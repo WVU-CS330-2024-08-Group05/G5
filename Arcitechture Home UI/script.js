@@ -5,11 +5,12 @@ function loadResortData() {
         download: true,
         header: true,
         complete: function(results) {
+            console.log(results.data); // Log data for debugging
             const data = results.data;
             generateResortCards(data);
         },
         error: function(err) {
-            console.error("Error loading the CSV file: ", err);
+            console.error('Error loading CSV file:', err); // Error handling
         }
     });
 }
@@ -51,4 +52,7 @@ function generateResortCards(resorts) {
     });
 }
 
-document.addEventListener('DOMContentLoaded', loadResortData);
+// Ensure script runs when the page has fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    loadResortData();
+});
