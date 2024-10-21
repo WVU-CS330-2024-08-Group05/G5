@@ -76,6 +76,15 @@ header {
     flex-grow: 1;
 }
 
+.resort-details a {
+    color: black;
+    text-decoration: none;
+}
+
+.resort-details a:hover {
+    color: blue;
+}
+
 .resort-details h2 {
     font-size: 1.5em;
     margin-bottom: 10px;
