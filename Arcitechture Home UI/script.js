@@ -52,7 +52,6 @@ function generateResortCards(resorts) {
     });
 }
 
-// Ensure script runs when the page has fully loaded
 document.addEventListener('DOMContentLoaded', function() {
     loadResortData();
 });
