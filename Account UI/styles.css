@@ -1,0 +1,105 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.search-bar {
+    width: 60%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px 0 0 4px;
+    outline: none;
+}
+
+.search-button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 0 4px 4px 0;
+}
+
+.user-locations {
+    display: flex;
+    height: 200px;
+    width: 55%;
+    float: right;
+    background-color: white;
+    padding: 20px;
+    margin-bottom: 10px;
+    margin-right: 90px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow-y:auto
+}
+
+#location-img {
+    float: left;
+    margin: 5px;
+  }
+
+.user-review {
+    margin-left: 10px;
+    
+  }
+
+#account-name {
+    display: inline-block;
+    margin: 50px 15% 50px 47%;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    
+}
+
+br {
+    display: block; /* makes it have a width */
+    content: ""; /* clears default height */
+    margin-top: 10px; /* change this to whatever height you want it */
+}
+
+.user-settings {
+    margin-left: 3%;
+    width: 25%;
+    height: 700px;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+}
+
+#settings-text {
+    text-align: center;
+}
+
+#settings {
+    text-align: left;
+}
+
+#return-home {
+    margin-left: 3%;
+    font-weight: bold;
+    border-radius: 4px;
+    font-size: 14px;
+    padding: 10px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
