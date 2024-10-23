@@ -1,27 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>SkiLogging</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>HTML5 Boilerplate</title>
     <link rel="stylesheet" href="SkiLoggingStyles.css">
 </head>
 
 <body>
-    <h1>
-        Overall Ski Trips Logged:
-    </h1>
-    <div>
-        <p>Total Hours Spent Skiing:</p>
-        <input type="number" id="totalHours" name="totalHours" value=0 readonly>
-        <p></p>
+    <header>
+        <button id="return-home">Return to Home <br> &#8592</button>
+        <div class="search-container">
+            <input type="text" placeholder="Search For Specific Resort or Location" class="search-bar">
+            <button class="search-button">Search</button>
+        </div>
+    </header>
+    <div class="left">
+        <h1>
+            Overall Ski Trips Logged:
+        </h1>
+        <div>
+            <p>Total Hours Spent Skiing:</p>
+            <input type="number" id="totalHours" name="totalHours" value=0 readonly>
+        </div>
+        <input type="number" id="Hours" name="Hours" placeholder="Log Hours:">
+        <input type ="text" id="Resort" name="Resort" placeholder="Enter Name of Resort:">
+        <input type= "date" id="Date"   name="Date" placeholder="Enter Date:" />
+        <button type="button" id="hourSubmit">submit</button>
     </div>
-    <label for="Hours">Log hours:</label>
-    <input type="number" id="Hours" name="Hours" value=0>
-    <button type="button" id="hourSubmit">submit</button>
 </body>
 
 </html>
+
 <script>
     document.getElementById('hourSubmit').addEventListener("click", function () {
         let newHours = parseFloat(document.getElementById('Hours').value) || 0;
