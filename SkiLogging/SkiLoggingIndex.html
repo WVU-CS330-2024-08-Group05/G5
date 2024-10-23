@@ -1,21 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>HTML5 Boilerplate</title>
-        <link rel="stylesheet" href="styles.css">
-        <script src="hoursLogged.js" defer></script>
-      </head>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HTML5 Boilerplate</title>
+    <link rel="stylesheet" href="SkiLoggingStyles.css">
+</head>
 
-      <body>
-        <h1>
-            Overall Ski Trips Logged:
-        </h1>
-        <input type="text" id="totalHours" name="totalHours" value=0 readonly>
-        <label for="Hours">Log hours:</label>
-        <input type="text" id="Hours" name="Hours" value=0>
-        <button type = "button" id="hourSubmit">submit</button>
-      </body>
+<body>
+    <h1>
+        Overall Ski Trips Logged:
+    </h1>
+    <div>
+        <p>Total Hours Spent Skiing:</p>
+        <input type="number" id="totalHours" name="totalHours" value=0 readonly>
+        <p></p>
+    </div>
+    <label for="Hours">Log hours:</label>
+    <input type="number" id="Hours" name="Hours" value=0>
+    <button type="button" id="hourSubmit">submit</button>
+</body>
 </html>
+<script>
+    document.getElementById('hourSubmit').addEventListener("click", function () {
+        let newHours = parseFloat(document.getElementById('Hours').value) || 0;
+        let totalHours = parseFloat(document.getElementById('totalHours').value) || 0;
+        totalHours += newHours;
+        document.getElementById('totalHours').value = totalHours;
+        document.getElementById('Hours').value = 0;
+    });
+</script>
