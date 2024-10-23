@@ -28,16 +28,36 @@
         <input type= "date" id="Date"   name="Date" placeholder="Enter Date:" />
         <button type="button" id="hourSubmit">submit</button>
     </div>
+
+    <div class="right">
+        <div>
+            <h2>
+                Previous Ski Trips:
+            </h2>
+            <ol id="SkiTripList"></ol>
+        </div>
+    </div>
 </body>
 
 </html>
 
 <script>
     document.getElementById('hourSubmit').addEventListener("click", function () {
+        // Adds hours to total
         let newHours = parseFloat(document.getElementById('Hours').value) || 0;
         let totalHours = parseFloat(document.getElementById('totalHours').value) || 0;
         totalHours += newHours;
         document.getElementById('totalHours').value = totalHours;
         document.getElementById('Hours').value = 0;
+
+        // Adds new Ski Trip to list which will be posted on right
+        // hand side of the web page
+        let resort = document.getElementById('Resort').value;
+        let date = document.getElementById('Date').value;
+        let listItem = document.createElement('li');
+        listItem.textContent = ("Trip to" + resort + " on " + date + ", for " + newHours + " hours");
+        document.getElementById('SkiTripList').append(listItem);
     });
+
+
 </script>
