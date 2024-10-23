@@ -8,6 +8,8 @@
 </head>
 
 <body>
+    <input type="hidden" id="totalHours" name="totalHours" value=0 readonly>
+    <input type="hidden" id="totalTrips" name="totalTrips" value=0 readonly>
     <header>
         <button id="return-home">Return to Home <br> &#8592</button>
         <div class="search-container">
@@ -15,26 +17,44 @@
             <button class="search-button">Search</button>
         </div>
     </header>
-    <div class="left">
-        <h1>
-            Overall Ski Trips Logged:
-        </h1>
-        <div>
-            <p>Total Hours Spent Skiing:</p>
-            <input type="number" id="totalHours" name="totalHours" value=0 readonly>
+    <div class="container">
+        <div class="left">
+            <div id="Account-info">
+                <h1>
+                    (Username)
+                </h1>
+                <div id="HoursSpent-Text">
+                    <p id="total-trips">Total Trips: </p>
+                    <p id="total-hours">Total Hours: </p>
+                    <p id="rank">Global Rank: </p>
+                </div>
+            </div>
+            <input type="number" id="Hours" name="Hours" placeholder="Log Hours:">
+            <input type="text" id="Resort" name="Resort" placeholder="Enter Name of Resort:">
+            <input type="date" id="Date" name="Date" placeholder="Enter Date:" />
+            <button type="button" id="hourSubmit">submit</button>
         </div>
-        <input type="number" id="Hours" name="Hours" placeholder="Log Hours:">
-        <input type ="text" id="Resort" name="Resort" placeholder="Enter Name of Resort:">
-        <input type= "date" id="Date"   name="Date" placeholder="Enter Date:" />
-        <button type="button" id="hourSubmit">submit</button>
-    </div>
 
-    <div class="right">
-        <div>
-            <h2>
-                Previous Ski Trips:
-            </h2>
-            <ol id="SkiTripList"></ol>
+        <div class="right">
+            <div>
+                <h2>
+                    Previous Ski Trips:
+                </h2>
+                <ul id="SkiTripList"></ul>
+            </div>
+            <div>
+                <h2>
+                    Leaderboard
+                </h2>
+                <ol id="SkiingLeaderboard">
+                    <li>First Place Dude</li>
+                    <li>Second PLace Dude</li>
+                    <li>Third Place Dude</li>
+                    <li>Fourth Place Dude</li>
+                    <li>Fifth Place Dude</li>
+                </ol>
+
+            </div>
         </div>
     </div>
 </body>
@@ -48,6 +68,7 @@
         let totalHours = parseFloat(document.getElementById('totalHours').value) || 0;
         totalHours += newHours;
         document.getElementById('totalHours').value = totalHours;
+        document.getElementById('total-hours').innerText = ("Total Hours: " + totalHours);
         document.getElementById('Hours').value = 0;
 
         // Adds new Ski Trip to list which will be posted on right
@@ -57,7 +78,15 @@
         let listItem = document.createElement('li');
         listItem.textContent = ("Trip to" + resort + " on " + date + ", for " + newHours + " hours");
         document.getElementById('SkiTripList').append(listItem);
+        // update user Info
+
+        // These dont work yet
+        //trips +=1;
     });
-
-
+    document.addEventListener('DOMContentLoaded', function () {
+        //set user info
+        document.getElementById('rank').textContent = ("Global Rank: " + 1); // Placeholder
+        document.getElementById('total-hours').textContent = ("Total Hours: " + 0);
+        document.getElementById('total-trips').textContent = ("Total Trips: " + 0);
+    });
 </script>
