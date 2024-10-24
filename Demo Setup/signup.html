@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script> <!-- Added defer to ensure the script loads after the HTML -->
+    <title>Snowhere You're Going</title>
+</head>
+<body class="signup-page">
+    <div class="container">
+        <header>
+            <img src="left-mountains.png" alt="Left Mountain" class="mountain left-mountain">
+            <div class="logo">
+                <h1>Snowhere<br>You're<br>Going</h1>
+            </div>
+            <img src="right-mountains.png" alt="Right Mountain" class="mountain right-mountain">
+        </header>
+        <div class="login-form">
+            <input type="text" placeholder="Username" id="username">
+            <input type="password" placeholder="Password" id="password">
+            <div id="error-message" class="error-message"></div> <!-- Added this line for displaying error messages -->
+            <button onclick="signUp()">Sign-up</button>
+            <a href="#" class="forgot-password">Forgot password?</a>
+        </div>
+    </div>
+</body>
+</html>
