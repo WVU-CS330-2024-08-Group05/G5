@@ -24,9 +24,9 @@
                     (Username)
                 </h1>
                 <div id="HoursSpent-Text">
-                    <p id="total-trips">Total Trips: </p>
-                    <p id="total-hours">Total Hours: </p>
-                    <p id="rank">Global Rank: </p>
+                    <p id="total-trips" hidden>Total Trips: </p>
+                    <p id="total-hours" >Total Hours: </p>
+                    <p id="rank" hidden>Global Rank: </p>
                 </div>
             </div>
             <input type="number" id="Hours" name="Hours" placeholder="Log Hours:">
@@ -76,7 +76,7 @@
         let resort = document.getElementById('Resort').value;
         let date = document.getElementById('Date').value;
         let listItem = document.createElement('li');
-        listItem.textContent = ("Trip to" + resort + " on " + date + ", for " + newHours + " hours");
+        listItem.textContent = ("Trip to " + resort + " on " + date + ", for " + newHours + " hours");
         document.getElementById('SkiTripList').append(listItem);
         // update user Info
 
@@ -85,8 +85,8 @@
     });
     document.addEventListener('DOMContentLoaded', function () {
         //set user info
-        document.getElementById('rank').textContent = ("Global Rank: " + 1); // Placeholder
-        document.getElementById('total-hours').textContent = ("Total Hours: " + 0);
-        document.getElementById('total-trips').textContent = ("Total Trips: " + 0);
+       // document.getElementById('rank').textContent = ("Global Rank: " + 1); // Placeholder
+        document.getElementById('total-hours').textContent = ("Total Hours: " + 0); 
+        //document.getElementById('total-trips').textContent = ("Total Trips: " + 0);Implement Later
     });
 </script>
