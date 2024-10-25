@@ -93,3 +93,34 @@ function isStrongPassword(password) {
     
     return error;
 }
+
+
+/*SkiLogger*/
+
+document.getElementById('hourSubmit').addEventListener("click", function () {
+    // Adds hours to total
+    let newHours = parseFloat(document.getElementById('Hours').value) || 0;
+    let totalHours = parseFloat(document.getElementById('totalHours').value) || 0;
+    totalHours += newHours;
+    document.getElementById('totalHours').value = totalHours;
+    document.getElementById('total-hours').innerText = ("Total Hours: " + totalHours);
+    document.getElementById('Hours').value = 0;
+
+    // Adds new Ski Trip to list which will be posted on right
+    // hand side of the web page
+    let resort = document.getElementById('Resort').value;
+    let date = document.getElementById('Date').value;
+    let listItem = document.createElement('li');
+    listItem.textContent = ("Trip to " + resort + " on " + date + ", for " + newHours + " hours");
+    document.getElementById('SkiTripList').append(listItem);
+    // update user Info
+
+    // These dont work yet
+    //trips +=1;
+});
+document.addEventListener('DOMContentLoaded', function () {
+    //set user info
+   // document.getElementById('rank').textContent = ("Global Rank: " + 1); // Placeholder
+    document.getElementById('total-hours').textContent = ("Total Hours: " + 0); 
+    //document.getElementById('total-trips').textContent = ("Total Trips: " + 0);Implement Later
+});
