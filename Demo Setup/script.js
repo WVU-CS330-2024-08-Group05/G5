@@ -1,5 +1,19 @@
-/*Account*/
+/*All Pages*/
+    //dark mode
+if(Account.darkMode){
+    document.body.classList.toggle('dark-mode');
+}
 
+
+/*Account*/
+const darkModeToggle = document.getElementById('darkModeToggle');
+
+darkModeToggle.addEventListener('click', () => {
+
+    document.body.classList.toggle('dark-mode');
+    Account.changeBrowserMode();
+
+});
 
 /*Home*/
 const csvFilePath = 'resortdata.csv';
