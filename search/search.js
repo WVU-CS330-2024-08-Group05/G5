@@ -1,4 +1,4 @@
-import { resortData } from './resortData.js''
+import { resortData } from './resortData.js';
 
 function filterByDistance(trips, location) {
     return;
