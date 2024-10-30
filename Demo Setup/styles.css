@@ -1,3 +1,7 @@
+* {
+    font-family: Arial, sans-serif;
+}
+
 /*Account*/
 .account-page body {
     font-family: Arial, sans-serif;
@@ -178,7 +182,6 @@
 }
 
 .home-page body {
-    font-family: Arial, sans-serif;
     background-color: #f5f5f5;
 }
 
