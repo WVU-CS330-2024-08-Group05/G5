@@ -3,6 +3,10 @@ body {
     font-family: Arial, sans-serif;
     background-color: #fff;
     text-align: center;
+    background-image: url('skiing.jpg'); 
+    background-size: cover; 
+    background-position: center; 
+    z-index: 1;
 }
 
 .container {
@@ -11,6 +15,9 @@ body {
     align-items: center;
     justify-content: center;
     height: 100vh;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background for contrast */
+    padding: 20px; /* Add padding to the container */
+    border-radius: 10px; /* Optional: add rounded corners */
 }
 
 header {
@@ -20,11 +27,10 @@ header {
     width: 100%;
 }
 
-.mountain {
+.skiing-loginin{
     width: 300px;
-    height: auto;
+    height: 300px;
 }
-
 .logo {
     padding: 0 20px;
     border: 2px solid black;
@@ -35,6 +41,7 @@ header {
     font-size: 48px;
     line-height: 1.2;
     font-weight: normal;
+    background-color: gray;
 }
 
 .login-form {
