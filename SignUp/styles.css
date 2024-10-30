@@ -5,8 +5,7 @@ body {
     text-align: center;
     background-image: url('skiing.jpg'); 
     background-size: cover; 
-    background-position: center; 
-    z-index: 1;
+    background-position: center;
 }
 
 .container {
