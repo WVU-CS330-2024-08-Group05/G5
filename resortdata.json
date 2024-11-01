@@ -1,4 +1,4 @@
-let resortData = [
+[
 	{
 		"resort_name": "49(degrees) North, WA",
 		"state": "Washington",
@@ -6552,5 +6552,3 @@ let resortData = [
 		"lon": -71.57
 	}
 ]
-
-export resortData;
