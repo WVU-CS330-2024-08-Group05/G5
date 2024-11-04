@@ -45,19 +45,19 @@ function generateSearchHtml(resorts) {
     let html = "";
     for (let resort of resorts) {
         html = html.concat(
-            `<div class="resort-card">
-            < div class="resort-logo" >
-                <img src="logo-placeholder.png" alt="Resort Logo">
-            </div>
-            <div class="resort-details">
-                <h2><a href="#PLACEHOLDER">${resort.name}</a></h2>
-                <p>Brief Description / Distance</p>
-            </div>
-            <div class="resort-rating">
-                <p>Rating</p>
-            </div>
-        </div >
-        `
+`<div class="resort-card">
+    <div class="resort-logo">
+        <img src="logo-placeholder.png" alt="Resort Logo">
+    </div>
+    <div class="resort-details">
+        <h2><a href="#PLACEHOLDER">${resort.resort_name}</a></h2>
+        <p>State: ${resort.state}</p>
+    </div>
+    <div class="resort-rating">
+        <p>Rating</p>
+    </div>
+</div >
+`
         );
     }
     return html;
