@@ -1,5 +1,4 @@
-{
-	"resortData": [
+[
 		{
 			"resort_name": "49(degrees) North, WA",
 			"state": "Washington",
@@ -6553,4 +6552,3 @@
 			"lon": -71.57
 		}
 	]
-}
