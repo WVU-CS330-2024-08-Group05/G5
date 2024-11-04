@@ -1,34 +1,17 @@
+const baseUrl = 'http://localhost:8080';
 
-export async function getResorts() {
-    fetch('./resortdata.json')
-        .then((res) => { return res.json() });
-}
+// Search functionality
+console.log('search funcitonality...');
+$(function () {
+    console.log('ready...');
+    $('#search-button').on('click', function () {
+        let state = $('#search-bar').val();
+        var script = document.currentScript;
+        console.log(`Searching for state ${state} in ${baseUrl}...`);
+        let url = new URL('./search.html', baseUrl)
+        if (state) url.searchParams.append('state', state);
+        console.log(`Fetching ${url.toString()}...`);
+        fetch(url).then((res) => $('#search-results').html(res));
+    })
 
-export function getStates(resortData) {
-    let states = new Array();
-    for (let resort of resortData) {
-        states.push(resort.state);
-    }
-    return states;
-}
-
-export function filterByState(trips, state) {
-    let resorts = new Array();
-    for (let resort of resortData) {
-        if (resort.state.tolower() == state.tolower())
-            resorts.push(resort);
-    }
-    return resorts;
-}
-
-export function generateSearchHtml(resorts) {
-    let html = new String();
-    for (let resort of resorts) {
-        html.append("<div>" + resort.name + "</div>");
-    }
-    return html;
-}
-
-function filterByDistance(trips, location) {
-    return;
-}
+});

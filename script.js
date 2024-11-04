@@ -16,25 +16,8 @@ darkModeToggle.addEventListener('click', () => {
 });
 
 /*Home*/
-const csvFilePath = 'resortdata.csv';
-
-function loadResortData() {
-    Papa.parse(csvFilePath, {
-        download: true,
-        header: true,
-        complete: function(results) {
-            console.log(results.data); // Log data for debugging
-            const data = results.data;
-            generateResortCards(data);
-        },
-        error: function(err) {
-            console.error('Error loading CSV file:', err); // Error handling
-        }
-    });
-}
-
 function generateResortCards(resorts) {
-    const resortList = document.querySelector('.resort-list');
+    const resortList = document.querySelector('#searchResults');
     resortList.innerHTML = ''; // Clear any existing content
 
     resorts.forEach(resort => {
@@ -138,3 +121,10 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('total-hours').textContent = ("Total Hours: " + 0); 
     //document.getElementById('total-trips').textContent = ("Total Trips: " + 0);Implement Later
 });
+
+// Search functionality
+//$('#searchButton').on('click', function (event) {
+//    let state = $('#search-bar').value();
+//    let url = new URL('./search.html')
+//    fetch(url, function(reps)
+//})
