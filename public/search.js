@@ -4,6 +4,7 @@ const baseUrl = 'http://localhost:8080';
 console.log('search funcitonality...');
 $(function () {
     console.log('ready...');
+
     $('#search-button').on('click', function () {
         let state = $('#search-bar').val();
         let url = new URL('./search.html', baseUrl)

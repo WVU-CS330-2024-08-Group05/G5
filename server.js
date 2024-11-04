@@ -9,7 +9,7 @@ const RESORTS = require('./resortdata.json');
 const STATES = getStates(RESORTS);
 
 // serve files from root dir
-app.use(express.static(__dirname));
+app.use(express.static('public'));
 
 app.listen(8080, function () {
     console.log('Listening on port 8080...');
