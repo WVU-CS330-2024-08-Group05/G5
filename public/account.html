@@ -6,14 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="jquery.js"></script>
     <script src="search.js"></script>
-    <link rel="stylesheet" href="homepage.css">
+    <link rel="stylesheet" href="account.css">
 </head>
 <body>
     <header>
-        <button id="return-home">Return to Home <br> &#8592</button>
+        <a id="return-home" href="..">Return to Home <br> &#8592</a>
         <div class="search-container">
-            <input type="text" placeholder="Search For Specific Resort or Location" class="search-bar" id="search-bar">
-            <button class="search-button" id="search-button">Search</button>
+            <input type="text" placeholder="Search For Specific Resort or Location" id="search-bar" class="search-bar">
+            <button id="search-cancel" class="search-button">X</button>
+            <button id="search-button" class="search-button">Search</button>
         </div>
     </header>
 

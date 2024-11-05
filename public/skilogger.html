@@ -4,18 +4,20 @@
     <title>SkiLogging</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="SkiLoggingStyles.css">
+    <link rel="stylesheet" href="skilogger.css">
     <script src="hoursLogged.js"></script>
     <script src="search.js"></script>
 </head>
 
 <body>
+    <div id="main">
     <input type="hidden" id="totalHours" name="totalHours" value=0 readonly>
     <header>
-        <button id="return-home">Return to Home <br> &#8592</button>
+        <a href=".." id="return-home">Return to Home <br> &#8592</a>
         <div class="search-container">
-            <input type="text" placeholder="Search For Specific Resort or Location" class="search-bar">
-            <button class="search-button">Search</button>
+            <input type="text" placeholder="Search For Specific Resort or Location" id="search-bar" class="search-bar">
+            <button id="search-cancel" class="search-button">X</button>
+            <button id="search-button" class="search-button">Search</button>
         </div>
     </header>
     <div class="container">
@@ -58,6 +60,9 @@
             </div>
         </div>
     </div>
+</div>
+
+    <div id="search-results" hidden></div>
 </body>
 
 </html>
