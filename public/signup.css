@@ -67,6 +67,8 @@ header {
     cursor: pointer;
     background-color: #fff;
     transition: background-color 0.3s;
+    font-weight: bold;
+    text-decoration: none;
 }
 
 .login-form button:hover {
