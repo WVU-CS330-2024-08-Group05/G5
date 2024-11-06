@@ -2,7 +2,7 @@
 
 
 /*Home*/
-const csvFilePath = 'resortdata.csv';
+const csvFilePath = 'resortdata.json';
 
 function loadResortData() {
     Papa.parse(csvFilePath, {
