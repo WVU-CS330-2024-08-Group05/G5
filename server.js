@@ -23,14 +23,16 @@ app.listen(8080, function () {
  */
 app.get('/search.html', function (req, res) {
     resorts = [...RESORTS];
+    options = {distance: false};
     if (req.query.search) {
         resorts = filterBySearch(resorts, req.query.search)
     }
     if (req.query.lat && req.query.lon && req.query.range) {
         resorts = filterByDistance(resorts, req.query, req.query.range);
+        options['distance'] = true;
     }
 
-    res.send(generateSearchHtml(resorts))
+    res.send(generateSearchHtml(resorts, options))
 });
 
 function filterBySearch(resorts, search) {
@@ -43,21 +45,24 @@ function filterBySearch(resorts, search) {
     return new_resorts;
 }
 
-function generateSearchHtml(resorts) {
+function generateSearchHtml(resorts, options) {
     let html = "";
     let distance = "";
     for (let resort of resorts) {
-        if ()
+        if (options.distance) {
+            distance = `<p>Distance: ${distance} miles</p>`;
+        }
         html = html.concat(
 `<div class="resort-card">
     <h3>${resort.resort_name}</h3>
-    <img src=flags/Flag_of_${resort.state.replaceAll(' ', '_')}.svg alt="State Logo" class="resort-logo" height=200 width=200>
+    <img src=flags/Flag_of_${resort.state.replaceAll(' ', '_')}.svg alt="State Logo" class="resort-logo" height="120" width="120">
     <div class="resort-details">
         <div id="piechart"></div>
         <p>Green Acres: ${resort.green_acres}<p>
         <p>Blue Acres: ${resort.blue_acres}<p>
         <p>Black Acres: ${resort.black_acres}<p>
         <p>Total Acres: ${resort.acres}<p>
+        ${distance}
     </div>
     <div class="resort-rating">
         <p>Rating</p>
@@ -72,7 +77,9 @@ function generateSearchHtml(resorts) {
 function filterByDistance(trips, location, range) {
     let new_resorts = Array();
     for (let resort of resorts) {
-        if (geo.calculateDistance(resort, location, { unit: 'mi' }) < range) {
+        let distance = geo.calculateDistance(resort, location, { unit: 'mi' });
+        resort['distance'] = distance;
+        if (distance < range) {
             new_resorts.push(resort);
         }
     }
