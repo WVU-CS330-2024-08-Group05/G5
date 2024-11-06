@@ -1,1 +1,1 @@
-let jsonObject = fetch("Arcitechture Home UI\resortdata.json");
+//let jsonObject = fetch("Arcitechture Home UI\resortdata.json");
