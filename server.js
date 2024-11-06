@@ -29,31 +29,26 @@ app.get('/search.html', function (req, res) {
     }
     if (req.query.lat && req.query.lon && req.query.range) {
         resorts = filterByDistance(resorts, req.query, req.query.range);
-        options['distance'] = true;
+        options.distance = true;
     }
 
     res.send(generateSearchHtml(resorts, options))
 });
 
-function filterBySearch(resorts, search) {
-    let new_resorts = new Array();
-    for (let resort of resorts) {
-        if (resort.state.toLowerCase().includes(search.toLowerCase()) ||
-            resort.resort_name.toLowerCase().includes(search.toLowerCase()))
-            new_resorts.push(resort);
-    }
-    return new_resorts;
-}
-
 function generateSearchHtml(resorts, options) {
     let html = "";
     let distance = "";
+    if (options.distance) resorts.sort(function (a, b) {
+        if (a.distance < b.distance) return -1;
+        else if (a.distance > b.distance) return 1;
+        else return 0;
+    });
     for (let resort of resorts) {
         if (options.distance) {
-            distance = `<p>Distance: ${distance} miles</p>`;
+            distance = `<p>Distance: ${resort.distance} miles</p>`;
         }
         html = html.concat(
-`<div class="resort-card">
+            `<div class="resort-card">
     <h3>${resort.resort_name}</h3>
     <img src=flags/Flag_of_${resort.state.replaceAll(' ', '_')}.svg alt="State Logo" class="resort-logo" height="120" width="120">
     <div class="resort-details">
@@ -72,6 +67,16 @@ function generateSearchHtml(resorts, options) {
         );
     }
     return html;
+}
+
+function filterBySearch(resorts, search) {
+    let new_resorts = new Array();
+    for (let resort of resorts) {
+        if (resort.state.toLowerCase().includes(search.toLowerCase()) ||
+            resort.resort_name.toLowerCase().includes(search.toLowerCase()))
+            new_resorts.push(resort);
+    }
+    return new_resorts;
 }
 
 function filterByDistance(trips, location, range) {
