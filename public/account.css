@@ -34,6 +34,11 @@ header {
     color: white;
     cursor: pointer;
     border-radius: 0 4px 4px 0;
+    font-weight: bold;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+    cursor: pointer;
 }
 
 .container {
@@ -113,8 +118,6 @@ header {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-
-
 #account-name {
     margin: 10px 30%;
     width: fit-content;
@@ -124,7 +127,6 @@ header {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
-
 
 .user-settings {
     margin-top: 10px;
@@ -166,4 +168,6 @@ header {
     border: none;
     cursor: pointer;
     width: 150px;
+    text-decoration: none;
+    text-align: center;
 }
