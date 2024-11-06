@@ -5,11 +5,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="SkiLoggingStyles.css">
+    <script src="hoursLogged.js"></script>
+    <script src="search.js"></script>
 </head>
 
 <body>
     <input type="hidden" id="totalHours" name="totalHours" value=0 readonly>
-    <input type="hidden" id="totalTrips" name="totalTrips" value=0 readonly>
     <header>
         <button id="return-home">Return to Home <br> &#8592</button>
         <div class="search-container">
@@ -24,9 +25,9 @@
                     (Username)
                 </h1>
                 <div id="HoursSpent-Text">
-                    <p id="total-trips" hidden>Total Trips: </p>
+                    <p id="total-trips" >Total Trips: </p>
                     <p id="total-hours" >Total Hours: </p>
-                    <p id="rank" hidden>Global Rank: </p>
+                    <p id="rank">Global Rank: </p>
                 </div>
             </div>
             <input type="number" id="Hours" name="Hours" placeholder="Log Hours:">
@@ -60,12 +61,14 @@
 </body>
 
 </html>
+|<script>
+    let trips = 0;
+    let totalHours = 0;
 
-<script>
     document.getElementById('hourSubmit').addEventListener("click", function () {
         // Adds hours to total
         let newHours = parseFloat(document.getElementById('Hours').value) || 0;
-        let totalHours = parseFloat(document.getElementById('totalHours').value) || 0;
+        //let totalHours = parseFloat(document.getElementById('totalHours').value) || 0;
         totalHours += newHours;
         document.getElementById('totalHours').value = totalHours;
         document.getElementById('total-hours').innerText = ("Total Hours: " + totalHours);
@@ -79,14 +82,14 @@
         listItem.textContent = ("Trip to " + resort + " on " + date + ", for " + newHours + " hours");
         document.getElementById('SkiTripList').append(listItem);
         // update user Info
-
-        // These dont work yet
-        //trips +=1;
+        trips += 1;
+        document.getElementById('total-trips').textContent = ("Total Trips: " + trips);
     });
     document.addEventListener('DOMContentLoaded', function () {
         //set user info
-       // document.getElementById('rank').textContent = ("Global Rank: " + 1); // Placeholder
-        document.getElementById('total-hours').textContent = ("Total Hours: " + 0); 
-        //document.getElementById('total-trips').textContent = ("Total Trips: " + 0);Implement Later
+
+        document.getElementById('rank').textContent = ("Global Rank: " + 1); // Placeholder
+        document.getElementById('total-hours').textContent = ("Total Hours: " + 0);
+        document.getElementById('total-trips').textContent = ("Total Trips: " + trips); //Implement Later
     });
 </script>

@@ -4,19 +4,21 @@
     <title>Account</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="script.js" defer></script>
-    <link rel="stylesheet" href="styles.css">
+    <script src="jquery.js"></script>
+    <script src="search.js"></script>
+    <link rel="stylesheet" href="account.css">
 </head>
-<body class="account-page">
+<body>
     <header>
-        <a href="home.html"><button id="return-home">Return to Home <br> &#8592</button></a>
+        <a id="return-home" href="index.html">Return to Home <br> &#8592</a>
         <div class="search-container">
-            <input type="text" placeholder="Search For Specific Resort or Location" class="search-bar">
-            <button class="search-button">Search</button>
+            <input type="text" placeholder="Search For Specific Resort or Location" id="search-bar" class="search-bar">
+            <button id="search-cancel" class="search-button">X</button>
+            <button id="search-button" class="search-button">Search</button>
         </div>
     </header>
 
-    <div class="container">
+    <div id="main" class="container">
         <div class="left">
             <div id="account-name">
                 <h1> Username Placeholder </h1>
@@ -25,19 +27,19 @@
             <div class="user-locations">
                 <div class="location-title">
                     <h2> Location Name </h2>
-                    <div class="resort-rating-account"> 
+                    <div class="resort-rating">
                         Rating
                     </div>
                 </div>
-                <div class="location-content">    
+                <div class="location-content">
                     <div>
-                        <img class="location-img" src="placeholder.png" alt="Picture of Resorts" height="200px" width="200px"> 
+                        <img class="location-img" src="placeholder.png" alt="Picture of Resorts" height="200" width="200">
                     </div>
                     <div class="user-review">
                         <h3>Review</h3>
                         <p>"Placeholder for user review"</p>
                     </div>
-                    
+
                     <div class="achievements">
                         <h3>Achievements </h3>
                         <p>(From SkiLogger)</p>
@@ -49,25 +51,23 @@
                 </div>
             </div>
         </div>
-    <div class="right">
-        <div class="user-settings" >
-            <div>
-                <h1 id="settings-text"> Settings </h1>
-            </div>
-                <div id="settings"> 
-                    <div class="setting">Dark Mode Toggle<button id="darkModeToggle">Dark Mode</button></div> 
-                    <div class="setting">Filler Option 2</div> 
-                    <div class="setting">Filler Option 3</div> 
-                    <div class="setting">Filler Option 4</div>    
+        <div class="right">
+            <div class="user-settings">
+                <div>
+                    <h1 id="settings-text"> Settings </h1>
+                </div>
+                <div id="settings">
+                    <div class="setting">Filler Option 1</div>
+                    <div class="setting">Filler Option 2</div>
+                    <div class="setting">Filler Option 3</div>
+                    <div class="setting">Filler Option 4</div>
                 </div>
 
+            </div>
         </div>
     </div>
-    </div>
 
-
-
-    
+    <div id="search-results" hidden></div>
 
 </body>
 

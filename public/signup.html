@@ -3,22 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="signup.css">
+    <script src="jquery.js"></script>
     <script src="script.js"></script>
     <title>Snowhere You're Going</title>
 </head>
 <body>
+    <img src="skiing.jpg" alt="mountain" class="skiing-loginin">
     <div class="container">
         <header>
-            <img src="left-mountains.png" alt="Left Mountain" class="mountain left-mountain">
+            
+            
             <div class="logo">
                 <h1>Snowhere<br>You're<br>Going</h1>
             </div>
-            <img src="right-mountains.png" alt="Right Mountain" class="mountain right-mountain">
         </header>
         <div class="login-form">
             <input type="text" placeholder="Username" id="username">
             <input type="password" placeholder="Password" id="password">
+            <button onclick="login()">Login</button>
+            <p>Don't have an account?</p>
             <button onclick="signUp()">Sign-up</button>
             <a href="#" class="forgot-password">Forgot password?</a>
         </div>
