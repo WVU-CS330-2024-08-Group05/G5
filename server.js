@@ -52,7 +52,7 @@ function generateSearchHtml(resorts, options) {
     <h3>${resort.resort_name}</h3>
     <img src=flags/Flag_of_${resort.state.replaceAll(' ', '_')}.svg alt="State Logo" class="resort-logo" height="120" width="120">
     <div class="resort-details">
-        <div id="piechart"></div>
+        <div class="piechart">[['Difficulty', 'Acres'], ['Green', ${resort.green_acres}], ['Blue', ${resort.blue_acres}], ['Black', ${resort.black_acres}]]</div >
         <p>Green Acres: ${resort.green_acres}<p>
         <p>Blue Acres: ${resort.blue_acres}<p>
         <p>Black Acres: ${resort.black_acres}<p>

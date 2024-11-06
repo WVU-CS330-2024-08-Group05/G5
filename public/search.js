@@ -23,7 +23,8 @@ $(function () {
                 if (html) $('#search-results').html(html);
                 else $('#search-results').html('<h2>No results...</h2>');
                 $('#search-results').show();
-            });
+            })
+            .then(drawCharts);
     });
 
     // Cancel button
@@ -33,3 +34,25 @@ $(function () {
     });
 
 });
+
+// Pie chart
+// Load google charts
+google.charts.load('current', { 'packages': ['corechart'] });
+google.charts.setOnLoadCallback(drawCharts);
+
+// Draw the chart and set the chart values
+function drawCharts() {
+    for (let element of document.getElementsByClassName('piechart')) {
+        console.log(element.textContent);
+        var data = google.visualization.arrayToDataTable(eval(element.textContent));
+
+        // Optional; add a title and set the width and height of the chart
+        var options = { 'width': 200, 'height': 200,
+            'colors': ['#6ad977', '#6070d6', '#161617'],
+            legend:'none' };
+
+        // Display the chart inside the <div> element with id="piechart"
+        var chart = new google.visualization.PieChart(element);
+        chart.draw(data, options);
+    }
+}
