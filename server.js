@@ -6,6 +6,8 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const RESORTS = require('./resortdata.json');
+const NodeGeolocation = require('nodejs-geolocation').default;
+const geo = new NodeGeolocation('App');
 
 // serve files from root dir
 app.use(express.static('public'));
@@ -20,11 +22,15 @@ app.listen(8080, function () {
  * Search results include resorts with names that start with req.query.search and resorts that are in a state the the begins with req.query.search.
  */
 app.get('/search.html', function (req, res) {
-        if (req.query.search) {
-            res.send(generateSearchHtml(filterBySearch(RESORTS, req.query.search)));
-        } else {
-            res.send(generateSearchHtml(RESORTS))
-        }
+    resorts = [...RESORTS];
+    if (req.query.search) {
+        resorts = filterBySearch(resorts, req.query.search)
+    }
+    if (req.query.lat && req.query.lon && req.query.range) {
+        resorts = filterByDistance(resorts, req.query, req.query.range);
+    }
+
+    res.send(generateSearchHtml(resorts))
 });
 
 function filterBySearch(resorts, search) {
@@ -39,15 +45,19 @@ function filterBySearch(resorts, search) {
 
 function generateSearchHtml(resorts) {
     let html = "";
+    let distance = "";
     for (let resort of resorts) {
+        if ()
         html = html.concat(
 `<div class="resort-card">
-    <div class="resort-logo">
-        <img src="logo-placeholder.png" alt="Resort Logo">
-    </div>
+    <h3>${resort.resort_name}</h3>
+    <img src=flags/Flag_of_${resort.state.replaceAll(' ', '_')}.svg alt="State Logo" class="resort-logo" height=200 width=200>
     <div class="resort-details">
-        <h2><a href="#PLACEHOLDER">${resort.resort_name}</a></h2>
-        <p>State: ${resort.state}</p>
+        <div id="piechart"></div>
+        <p>Green Acres: ${resort.green_acres}<p>
+        <p>Blue Acres: ${resort.blue_acres}<p>
+        <p>Black Acres: ${resort.black_acres}<p>
+        <p>Total Acres: ${resort.acres}<p>
     </div>
     <div class="resort-rating">
         <p>Rating</p>
@@ -59,6 +69,12 @@ function generateSearchHtml(resorts) {
     return html;
 }
 
-function filterByDistance(trips, location) {
-    return;
+function filterByDistance(trips, location, range) {
+    let new_resorts = Array();
+    for (let resort of resorts) {
+        if (geo.calculateDistance(resort, location, { unit: 'mi' }) < range) {
+            new_resorts.push(resort);
+        }
+    }
+    return new_resorts;
 }

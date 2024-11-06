@@ -11,6 +11,9 @@ $(function () {
         // Create url for /search.html
         let url = new URL('./search.html', baseUrl)
         if (search) url.searchParams.append('search', search);
+        url.searchParams.append('lat', '39.66');
+        url.searchParams.append('lon', '-79.97');
+        url.searchParams.append('range', '146');
         // Hide main, show search-results
         $('#main').hide();
         // Fetch search results
