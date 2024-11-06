@@ -26,10 +26,4 @@ $(function () {
             });
     });
 
-    // Cancel button
-    $('#search-cancel').on('click', function () {
-        $('#main').show();
-        $('#search-results').hide();
-    });
-
 });
