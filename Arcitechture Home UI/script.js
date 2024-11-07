@@ -1,4 +1,5 @@
 const csvFilePath = 'resortdata.csv';
+let allResorts = [];
 
 function loadResortData() {
     Papa.parse(csvFilePath, {
@@ -51,6 +52,24 @@ function generateResortCards(resorts) {
         resortList.appendChild(resortCard);
     });
 }
+
+function filterResorts(query) {
+    const lowercasedQuery = query.toLowerCase();
+    const filteredResorts = allResorts.filter(resort => {
+        const resortName = resort.resort_name.toLowerCase();
+        const resortLocation = resort.state.toLowerCase();
+        return resortName.includes(lowercasedQuery) || resortLocation.includes(lowercasedQuery);
+    });
+
+    // Regenerate resort cards based on the filtered results
+    generateResortCards(filteredResorts);
+}
+
+// Event listener for the search bar
+document.querySelector('.search-bar').addEventListener('input', (e) => {
+    const searchQuery = e.target.value;
+    filterResorts(searchQuery);
+});
 
 document.addEventListener('DOMContentLoaded', function() {
     loadResortData();

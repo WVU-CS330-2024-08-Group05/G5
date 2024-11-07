@@ -12,19 +12,22 @@
     <img src="skiing.jpg" alt="mountain" class="skiing-loginin">
     <div class="container">
         <header>
-            
-            
             <div class="logo">
                 <h1>Snowhere<br>You're<br>Going</h1>
             </div>
         </header>
         <div class="login-form">
+            <input type="email" placeholder="Email" id="email">
+            <div id="email-error" class="error-message"></div> 
+
             <input type="text" placeholder="Username" id="username">
+
             <input type="password" placeholder="Password" id="password">
-            <button onclick="login()">Login</button>
-            <p>Don't have an account?</p>
+            <div id="password-error" class="error-message"></div> 
+
             <button onclick="signUp()">Sign-up</button>
-            <a href="#" class="forgot-password">Forgot password?</a>
+            <a href="index.html"><button>Homepage</button></a>
+            <p>Already have an account? <a href="login.html">Log in</a></p>
         </div>
     </div>
 </body>

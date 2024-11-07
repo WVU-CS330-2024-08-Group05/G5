@@ -40,7 +40,6 @@ header {
     font-size: 48px;
     line-height: 1.2;
     font-weight: normal;
-   
 }
 
 .login-form {
@@ -50,30 +49,29 @@ header {
     margin-top: 20px;
 }
 
+.login-form input[type="email"],
 .login-form input[type="text"],
 .login-form input[type="password"] {
     width: 200px;
     padding: 10px;
     margin: 5px 0;
     border: 2px solid #000;
+    border-radius: 4px;
 }
 
 .login-form button {
     padding: 10px 20px;
     margin: 10px 0;
     border: 2px solid #000;
+    border-radius: 4px;
     cursor: pointer;
     background-color: #fff;
     transition: background-color 0.3s;
+    font-weight: bold;
+    text-decoration: none;
 }
 
 .login-form button:hover {
     background-color: #000;
     color: #fff;
-}
-
-.forgot-password {
-    text-decoration: none;
-    color: black;
-    margin-top: 10px;
 }
