@@ -118,9 +118,12 @@ input[type="search"]::-webkit-search-cancel-button {
 
 .resort-card {
     display: flex;
+    margin: auto;
     align-items: center;
     background-color: white;
     padding: 20px;
+    width: 1000px;
+    height: 500px;
     margin-bottom: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -161,4 +164,33 @@ input[type="search"]::-webkit-search-cancel-button {
     text-align: center;
     border-radius: 8px;
     font-size: 1.2em;
+}
+
+/*Nav Buttons When hovered on*/
+.skilogger-button:hover {
+    background-color: darkblue;
+}
+
+.account-button:hover{
+    background-color: darkblue;
+}
+
+.search-button:hover{
+    background-color:darkblue;
+}
+
+.to-login-button:hover{
+    background-color:darkblue;
+}
+
+.to-signup-button:hover{
+    background-color:darkblue;
+}
+
+.resort-card:hover {
+    background-color: lightgray;
+}
+
+.resort-rating:hover{
+    background-color:darkblue;
 }
