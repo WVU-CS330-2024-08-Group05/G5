@@ -63,17 +63,37 @@ document.addEventListener('DOMContentLoaded', function() {
 function signUp() {
     let username = document.getElementById('username').value;
     let password = document.getElementById('password').value;
-    let errorMessage = isStrongPassword(password);
-    let errorDiv = document.getElementById('error-message');
-    
-    if (username && errorMessage.length === 0) {
-        errorDiv.innerHTML = "";
+    let email = document.getElementById('email').value;
 
+    let emailErrorDiv = document.getElementById('email-error');
+    let passwordErrorDiv = document.getElementById('password-error');
+
+    // Clear previous error messages
+    emailErrorDiv.innerHTML = "";
+    passwordErrorDiv.innerHTML = "";
+
+    // Validate email and password
+    // Assume it returns an error message if invalid, else ""
+    let emailResult = isEmail(email);  
+    let passwordErrorMessage = isStrongPassword(password);  
+
+    let hasError = false;
+
+    // Display email error if invalid
+    if (!emailResult.isValid) {
+        emailErrorDiv.innerHTML = emailResult;
+        hasError = true;
+    }
+
+    // Display password error if invalid
+    if (passwordErrorMessage) {
+        passwordErrorDiv.innerHTML = passwordErrorMessage;
+        hasError = true;
+    }
+
+    if (!hasError && username) {
+        // Redirect if no errors
         window.location.href = 'home.html';
-
-        // alert(`Welcome, ${username}!`);
-    } else {
-        errorDiv.innerHTML = errorMessage;
     }
 }
 
@@ -90,6 +110,20 @@ function isStrongPassword(password) {
     
     return error;
 }
+
+function isEmail(email) {
+    let error = "";
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+   
+    if(!emailRegex.test(email)){
+        error += "Must be a valid email.<br>"
+    }
+    
+    return error;
+
+}
+
+
 
 
 /*SkiLogger*/

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="signup.css">
     <script src="jquery.js"></script>
-    <script src="login.js"></script>
+    <script src="script.js"></script>
     <title>Snowhere You're Going</title>
 </head>
 <body>
@@ -18,8 +18,13 @@
         </header>
         <div class="login-form">
             <input type="email" placeholder="Email" id="email">
+            <div id="email-error" class="error-message"></div> 
+
             <input type="text" placeholder="Username" id="username">
+
             <input type="password" placeholder="Password" id="password">
+            <div id="password-error" class="error-message"></div> 
+
             <button onclick="signUp()">Sign-up</button>
             <a href="index.html"><button>Homepage</button></a>
             <p>Already have an account? <a href="login.html">Log in</a></p>
