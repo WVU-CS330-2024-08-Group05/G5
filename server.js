@@ -80,7 +80,7 @@ function filterBySearch(resorts, search) {
 }
 
 function filterByDistance(trips, location, range) {
-    let new_resorts = Array();
+    let new_resorts = new Array();
     for (let resort of resorts) {
         let distance = geo.calculateDistance(resort, location, { unit: 'mi' });
         resort['distance'] = distance;
