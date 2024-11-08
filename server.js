@@ -141,7 +141,7 @@ function filterByDistance(trips, location, range) {
  * check if username is in database, then check if password matches
 */
 
-app.get('/logging-in.html', async function (req, res) {
+app.post('/logging-in.html', async function (req, res) {
     let msg = "Username not found"; // Default message
     
     let username_exists = await connectAndQueryUsername(req.query.username, msg);

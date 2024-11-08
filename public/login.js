@@ -8,23 +8,33 @@ $(function () {
     $('#login').on('click', async function () {
         console.log("login attempt");
     
+        // Gather user inputs
         let username = $('#username').val();
         let password = $('#password').val();
     
-        let url = new URL('./logging-in.html', baseUrl);
-        if (username) url.searchParams.append('username', username);
-        
-        console.log(`Fetching ${url.toString()}...`);
+        // Define the URL for the POST request
+        let url = `${baseUrl}/logging-in.html`;
     
-        // Fetch the message from the server
-        fetch(url)
+        // Only send the request if username is provided
+        if (username) {
+            console.log(`Posting to ${url}...`);
+    
+            // Make a POST request with the username in the request body
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username: username })
+            })
             .then((res) => res.text())
             .then((msg) => {
-                console.log(msg);
+                console.log(msg); // Log the server's response message
             })
             .catch((error) => {
                 console.error('Error:', error);
             });
+        }
     });
 
 });
