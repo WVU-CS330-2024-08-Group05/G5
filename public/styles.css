@@ -143,12 +143,17 @@ input[type="search"]::-webkit-search-cancel-button {
     background-color:darkblue;
 }
 
+#return-home:hover {
+    background-color: darkblue;
+}
+
 /* Search */
 
 .resort-card {
     display: flex;
+    flex:1;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
     border-bottom: 2px solid #ddd;
     padding: 6px 6px;
@@ -161,31 +166,32 @@ input[type="search"]::-webkit-search-cancel-button {
         font-size: 1em;
         color: black;
         margin: 0 0 4px;
+        align-self: center;
     }
 
     .resort-card img {
-        padding: 0px 0px 0px 0px;
+        height: 100px;
+        width: 100px;
     }
 
 .resort-details {
     flex: 1;
     display: flex;
     flex-direction: row;
-    gap: 4px;
+    justify-content: space-evenly;
     color: #222;
-    font-size: 0.9em;
-    font-weight: 600;
+    font-size: 0.8em;
+    font-weight: 500;
 }
 
 .piechart {
-    padding: 0px 40px 0px 40px;
+    
 }
 
 .acreage-details {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-content: center;
     padding:10px 20px 5px 50px;
 }
 
@@ -193,7 +199,6 @@ input[type="search"]::-webkit-search-cancel-button {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    text-align: right;
     padding: 10px 20px 5px 10px;
 }
 
@@ -203,12 +208,15 @@ input[type="search"]::-webkit-search-cancel-button {
     color: white;
     text-align: center;
     border-radius: 8px;
+    align-self: center;
 }
 
-#return-home:hover{
-    background-color:darkblue;
+#search-results {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
 }
-
 
 /*All for sk-logger*/
 
@@ -352,10 +360,4 @@ input[type="search"]::-webkit-search-cancel-button {
 
 .ski-logger #SkiingLeaderboard li:hover {
     background-color: #f0f8ff;
-}
-#search-results {
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-    align-items: center;
 }

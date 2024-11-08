@@ -62,9 +62,9 @@ function generateSearchHtml(resorts, options) {
         <div class="other-resort-details">
         ${distance}
         </div>
-    </div>
-    <div class="resort-rating">
-        <p>Rating</p>
+        <div class="resort-rating">
+            <p>Rating</p>
+        </div>
     </div>
 </div >
 `
