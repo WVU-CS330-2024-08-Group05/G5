@@ -115,8 +115,6 @@ function isEmail(email) {
     return error;
 }
 
-
-
 /*SkiLogger*/
 
 document.getElementById('hourSubmit').addEventListener("click", function () {

@@ -12,11 +12,19 @@ $(function () {
         let username = $('#username').val();
         let password = $('#password').val();
     
+        // input error messages
+        let usernameErrorDiv = $('#username-error');
+        let passwordErrorDiv = $('#password-error');
+
+        // Clear previous error messages
+        usernameErrorDiv.html("");
+        passwordErrorDiv.html("");
+
         // Define the URL for the POST request
         let url = `${baseUrl}/logging-in.html`;
     
         // Only send the request if username is provided
-        if (username) {
+        if (username && password) {
             console.log(`Posting to ${url}...`);
     
             // Make a POST request with the username in the request body
@@ -25,11 +33,27 @@ $(function () {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ username: username })
+                body: JSON.stringify({ username: username, password: password })
             })
             .then((res) => res.text())
             .then((msg) => {
-                console.log(msg); // Log the server's response message
+                if (msg === "Username not found") {
+                    usernameErrorDiv.html("User does not exist, or username is incorrect.");
+                } 
+                if (msg === "Password is incorrect") {
+                    passwordErrorDiv.html("Password is incorrect.");
+                }
+                if (msg === "Password is correct") {
+                    // Update the DOM first
+                    usernameErrorDiv.html(""); 
+                    passwordErrorDiv.html("");
+            
+                    // Now redirect after the DOM is updated
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 100); // Delay redirection slightly to ensure the DOM is updated
+                }
+
             })
             .catch((error) => {
                 console.error('Error:', error);

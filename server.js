@@ -17,6 +17,8 @@ app.listen(8080, function () {
     console.log('Listening on port 8080...');
 });
 
+// Middleware to parse json
+app.use(express.json());
 
 
 /**
@@ -142,18 +144,32 @@ function filterByDistance(trips, location, range) {
 */
 
 app.post('/logging-in.html', async function (req, res) {
-    let msg = "Username not found"; // Default message
+    let msg = "";
+
+    let username = req.body.username;
+    let password = req.body.password;
     
-    let username_exists = await connectAndQueryUsername(req.query.username, msg);
+    let username_exists = await connectAndQueryUsername(username);
+    let password_matches;
+
+    msg = username_exists;
+
+    if(username_exists === "User found") {
+        password_matches = await connectAndQueryPassword(password);
+        msg = password_matches;
+    }
+
     
-    res.send(username_exists);
+
+    res.send(msg);
 });
 
 
-async function connectAndQueryUsername(username, msg) {
+async function connectAndQueryUsername(username) {
     try {
         let poolConnection = await sql.connect(config);
-        console.log("Connected for username check successfully");
+
+        let msg = "Username not found"; // Default message
 
         // Run the query to fetch ID based on the username
         const resultSet = await poolConnection.request()
@@ -174,19 +190,29 @@ async function connectAndQueryUsername(username, msg) {
     } 
 }
 
-async function connectAndQueryPassword(username) {
+async function connectAndQueryPassword(password) {
     try {
-        var poolConnection = await sql.connect(config);
-        console.log("Connect for password check successfully")
+        let poolConnection = await sql.connect(config);
 
-        // Run the query to fetch password based on the username
+        let msg = "Password is incorrect"; // Default message
+
+        // Run the query to find if the password is correct
         const resultSet = await poolConnection.request()
-        .input('username', sql.VarChar, username) // avoid sql injections
-        .query(`SELECT password FROM Accounts WHERE username = @username`);
+            .input('password', sql.VarChar, password) // avoid sql injections
+            .query(`SELECT username FROM Accounts WHERE password COLLATE Latin1_General_BIN = @password`); // case-sensitive search
+            // don't need to check by username, because this is only called when a username is found
+            // therefore, if this function is run a password must either match or not
 
-
-
+        // Check if any record was found in the database
+        if (resultSet.recordset.length > 0) {
+            msg = "Password is correct"; // Username exists
+        } 
+        
+        poolConnection.close();
+        return msg;
+        
     } catch (err) {
         console.error(err.message);
-    }
+        return "Error checking username"; // Return a default error message in case of failure
+    } 
 }
