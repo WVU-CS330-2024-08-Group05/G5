@@ -1,19 +1,19 @@
 /*All Pages*/
     //dark mode
-if(Account.darkMode){
-    document.body.classList.toggle('dark-mode');
-}
+// if(Account.darkMode){
+//     document.body.classList.toggle('dark-mode');
+// }
 
 
-/*Account*/
-const darkModeToggle = document.getElementById('darkModeToggle');
+// /*Account*/
+// const darkModeToggle = document.getElementById('darkModeToggle');
 
-darkModeToggle.addEventListener('click', () => {
+// darkModeToggle.addEventListener('click', () => {
 
-    document.body.classList.toggle('dark-mode');
-    Account.changeBrowserMode();
+//     document.body.classList.toggle('dark-mode');
+//     Account.changeBrowserMode();
 
-});
+// });
 
 /*Home*/
 function generateResortCards(resorts) {
@@ -57,72 +57,63 @@ document.addEventListener('DOMContentLoaded', function() {
     loadResortData();
 });
 
-
-/*SignUp*/
+/* Sign Up */
 
 function signUp() {
-    let username = document.getElementById('username').value;
-    let password = document.getElementById('password').value;
-    let email = document.getElementById('email').value;
+    let username = $('#username').val();
+    let password = $('#password').val();
+    let email = $('#email').val();
 
-    let emailErrorDiv = document.getElementById('email-error');
-    let passwordErrorDiv = document.getElementById('password-error');
+    let emailErrorDiv = $('#email-error');
+    let passwordErrorDiv = $('#password-error');
 
     // Clear previous error messages
-    emailErrorDiv.innerHTML = "";
-    passwordErrorDiv.innerHTML = "";
+    emailErrorDiv.html("");
+    passwordErrorDiv.html("");
 
     // Validate email and password
-    // Assume it returns an error message if invalid, else ""
     let emailResult = isEmail(email);  
     let passwordErrorMessage = isStrongPassword(password);  
 
     let hasError = false;
 
     // Display email error if invalid
-    if (!emailResult.isValid) {
-        emailErrorDiv.innerHTML = emailResult;
+    if (emailResult) {
+        emailErrorDiv.html(emailResult);
         hasError = true;
     }
 
     // Display password error if invalid
     if (passwordErrorMessage) {
-        passwordErrorDiv.innerHTML = passwordErrorMessage;
+        passwordErrorDiv.html(passwordErrorMessage);
         hasError = true;
     }
 
     if (!hasError && username) {
-        // Redirect if no errors
-        window.location.href = 'home.html';
+        window.location.href = 'home.html';  // Redirect on success
     }
 }
 
+
 function isStrongPassword(password) {
     let error = "";
-    
     if (password.length < 8) {
         error += "Password needs to be more than 8 characters.<br>";
     }
-
     if (!/[A-Z]/.test(password)) {
         error += "Password needs to have a capital letter.<br>";
     }
-    
     return error;
 }
 
 function isEmail(email) {
     let error = "";
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-   
-    if(!emailRegex.test(email)){
-        error += "Must be a valid email.<br>"
+    if (!emailRegex.test(email)) {
+        error += "Must be a valid email.<br>";
     }
-    
     return error;
-
 }
-
 
 
 
