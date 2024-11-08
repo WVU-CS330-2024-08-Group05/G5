@@ -48,16 +48,20 @@ function generateSearchHtml(resorts, options) {
             distance = `<p>Distance: ${resort.distance} miles</p>`;
         }
         html = html.concat(
-            `<div class="resort-card">
+`<div class="resort-card">
     <h3>${resort.resort_name}</h3>
-    <img src=flags/Flag_of_${resort.state.replaceAll(' ', '_')}.svg alt="State Logo" class="resort-logo" height="120" width="120">
     <div class="resort-details">
+        <img src=flags/Flag_of_${resort.state.replaceAll(' ', '_')}.svg alt="State Logo" height="120" width="120">
         <div class="piechart">[['Difficulty', 'Acres'], ['Green', ${resort.green_acres}], ['Blue', ${resort.blue_acres}], ['Black', ${resort.black_acres}]]</div >
+        <div class="acreage-details">
         <p>Green Acres: ${resort.green_acres}<p>
         <p>Blue Acres: ${resort.blue_acres}<p>
         <p>Black Acres: ${resort.black_acres}<p>
         <p>Total Acres: ${resort.acres}<p>
+        </div>
+        <div class="other-resort-details">
         ${distance}
+        </div>
     </div>
     <div class="resort-rating">
         <p>Rating</p>

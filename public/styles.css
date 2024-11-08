@@ -110,62 +110,6 @@ input[type="search"]::-webkit-search-cancel-button {
     cursor: pointer;
 }
 
-.resort-list {
-    max-height: 70vh;
-    overflow-y: auto;
-    padding: 20px;
-}
-
-.resort-card {
-    display: flex;
-    margin: auto;
-    align-items: center;
-    background-color: white;
-    padding: 20px;
-    width: 1000px;
-    height: 500px;
-    margin-bottom: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.resort-logo img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    margin-right: 20px;
-}
-
-.resort-details {
-    flex-grow: 1;
-}
-
-.resort-details a {
-    color: black;
-    text-decoration: none;
-}
-
-.resort-details a:hover {
-    color: #007bff;
-}
-
-.resort-details h2 {
-    font-size: 1.5em;
-    margin-bottom: 10px;
-}
-
-.resort-details p {
-    color: #555;
-}
-
-.resort-rating {
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    text-align: center;
-    border-radius: 8px;
-    font-size: 1.2em;
-}
-
 /*Nav Buttons When hovered on*/
 .skilogger-button:hover {
     background-color: darkblue;
@@ -197,4 +141,73 @@ input[type="search"]::-webkit-search-cancel-button {
 
 #return-home:hover{
     background-color:darkblue;
+}
+
+/* Search */
+
+.resort-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 2px solid #ddd;
+    padding: 6px 6px;
+    width: 90%;
+    background-color: white;
+    font-family: Arial, sans-serif;
+}
+
+    .resort-card h3 {
+        font-size: 1em;
+        color: black;
+        margin: 0 0 4px;
+    }
+
+    .resort-card img {
+        padding: 0px 0px 0px 0px;
+    }
+
+.resort-details {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    color: #222;
+    font-size: 0.9em;
+    font-weight: 600;
+}
+
+.piechart {
+    padding: 0px 40px 0px 40px;
+}
+
+.acreage-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    padding:10px 20px 5px 50px;
+}
+
+.other-resort-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: right;
+    padding: 10px 20px 5px 10px;
+}
+
+.resort-rating {
+    padding: 6px;
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    border-radius: 8px;
+}
+
+#search-results {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
 }
