@@ -36,24 +36,25 @@ const config = {
 }
 
 console.log("Starting...");
-connectAndQuery();
+// connectTest();
 
-/** 
- * Query top row to test connection
-*/
+// /** 
+//  * Query to test connection
+// */
 
-async function connectAndQuery() {
-    try {
-        var poolConnection = await sql.connect(config);
+// async function connectTest() {
+//     try {
+//         var poolConnection = await sql.connect(config);
 
-        console.log("Connected Successfully");
+//         console.log("Connected Successfully");
 
-        // close connection only when we're certain application is finished
-        poolConnection.close();
-    } catch (err) {
-        console.error(err.message);
-    }
-}
+//         // close connection only when we're certain application is finished
+//         poolConnection.close();
+//     } catch (err) {
+//         console.error(err.message);
+//     }
+// }
+
 
 /**
  * Search functionality
@@ -132,4 +133,60 @@ function filterByDistance(trips, location, range) {
         }
     }
     return new_resorts;
+}
+
+
+/**  Login Functionality 
+ * 
+ * check if username is in database, then check if password matches
+*/
+
+app.get('/logging-in.html', async function (req, res) {
+    let msg = "Username not found"; // Default message
+    
+    let username_exists = await connectAndQueryUsername(req.query.username, msg);
+    
+    res.send(username_exists);
+});
+
+
+async function connectAndQueryUsername(username, msg) {
+    try {
+        let poolConnection = await sql.connect(config);
+        console.log("Connected for username check successfully");
+
+        // Run the query to fetch ID based on the username
+        const resultSet = await poolConnection.request()
+            .input('username', sql.VarChar, username) // Avoid SQL injections
+            .query(`SELECT id FROM Accounts WHERE username COLLATE Latin1_General_BIN = @username`); // case-sensitive search
+
+        // Check if any record was found in the database
+        if (resultSet.recordset.length > 0) {
+            msg = "User found"; // Username exists
+        } 
+        
+        poolConnection.close();
+        return msg;
+        
+    } catch (err) {
+        console.error(err.message);
+        return "Error checking username"; // Return a default error message in case of failure
+    } 
+}
+
+async function connectAndQueryPassword(username) {
+    try {
+        var poolConnection = await sql.connect(config);
+        console.log("Connect for password check successfully")
+
+        // Run the query to fetch password based on the username
+        const resultSet = await poolConnection.request()
+        .input('username', sql.VarChar, username) // avoid sql injections
+        .query(`SELECT password FROM Accounts WHERE username = @username`);
+
+
+
+    } catch (err) {
+        console.error(err.message);
+    }
 }
