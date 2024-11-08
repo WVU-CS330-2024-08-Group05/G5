@@ -5,6 +5,7 @@
 const express = require('express');
 const path = require('path');
 const app = express();
+const sql = require('mssql');
 const RESORTS = require('./resortdata.json');
 const NodeGeolocation = require('nodejs-geolocation').default;
 const geo = new NodeGeolocation('App');
@@ -15,6 +16,44 @@ app.use(express.static('public'));
 app.listen(8080, function () {
     console.log('Listening on port 8080...');
 });
+
+
+
+/**
+ * Connect to Database
+ */
+const config = {
+    user: "cs330admin", // better stored in an app setting such as process.env.DB_USER
+    password: "cs330Pass!", // better stored in an app setting such as process.env.DB_PASSWORD
+    server: "cs3305.database.windows.net", // better stored in an app setting such as process.env.DB_SERVER
+    database: "CS_330_5", // better stored in an app setting such as process.env.DB_NAME
+    authentication: {
+        type: 'default'
+    },
+    options: {
+        encrypt: true
+    }
+}
+
+console.log("Starting...");
+connectAndQuery();
+
+/** 
+ * Query top row to test connection
+*/
+
+async function connectAndQuery() {
+    try {
+        var poolConnection = await sql.connect(config);
+
+        console.log("Connected Successfully");
+
+        // close connection only when we're certain application is finished
+        poolConnection.close();
+    } catch (err) {
+        console.error(err.message);
+    }
+}
 
 /**
  * Search functionality
