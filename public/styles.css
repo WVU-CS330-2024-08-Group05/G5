@@ -205,6 +205,154 @@ input[type="search"]::-webkit-search-cancel-button {
     border-radius: 8px;
 }
 
+#return-home:hover{
+    background-color:darkblue;
+}
+
+
+/*All for sk-logger*/
+
+.ski-logger header {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.ski-logger .search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.ski-logger .search-bar {
+    width: 60%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px 0 0 4px;
+    outline: none;
+}
+
+.ski-logger #hoursSpent-text {
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ski-logger .container {
+    display: flex;
+    height: 80vh;
+}
+
+.ski-logger .search-button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 0 4px 4px 0;
+    font-weight: bold;
+}
+
+.ski-logger input[type="search"]::-webkit-search-cancel-button {
+    cursor: pointer;
+}
+
+.ski-logger #return-home {
+    margin-left: 3%;
+    font-weight: bold;
+    border-radius: 4px;
+    font-size: 14px;
+    padding: 10px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    width: 150px;
+    text-decoration: none;
+    text-align: center;
+}
+
+.ski-logger .left {
+    width: 65%;
+    margin-right: 5%;
+    display: flex;
+    flex-direction: column;
+}
+
+.ski-logger .right {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    margin-right: 2%;
+}
+/*changes the font and the color of the web page background*/
+.ski-logger body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+}
+
+
+/*changes the totalHours input box to a different color and size*/
+.ski-logger #totalHours {
+    width: 150px;
+    height: 50px;
+    font-size: 25px;
+    padding: 10px;
+    border: 2px solid red;
+    border-radius: 8px;
+    background-color: whitesmoke;
+    text-align: center;
+}
+
+/*adds a glow around the box when totalHours is clicked on*/
+.ski-logger #totalHours:focus {
+    border-color: red;
+    box-shadow: 0 0 10px red;
+    outline: none;
+}
+
+.ski-logger #SkiTripList {
+    list-style: none;
+    padding-left: 0;
+}
+
+.ski-logger #SkiTripList li {
+    background-color: #fff;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.ski-logger #SkiTripList li:hover {
+    background-color: #f0f8ff;
+}
+
+.ski-logger #SkiingLeaderboard {
+    list-style: decimal;
+    padding-left: 20px;
+}
+
+.ski-logger #SkiingLeaderboard {
+    list-style: decimal;
+    padding-left: 20px;
+}
+
+.ski-logger #SkiingLeaderboard li {
+    //padding: 8px 0;
+    background-color: #fff;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.ski-logger #SkiingLeaderboard li:hover {
+    background-color: #f0f8ff;
+}
 #search-results {
     display: flex;
     flex-direction: column;
