@@ -6,6 +6,7 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const sql = require('mssql');
+const bcrypt = require('bcrypt');
 const RESORTS = require('./resortdata.json');
 const NodeGeolocation = require('nodejs-geolocation').default;
 const geo = new NodeGeolocation('App');
@@ -155,7 +156,7 @@ app.post('/logging-in.html', async function (req, res) {
     msg = username_exists;
 
     if(username_exists === "User found") {
-        password_matches = await connectAndQueryPassword(password);
+        password_matches = await connectAndQueryPassword(username, password);
         msg = password_matches;
     }
 
@@ -190,7 +191,7 @@ async function connectAndQueryUsername(username) {
     } 
 }
 
-async function connectAndQueryPassword(password) {
+async function connectAndQueryPassword(username, password) {
     try {
         let poolConnection = await sql.connect(config);
 
@@ -198,16 +199,20 @@ async function connectAndQueryPassword(password) {
 
         // Run the query to find if the password is correct
         const resultSet = await poolConnection.request()
-            .input('password', sql.VarChar, password) // avoid sql injections
-            .query(`SELECT username FROM Accounts WHERE password COLLATE Latin1_General_BIN = @password`); // case-sensitive search
-            // don't need to check by username, because this is only called when a username is found
-            // therefore, if this function is run a password must either match or not
-
+            .input('username', sql.VarChar, username) // Avoid SQL injections
+            .query(`SELECT password AS hash FROM Accounts WHERE username COLLATE Latin1_General_BIN = @username`); // Case-sensitive search
+    
         // Check if any record was found in the database
         if (resultSet.recordset.length > 0) {
-            msg = "Password is correct"; // Username exists
-        } 
-        
+            let hash = resultSet.recordset[0].hash;
+
+            // Compare password with the hashed password
+            const isMatch = await bcrypt.compare(password, hash);
+            if (isMatch) {
+                msg = "Password is correct";
+            }
+        }
+
         poolConnection.close();
         return msg;
         
@@ -215,4 +220,74 @@ async function connectAndQueryPassword(password) {
         console.error(err.message);
         return "Error checking username"; // Return a default error message in case of failure
     } 
+}
+
+/**
+ * Sign Up functionality
+ */
+
+app.post("/signing-up.html", async function (req, res) {
+   
+    let msg = "";
+
+    let username = req.body.username;
+    let password = req.body.password;
+    let email = req.body.email;
+
+
+    // check if username is already taken
+    let username_exists = await connectAndQueryUsername(username);
+    if(username_exists === "User found") {
+        msg = "Username taken."
+    } 
+    // if username not taken, proceed with creating account
+    else {
+    
+        const saltRounds = 10;
+        bcrypt.genSalt(saltRounds, function(err, salt) {
+            bcrypt.hash(password, salt, function(err, hash) {
+                
+                msg = connectAndInsertAccount(username, hash, email);
+                
+                // error handling
+                if(err) {
+                    console.error(err);
+                }
+            });
+            // error handling
+            if(err) {
+                console.error(err);
+            }
+        });
+
+    }
+    
+
+    res.send(msg);
+});
+
+async function connectAndInsertAccount(username, hashedPassword, email) {
+    try {
+        let poolConnection = await sql.connect(config);
+
+        let msg = "Account creation failed" // default msg
+
+        // Run the query to insert new account
+        const resultSet = await poolConnection.request()
+        .input('username', sql.VarChar, username)
+        .input('hashedPassword', sql.VarChar, hashedPassword)
+        .input('email', sql.VarChar, email)
+        .query(`INSERT INTO Accounts (username, password, email, settings, pinned_resorts, trips)
+                VALUES (@username, @hashedPassword, @email, NULL, NULL, NULL)`);
+        
+        // checking if an insert was made
+        if (resultSet.rowsAffected[0] > 0) {
+            msg = "Account created successfully"
+        }
+
+        poolConnection.close();
+        return msg;
+    } catch (err) {
+        console.error(err)
+    }
 }
