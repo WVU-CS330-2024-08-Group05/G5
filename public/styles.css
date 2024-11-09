@@ -350,7 +350,7 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 
 .ski-logger #SkiingLeaderboard li {
-    //padding: 8px 0;
+    padding: 8px 0;
     background-color: #fff;
     padding: 10px;
     margin-bottom: 5px;

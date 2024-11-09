@@ -40,7 +40,7 @@ $(function () {
             if (usernameAvailable) {
                 // Update the DOM and redirect
                 setTimeout(() => {
-                    window.location.href = 'index.html';
+                    window.location.href = 'home.html';
                 }, 100);
             }
         }
