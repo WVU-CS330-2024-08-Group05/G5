@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="jquery.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="search.js"></script>
+</head>
+<body class="home-page">
+    <header>
+        <div class="nav-buttons">
+            <a href="account.html" class="account-button">Account</a>
+            <a href="skilogger.html" class="skilogger-button">Ski Logger</a>
+        </div>
+        <div class="search-container">
+            <input  type="search" placeholder="Search For Specific Resort or Location" id="search-bar" class="search-bar">
+            <button id="search-button" class="search-button">Search</button>
+            <label for="range">Within </label>
+            <select name="range" id="range">
+                <option value="25000">any range</option>
+                <option value="50">50 miles</option>
+                <option value="100">100 miles</option>
+                <option value="200">200 miles</option>
+            </select>
+        </div>
+    </header>
+
+    <div id="main"></div>
+    <div id="search-results" hidden></div>
+</body>
+</html>

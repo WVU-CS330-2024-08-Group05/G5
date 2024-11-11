@@ -50,7 +50,7 @@ $(function () {
             
                     // Now redirect after the DOM is updated
                     setTimeout(() => {
-                        window.location.href = 'home.html';
+                        window.location.href = 'index.html';
                     }, 100); // Delay redirection slightly to ensure the DOM is updated
                 }
 

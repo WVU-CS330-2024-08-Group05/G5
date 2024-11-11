@@ -14,9 +14,6 @@ const geo = new NodeGeolocation('App');
 // serve files from root dir
 app.use(express.static('public'));
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'login.html'));
-});
 
 app.listen(8080, function () {
     console.log('Listening on port 8080...');
