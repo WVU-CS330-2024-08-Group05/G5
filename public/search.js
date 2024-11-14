@@ -1,16 +1,18 @@
 const baseUrl = 'http://localhost:8080';
 
 // Search functionality
-console.log('search funcitonality...');
+console.log('search functionality...');
 $(function () {
     console.log('ready...');
 
-    $('#search-button').on('click', async function () {
+    // Common function to handle the search
+    async function performSearch() {
         // Get search bar value
         let search = $('#search-bar').val();
-        // Create url for /search.html
+        // Create URL for /search.html
         let url = new URL('./search.html', baseUrl);
         if (search) url.searchParams.append('search', search);
+        
         // Handle location and range parameters
         if ("geolocation" in navigator) {
             console.log('Getting location...');
@@ -27,6 +29,7 @@ $(function () {
                 console.error('Error getting location:', error);
             }
         }
+
         // Hide main, show search-results
         $('#main').hide();
         // Fetch search results
@@ -38,15 +41,26 @@ $(function () {
                 $('#search-results').show();
             })
             .then(drawCharts);
+    }
+
+    // Listen for button click
+    $('#search-button').on('click', performSearch);
+
+    // Listen for Enter key press in the search bar
+    $('#search-bar').on('keypress', function (e) {
+        if (e.which === 13) { // 13 is the Enter key code
+            e.preventDefault(); // Prevent form submission if inside a form
+            performSearch();    // Call the search function
+        }
     });
 
     // Cancel button
     $('#search-cancel').on('click', function () {
-            $('#main').show();
-            $('#search-results').hide();
-        });
-
+        $('#main').show();
+        $('#search-results').hide();
+    });
 });
+
 
 // Pie chart
 // Load google charts

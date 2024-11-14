@@ -90,7 +90,7 @@ function signUp() {
     }
 
     if (!hasError && username) {
-        window.location.href = 'home.html';  // Redirect on success
+        window.location.href = 'index.html';  // Redirect on success
     }
 }
 

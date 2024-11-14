@@ -14,6 +14,7 @@ const geo = new NodeGeolocation('App');
 // serve files from root dir
 app.use(express.static('public'));
 
+
 app.listen(8080, function () {
     console.log('Listening on port 8080...');
 });
@@ -37,26 +38,6 @@ const config = {
         encrypt: true
     }
 }
-
-console.log("Starting...");
-// connectTest();
-
-// /** 
-//  * Query to test connection
-// */
-
-// async function connectTest() {
-//     try {
-//         var poolConnection = await sql.connect(config);
-
-//         console.log("Connected Successfully");
-
-//         // close connection only when we're certain application is finished
-//         poolConnection.close();
-//     } catch (err) {
-//         console.error(err.message);
-//     }
-// }
 
 
 /**
