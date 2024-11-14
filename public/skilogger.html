@@ -67,17 +67,16 @@
 </html>
 
 <script>
-    let trips = 0;
-    let totalHours = 0;
-
+    let trips = 0; // take value from account data in database
+    let totalHours = 0; // take value from account data in database
     document.getElementById('hourSubmit').addEventListener("click", function () {
         // Adds hours to total
-        let newHours = parseFloat(document.getElementById('Hours').value) || 0;
-        //let totalHours = parseFloat(document.getElementById('totalHours').value) || 0;
+
+        let newHours = parseFloat($("#Hours").val());
         totalHours += newHours;
-        document.getElementById('totalHours').value = totalHours;
-        document.getElementById('total-hours').innerText = ("Total Hours: " + totalHours);
-        document.getElementById('Hours').value = 0;
+        $("#totalHours").value = totalHours;
+        $("#totalHours").innerText = ("Total Hours: " + totalHours);
+        $("#Hours").value = 0;
 
         // Adds new Ski Trip to list which will be posted on right
         // hand side of the web page
@@ -90,11 +89,4 @@
         trips += 1;
         document.getElementById('total-trips').textContent = ("Total Trips: " + trips);
     });
-    //document.addEventListener('DOMContentLoaded', function () {
-    //    //set user info
-
-    //    document.getElementById('rank').textContent = ("Global Rank: " + 1);
-    //    document.getElementById('total-hours').textContent = ("Total Hours: " + 0); 
-    //    document.getElementById('total-trips').textContent = ("Total Trips: " + trips);
-    //});
 </script>
