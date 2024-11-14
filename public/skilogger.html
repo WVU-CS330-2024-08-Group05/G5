@@ -6,9 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="styles.css">
     <script src="jquery.js"></script>
+    <script src="hoursLogged.js"></script>
     <script src="search.js"></script>
     <script src="script.js"></script>
-]</head>
+</head>
 
 <body>
     <input type="hidden" id="totalHours" name="totalHours" value=0 readonly>
@@ -22,28 +23,18 @@
         <div class="container" id="main">
             <div class="left">
                 <div id="Account-info">
-                    <h1  id="account-username">(Username)</h1>
+                    <h1>
+                        (Username)
+                    </h1>
                     <div id="HoursSpent-Text">
                         <p id="total-trips">Total Trips: </p>
                         <p id="total-hours">Total Hours: </p>
                         <p id="rank">Global Rank: </p>
                     </div>
                 </div>
-
                 <input type="number" id="Hours" name="Hours" placeholder="Log Hours:">
                 <input type="text" id="Resort" name="Resort" placeholder="Enter Name of Resort:">
-                <input type="date" id="Date" name="Date" placeholder="Enter Date:">
-
-                <div>
-                    <div class="star-buttons">
-                        <button  onclick="setRating(1)">&#9733;</button>
-                        <button  onclick="setRating(2)">&#9733;</button>
-                        <button  onclick="setRating(3)">&#9733;</button>
-                        <button onclick="setRating(4)">&#9733;</button>
-                        <button onclick="setRating(5)">&#9733;</button>
-                    </div>
-                </div>
-
+                <input type="date" id="Date" name="Date" placeholder="Enter Date:" />
                 <button type="button" id="hourSubmit">submit</button>
             </div>
 
@@ -60,7 +51,7 @@
                     </h2>
                     <ol id="SkiingLeaderboard">
                         <li>First Place</li>
-                        <li>Second Place</li>
+                        <li>Second PLace</li>
                         <li>Third Place</li>
                         <li>Fourth Place</li>
                         <li>Fifth Place</li>
@@ -69,21 +60,24 @@
                 </div>
             </div>
         </div>
+
+    <div id="search-results" hidden></div>
 </body>
 
 </html>
 
 <script>
-    let trips = 0; // take value from account data in database
-    let totalHours = 0; // take value from account data in database
+    let trips = 0;
+    let totalHours = 0;
+
     document.getElementById('hourSubmit').addEventListener("click", function () {
         // Adds hours to total
-
-        let newHours = parseFloat($("#Hours").val());
+        let newHours = parseFloat(document.getElementById('Hours').value) || 0;
+        //let totalHours = parseFloat(document.getElementById('totalHours').value) || 0;
         totalHours += newHours;
-        $("#totalHours").value = totalHours;
-        $("#totalHours").innerText = ("Total Hours: " + totalHours);
-        $("#Hours").value = 0;
+        document.getElementById('totalHours').value = totalHours;
+        document.getElementById('total-hours').innerText = ("Total Hours: " + totalHours);
+        document.getElementById('Hours').value = 0;
 
         // Adds new Ski Trip to list which will be posted on right
         // hand side of the web page
@@ -96,4 +90,11 @@
         trips += 1;
         document.getElementById('total-trips').textContent = ("Total Trips: " + trips);
     });
+    //document.addEventListener('DOMContentLoaded', function () {
+    //    //set user info
+
+    //    document.getElementById('rank').textContent = ("Global Rank: " + 1);
+    //    document.getElementById('total-hours').textContent = ("Total Hours: " + 0); 
+    //    document.getElementById('total-trips').textContent = ("Total Trips: " + trips);
+    //});
 </script>
