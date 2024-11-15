@@ -54,13 +54,21 @@ $(function () {
         }
     });
 
+    $('#search-bar').on('input', function () {
+        if ($(this).val() === '') {
+            console.log("Clearing search results");
+            $('#main').show();
+            $('#search-results').hide();
+            $('#search-results').html('');
+        }
+    })
+
     // Cancel button
     $('#search-cancel').on('click', function () {
         $('#main').show();
         $('#search-results').hide();
     });
 });
-
 
 // Pie chart
 // Load google charts
