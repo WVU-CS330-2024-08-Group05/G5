@@ -54,14 +54,19 @@ $(function () {
     });
     
     // Clear search
+    let previousValue = '';
     $('#search-bar').on('input', function () {
-        if ($(this).val() === '') {
-            console.log("Clearing search results");
+        performSearch();
+        const currentValue = $(this).val();
+        if (currentValue === '' && previousValue !== '') {
+            console.log('Clear button clicked!');
+            // Clear search results when clear button is clicked
             $('#main').show();
             $('#search-results').hide();
             $('#search-results').html('');
         }
-    })
+        previousValue = currentValue; // Update the previous value
+    });
 });
 
 // Pie chart
