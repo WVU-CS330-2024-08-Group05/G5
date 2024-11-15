@@ -59,7 +59,7 @@ $(function () {
         $('#search-bar').on('input', function () {
             // Performs search as you give input
             
-            if (currentValue !== '') {
+            if (previousValue !== '') {
                 performSearch();
             }
             const currentValue = $(this).val();
