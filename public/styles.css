@@ -60,7 +60,7 @@ header {
     align-content: center;
 }
 
-.to-login-button {
+.home-page .login-button {
     margin-right: 5px;
     font-weight: bold;
     border-radius: 4px;
@@ -73,7 +73,7 @@ header {
     text-decoration: none;
 }
 
-.to-signup-button {
+.home-page .signup-button {
     margin-right: 5px;
     font-weight: bold;
     border-radius: 4px;
