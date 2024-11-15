@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snowhere you're going map</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <!-- Esri Leaflet JavaScript -->
+    <script src="https://unpkg.com/esri-leaflet@3.0.5/dist/esri-leaflet.js"></script>
+</head>
+
+<body>
+    <h1>Snowhere you're going - Raster Data Visualization</h1>
+    <div id="map" style="width: 100%; height: 600px;"></div>
+
+    <script>
+        // Initialize the map and set its view to the USA
+        var map = L.map('map').setView([39.8283, -98.5795], 4);
+
+        // Add map base layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '� OpenStreetMap'
+        }).addTo(map);
+
+        // Add USDA Cropland Data Layer from ImageServer
+        var imageLayer = L.esri.imageMapLayer({
+            url: 'https://planetarycomputer.microsoft.com/api/stac/v1/collections/modis-10A1-061',
+            opacity: 0.75 // Adjust the transparency for better visibility
+        }).addTo(map);
+    </script>
+</body>
+
+</html>

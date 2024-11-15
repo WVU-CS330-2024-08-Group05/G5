@@ -47,7 +47,11 @@ $(function () {
                     // Update the DOM first
                     usernameErrorDiv.html(""); 
                     passwordErrorDiv.html("");
-            
+                    
+                    // Update sessionStorage to indicate a logged-in user (not a guest)
+                    sessionStorage.setItem("isGuest", "false");
+                    console.log(sessionStorage.getItem("isGuest"));
+    
                     // Now redirect after the DOM is updated
                     setTimeout(() => {
                         window.location.href = 'index.html';
