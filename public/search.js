@@ -29,7 +29,6 @@ $(function () {
                 console.error('Error getting location:', error);
             }
         }
-
         // Hide main, show search-results
         $('#main').hide();
         // Fetch search results
@@ -42,7 +41,7 @@ $(function () {
             })
             .then(drawCharts);
     }
-
+    performSearch();
     // Listen for button click
     $('#search-button').on('click', performSearch);
 
@@ -53,14 +52,17 @@ $(function () {
             performSearch();    // Call the search function
         }
     });
-
-    // Cancel button
-    $('#search-cancel').on('click', function () {
-        $('#main').show();
-        $('#search-results').hide();
-    });
+    
+    // Clear search
+    $('#search-bar').on('input', function () {
+        if ($(this).val() === '') {
+            console.log("Clearing search results");
+            $('#main').show();
+            $('#search-results').hide();
+            $('#search-results').html('');
+        }
+    })
 });
-
 
 // Pie chart
 // Load google charts
