@@ -35,6 +35,13 @@
                 <input type="number" id="Hours" name="Hours" placeholder="Log Hours:">
                 <input type="text" id="Resort" name="Resort" placeholder="Enter Name of Resort:">
                 <input type="date" id="Date" name="Date" placeholder="Enter Date:" />
+                <div class="rating">
+                    <input type="radio" name="rating" id="1-star" value="1"/>
+                    <input type="radio" name="rating" id="2-star" value="2"/>
+                    <input type="radio" name="rating" id="3-star" value="3"/>
+                    <input type="radio" name="rating" id="4-star" value="4"/>
+                    <input type="radio" name="rating" id="5-star" value="5"/>
+                </div>
                 <button type="button" id="hourSubmit">submit</button>
             </div>
 
@@ -77,13 +84,14 @@
         $("#totalHours").value = totalHours;
         $("#totalHours").innerText = ("Total Hours: " + totalHours);
         $("#Hours").value = 0;
+        //let rating = document.getElementsByName('rating').value;
 
         // Adds new Ski Trip to list which will be posted on right
         // hand side of the web page
         let resort = document.getElementById('Resort').value;
         let date = document.getElementById('Date').value;
         let listItem = document.createElement('li');
-        listItem.textContent = ("Trip to " + resort + " on " + date + ", for " + newHours + " hours");
+        listItem.textContent = ("Trip to " + resort + " on " + date + ", for " + newHours + " hours\n");// + "Rating: " + rating + " stars");
         document.getElementById('SkiTripList').append(listItem);
         // update user Info
         trips += 1;
