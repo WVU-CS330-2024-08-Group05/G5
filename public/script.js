@@ -1,3 +1,5 @@
+
+
 /*All Pages*/
     //dark mode
 // if(Account.darkMode){
@@ -14,6 +16,10 @@
 //     Account.changeBrowserMode();
 
 // });
+
+
+
+
 
 /*Home*/
 function generateResortCards(resorts) {
