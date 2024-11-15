@@ -24,12 +24,12 @@
         // Add map base layer
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
-            attribution: '© OpenStreetMap'
+            attribution: 'ï¿½ OpenStreetMap'
         }).addTo(map);
 
         // Add USDA Cropland Data Layer from ImageServer
         var imageLayer = L.esri.imageMapLayer({
-            url: '',
+            url: 'https://planetarycomputer.microsoft.com/api/stac/v1/collections/modis-10A1-061',
             opacity: 0.75 // Adjust the transparency for better visibility
         }).addTo(map);
     </script>
