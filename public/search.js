@@ -29,7 +29,6 @@ $(function () {
                 console.error('Error getting location:', error);
             }
         }
-
         // Hide main, show search-results
         $('#main').hide();
         // Fetch search results
@@ -42,7 +41,7 @@ $(function () {
             })
             .then(drawCharts);
     }
-
+    performSearch();
     // Listen for button click
     $('#search-button').on('click', performSearch);
 
@@ -53,7 +52,8 @@ $(function () {
             performSearch();    // Call the search function
         }
     });
-
+    
+    // Clear search
     $('#search-bar').on('input', function () {
         if ($(this).val() === '') {
             console.log("Clearing search results");
@@ -62,12 +62,6 @@ $(function () {
             $('#search-results').html('');
         }
     })
-
-    // Cancel button
-    $('#search-cancel').on('click', function () {
-        $('#main').show();
-        $('#search-results').hide();
-    });
 });
 
 // Pie chart
