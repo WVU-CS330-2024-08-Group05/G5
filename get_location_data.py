@@ -31,21 +31,21 @@ MAX_POINTS = 50000  # Maximum number of points to process
 
 
 
-def main(date):
+def main(coords):
     """
-    Main function to fetch and print data for a given date.
+    Main function to fetch and print weather data for given location in json.
     
     Args:
-        date (str): The date in YYYY-MM-DD format.
+        coords (string) coordinates in form (x.xx,x.xx)
     """
-    print(f"Starting data retrieval for date: {date}", file=sys.stderr)
-    data = get_temperature_data(date)
+    print(f"Starting data retrieval for coordinates: {coords}", file=sys.stderr)
+    data = get_location_data(coords)
     print(json.dumps(data))  # Only output JSON data to stdout
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python get_temperature_data.py <date>", file=sys.stderr)
+        print("Usage: python get_location_data.py <date>", file=sys.stderr)
         sys.exit(1)
 
-    input_date = sys.argv[1]
-    main(input_date)
+    coords = sys.argv[1]
+    main(coords)
