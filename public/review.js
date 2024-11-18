@@ -6,13 +6,17 @@ class Review {
     #username;
     #date;
     #hours;
+    #resort
 
-    constructor(stars, username, date, hours) {
+    constructor(stars, username, date, hours, resort) {
         this.stars = stars;
         this.username = username;
         this.date = date;
         this.hours = hours;
     };
+    set resort(resort) {
+        this.resort = resort;
+    }
 
     set stars(stars) {
         this.stars = stars;
@@ -29,7 +33,9 @@ class Review {
     set hours(hours) {
         this.hours = hours;
     }
-
+    get resort() {
+        return resort;
+    }
     get hours() {
         return hours;
     }
