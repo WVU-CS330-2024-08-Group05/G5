@@ -121,12 +121,6 @@ function isEmail(email) {
     return error;
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    //set user info
-    document.getElementById('rank').textContent = ("Global Rank: " + 1);
-    document.getElementById('total-hours').textContent = ("Total Hours: " + 0);
-    document.getElementById('total-trips').textContent = ("Total Trips: " + trips);
-});
 
 // Search functionality
 //$('#searchButton').on('click', function (event) {
