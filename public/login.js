@@ -50,7 +50,9 @@ $(function () {
                     
                     // Update sessionStorage to indicate a logged-in user (not a guest)
                     sessionStorage.setItem("isGuest", "false");
-                    console.log(sessionStorage.getItem("isGuest"));
+
+                    console.log(username);
+                    sessionStorage.setItem("username", username);
     
                     // Now redirect after the DOM is updated
                     setTimeout(() => {

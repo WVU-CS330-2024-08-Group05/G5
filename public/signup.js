@@ -38,6 +38,12 @@ $(function () {
         if (!hasError) {
             const usernameAvailable = await usernameExists(username, password, email);
             if (usernameAvailable) {
+                
+                // Update sessionStorage to indicate a logged-in user (not a guest)
+                sessionStorage.setItem("isGuest", "false");
+
+                sessionStorage.setItem("username", username);
+                
                 // Update the DOM and redirect
                 setTimeout(() => {
                     window.location.href = 'index.html';

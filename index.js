@@ -1,7 +1,7 @@
 /**
  * Server on http://localhost:8080
  */
-
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const app = express();
@@ -23,21 +23,20 @@ app.listen(8080, function () {
 app.use(express.json());
 
 
+
 /**
  * Connect to Database
  */
 const config = {
-    user: "cs330admin", // better stored in an app setting such as process.env.DB_USER
-    password: "cs330Pass!", // better stored in an app setting such as process.env.DB_PASSWORD
-    server: "cs3305.database.windows.net", // better stored in an app setting such as process.env.DB_SERVER
-    database: "CS_330_5", // better stored in an app setting such as process.env.DB_NAME
-    authentication: {
-        type: 'default'
-    },
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    server: process.env.DB_SERVER,
+    database: process.env.DB_DATABASE,
     options: {
-        encrypt: true
-    }
-}
+        encrypt: true, // Enables encryption for Azure SQL
+        enableArithAbort: true,
+  },
+};
 
 
 /**
