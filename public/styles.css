@@ -227,6 +227,11 @@ input[type="search"]::-webkit-search-cancel-button {
         width: 100px;
     }
 
+    .resort-card th, .resort-card td {
+        text-align: center;
+        font: bold 12px arial;
+    }
+
 .resort-details {
     flex: 1;
     display: flex;

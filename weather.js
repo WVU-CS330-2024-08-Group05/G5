@@ -32,13 +32,19 @@ period format:
 
 async function get_resort_weather(resort) {
     console.log("Entering get_resort_weather...");
-    data = await fetch(`https://api.weather.gov/points/${resort.lat},${resort.lon}`);
+    let url = `https://api.weather.gov/points/${resort.lat},${resort.lon}`;
+    data = await fetch(url);
     if (!data.ok) {
+        console.log(url);
+        consol.log(data);
         throw new Error('Failed to fetch...');
     }
     data = await data.json();
-    let twelve_hour = await fetch(`${data.properties.forecast}`);
+    url = `${data.properties.forecast}`;
+    let twelve_hour = await fetch(url);
     if (!twelve_hour.ok) {
+        console.log(data);
+        console.log(url);
         throw new Error('Failed to fetch...');
     }
     twelve_hour = await twelve_hour.json();
@@ -62,5 +68,6 @@ async function get_resort_weather_hourly(resort) {
 }
 
 module.exports = {
-    get_resort_weather
+    get_resort_weather,
+    get_resort_weather_hourly
 };

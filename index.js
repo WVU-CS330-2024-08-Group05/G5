@@ -120,21 +120,22 @@ async function generateSearchHtml(resorts, options) {
 }
 
 function get_week_days() {
-    let weekDays = {
-        1: 'Monday',
-        2: 'Tuesday',
-        3: 'Wednesday',
-        4: 'Thursday',
-        5: 'Friday',
-        6: 'Saturday',
-        7: 'Sunday'
-    };
+    let weekDays = [
+        'Sunday',
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday'
+    ];
     let date = new Date();
     let day = date.getDay();
     let week_array = [];
-    for (i = 0; i < 6; ++i) {
+    for (i = 0; i < 7; ++i) {
         week_array.push(weekDays[(day + i) % 7]);
     }
+    week_array[0] = "Today";
     return week_array;
 }
 
