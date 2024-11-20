@@ -8,7 +8,7 @@
     <script src="jquery.js"></script>
     <script src="hoursLogged.js"></script>
     <script src="search.js"></script>
-    <script src="script.js"></script>
+    <script src="completedTrips.js"></script>
 </head>
 
 <body>
@@ -23,7 +23,7 @@
         <div class="container" id="main">
             <div class="left">
                 <div id="Account-info">
-                    <h1 id="username">
+                    <h1 id="username-written">
                         (Username)
                     </h1>
                     <div id="HoursSpent-Text">
@@ -63,10 +63,12 @@
                         <li>Fourth Place</li>
                         <li>Fifth Place</li>
                     </ol>
-
                 </div>
             </div>
         </div>
+
+        <!-- Test Button to fetch trips for Testingt -->
+        <button type="button" onclick=testGetAccountTrips()>Test Fetch Trips for 'Testingt'</button>
 
     <div id="search-results" hidden></div>
 </body>

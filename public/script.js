@@ -1,6 +1,6 @@
 /*Account*/
-// display account username on Account page
-if (window.location.pathname.endsWith('account.html') || window.location.pathname === '/') {
+// display account username on Account page and Skilogger page
+if (window.location.pathname.endsWith('skilogger.html') || window.location.pathname.endsWith('account.html') || window.location.pathname === '/') {
     window.addEventListener('pageshow', function () {
         accountUsername();
     });
@@ -8,8 +8,7 @@ if (window.location.pathname.endsWith('account.html') || window.location.pathnam
 
 function accountUsername(){
     const username = sessionStorage.getItem("username");
-    console.log(username);
-    document.getElementById("account-name-written").innerHTML = username;
+    document.getElementById("username-written").innerHTML = username;
 }
 
 // Dark mode
@@ -84,3 +83,5 @@ document.addEventListener('DOMContentLoaded', function() {
 //    let url = new URL('./search.html')
 //    fetch(url, function(reps)
 //})
+
+

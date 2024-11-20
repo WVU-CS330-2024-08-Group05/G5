@@ -1,8 +1,8 @@
 $(function () {
-    let trips = 0; // take value from account data in database
-    let username = "username"; // take value from account data
-    let rank = 1; // take value from account data in database
-    let totalHours = 0; // take value from account data in database
+    let trips = 0; // count the amount of 'trips' objects in the trips json stored in the database
+    let username = sessionStorage.getItem("username"); // localstorage for now until a better idea is thought of
+    let rank = 1; // take totalHours from all user once a cycle(we'll figure out time), and set ranks globally
+    let totalHours = 0; // total all the hours from trips in database
     if (localStorage.getItem('trips') !== null) {
         trips = JSON.parse(localStorage.getItem("trips"));
     }
@@ -12,12 +12,8 @@ $(function () {
     if (localStorage.getItem('rank') != null) {
         rank = localStorage.getItem('rank');
     }
-    if (localStorage.getItem('username') != null) {
-        username = localStorage.getItem('username');
-    }
     let rating = 0;
 
-    $("#username").textContent = username;
     document.getElementById('total-trips').textContent = ("Total Trips: " + trips);
     document.getElementById('total-hours').textContent = ("Total Hours: " + totalHours);
     document.getElementById('rank').textContent = ("Global Rank: " + rank);
@@ -30,6 +26,10 @@ $(function () {
         $("#totalHours").innerText = ("Total Hours: " + totalHours);
         $("#Hours").value = 0;
         //let rating = document.getElementsByName('rating').value;
+        // update user Info
+        trips += 1;
+        document.getElementById('total-trips').textContent = ("Total Trips: " + trips);
+        document.getElementById('total-hours').textContent = ("Total Hours: " + totalHours);
 
         // Adds new Ski Trip to list
         let resort = document.getElementById('Resort').value;
@@ -38,10 +38,7 @@ $(function () {
         listItem.textContent = ("Trip to " + resort + " on " + date + ", for " + newHours + " hours, " + "Rating: " + rating + " stars");
         document.getElementById('SkiTripList').append(listItem);
 
-        // update user Info
-        trips += 1;
-        document.getElementById('total-trips').textContent = ("Total Trips: " + trips);
-        document.getElementById('total-hours').textContent = ("Total Hours: " + totalHours);
+
         // send account data to database
         localStorage.setItem('trips', trips);
         localStorage.setItem('totalHours', totalHours);
