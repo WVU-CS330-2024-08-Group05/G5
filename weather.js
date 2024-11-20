@@ -34,13 +34,17 @@ async function getResortWeather(resort) {
     let url = `https://api.weather.gov/points/${resort.lat},${resort.lon}`;
     data = await fetch(url);
     if (!data.ok) {
-        throw new Error('Failed to fetch...');
+        console.log(resort);
+        console.log(data);
+        throw new Error(`Failed to fetch ${url}...`);
     }
     data = await data.json();
     url = `${data.properties.forecast}`;
     let twelve_hour = await fetch(url);
     if (!twelve_hour.ok) {
-        throw new Error('Failed to fetch...');
+        console.log(resort);
+        console.log(data);
+        throw new Error(`Failed to fetch ${url}...`);
     }
     twelve_hour = await twelve_hour.json();
 
