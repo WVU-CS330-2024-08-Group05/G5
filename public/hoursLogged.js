@@ -1,53 +1,59 @@
 $(function () {
-    let trips = 0; // count the amount of 'trips' objects in the trips json stored in the database
-    let username = sessionStorage.getItem("username"); // localstorage for now until a better idea is thought of
-    let rank = 1; // take totalHours from all user once a cycle(we'll figure out time), and set ranks globally
-    let totalHours = 0; // total all the hours from trips in database
-    if (localStorage.getItem('trips') !== null) {
-        trips = JSON.parse(localStorage.getItem("trips"));
-    }
-    if (localStorage.getItem('totalHours') != null) {
-        totalHours = JSON.parse(localStorage.getItem('totalHours'));
-    }
-    if (localStorage.getItem('rank') != null) {
-        rank = localStorage.getItem('rank');
-    }
-    let rating = 0;
+    let tripsCount = 0;
+    let username = sessionStorage.getItem("username");
+    let totalHours = 0;
+    let trips = [];
 
-    document.getElementById('total-trips').textContent = ("Total Trips: " + trips);
-    document.getElementById('total-hours').textContent = ("Total Hours: " + totalHours);
-    document.getElementById('rank').textContent = ("Global Rank: " + rank);
+    // Fetch trips for the user and update the UI on page load
+    $(document).ready(async function () {
+        const fetchedTrips = await Trip.getAccountTrips(username);
 
+        if (fetchedTrips && fetchedTrips.length > 0) {
+            trips = fetchedTrips;
+            tripsCount = trips.length;
+            totalHours = trips.reduce((sum, trip) => sum + trip.hours, 0);
+
+            document.getElementById('total-trips').textContent = `Total Trips: ${tripsCount}`;
+            document.getElementById('total-hours').textContent = `Total Hours: ${totalHours}`;
+
+            trips.forEach(trip => {
+                let listItem = document.createElement('li');
+                listItem.textContent = `Trip to ${trip.resort} on ${trip.date}, for ${trip.hours} hours, Rating: ${trip.rating} stars`;
+                document.getElementById('SkiTripList').append(listItem);
+            });
+        }
+    });
+
+    // Handle trip submission
     $('#hourSubmit').on('click', async function () {
+        const newHours = parseFloat($("#Hours").val());
+        const resort = $('#Resort').val();
+        const date = $('#Date').val();
+        const rating = $("input[name='rating']:checked").val();
 
-        let newHours = parseFloat($("#Hours").val());
+        if (!newHours || !resort || !date || !rating) {
+            alert('Please fill in all fields before submitting.');
+            return;
+        }
+
         totalHours += newHours;
-        $("#totalHours").value = totalHours;
-        $("#totalHours").innerText = ("Total Hours: " + totalHours);
-        $("#Hours").value = 0;
-        //let rating = document.getElementsByName('rating').value;
-        // update user Info
-        trips += 1;
-        document.getElementById('total-trips').textContent = ("Total Trips: " + trips);
-        document.getElementById('total-hours').textContent = ("Total Hours: " + totalHours);
+        $("#totalHours").text(`Total Hours: ${totalHours}`);
+        $("#Hours").val('');
 
-        // Adds new Ski Trip to list
-        let resort = document.getElementById('Resort').value;
-        let date = document.getElementById('Date').value;
+        // Create a new trip and add to the array
+        const newTrip = new Trip(resort, newHours, date, rating);
+        trips.push(newTrip);
+
+        tripsCount += 1;
+        document.getElementById('total-trips').textContent = `Total Trips: ${tripsCount}`;
+        document.getElementById('total-hours').textContent = `Total Hours: ${totalHours}`;
+
+        // Add trip to the UI
         let listItem = document.createElement('li');
-        listItem.textContent = ("Trip to " + resort + " on " + date + ", for " + newHours + " hours, " + "Rating: " + rating + " stars");
+        listItem.textContent = `Trip to ${resort} on ${date}, for ${newHours} hours, Rating: ${rating} stars`;
         document.getElementById('SkiTripList').append(listItem);
 
-
-        // send account data to database
-        localStorage.setItem('trips', trips);
-        localStorage.setItem('totalHours', totalHours);
+        // Store the trips in the database
+        await Trip.storeTripsInAccount(username, trips);
     });
-    $('input[name="rating"]').change(function () {
-        rating = $(this).val(); // Assign value to the variable
-        $('#output').text(`Selected Value: ${rating}`); // Update the text
-        console.log(`The selected value is: ${rating}`); // For debugging'
-    });
-
-
 });

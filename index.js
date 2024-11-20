@@ -309,24 +309,24 @@ async function connectAndInsertAccount(username, password, email) {
 
 
 /** Trips Functionality */
-app.post("/account-trips.html", async function (req, res) {
 
-    let msg = null; // json, NULL if not working, empty {} if empty 
+app.post("/account-trips.html", async function (req, res) {
+    let msg = null; // Default to no data
 
     const username = req.body.username;
     try {
         msg = await connectAndQueryTrips(username);
     } catch (err) {
         console.error(err.message);
-        msg = "Error signing up. Please try again later.";
+        msg = { error: "Error retrieving trips. Please try again later." }; // Send error as JSON
     }
 
-    res.json(msg);
+    res.json(msg); // Ensure response is always JSON
 });
 
 
 async function connectAndQueryTrips(username) {
-    let msg = null; // default to not working
+    let msg = null;
 
     const query = `SELECT trips FROM Accounts WHERE username COLLATE Latin1_General_BIN = @username`;
     const input = [{ name: 'username', type: sql.VarChar, value: username }];
@@ -335,15 +335,21 @@ async function connectAndQueryTrips(username) {
     if (resultSet.recordset && resultSet.recordset.length > 0) {
         const tripsString = resultSet.recordset[0].trips;
 
-        // parse trips if it's valid JSON
-        try {
-            const trips = JSON.parse(tripsString);
-            msg = trips; // assign parsed JSON to msg
-        } catch (error) {
-            console.error("Failed to parse JSON:", error);
+        // Ensure `tripsString` is valid JSON
+        if (tripsString) {
+            try {
+                const trips = JSON.parse(tripsString); // Parse JSON
+                msg = trips; // Assign parsed JSON to msg
+            } catch (error) {
+                console.error("Failed to parse JSON from database:", error);
+                msg = []; // Return empty array on parsing failure
+            }
+        } else {
+            msg = []; // Handle null or empty trips column
         }
+    } else {
+        msg = []; // No records found
     }
-
     return msg;
 }
 
@@ -351,7 +357,7 @@ async function connectAndQueryTrips(username) {
 app.post("/store-trips.html", async function (req, res) {
     let msg = "Storing account failed";  // Default error message
 
-    const username= req.body.username;
+    const username = req.body.username;
     const trips = req.body.trips; 
 
     if (!username || !trips) {
@@ -359,18 +365,8 @@ app.post("/store-trips.html", async function (req, res) {
         return res.send(msg);
     }
 
-    // SQL query to insert trips data into the trips table
-    const query = `INSERT INTO trips (username, trips) VALUES (@username, @trips)`;
-    
-    const input = [
-        { name: 'username', type: sql.VarChar, value: username },
-        { name: 'trips', type: sql.NVarChar, value: JSON.stringify(trips) }  // JSON data must be stringified
-    ];
-
     try {
-        // Execute the query
-        await executeQuery(query, input);
-        msg = 'Trips successfully stored';
+        msg = await connectAndUpdateTrips(username, trips);
     } catch (err) {
         console.error('Error storing trips:', err);
         msg = 'Failed to store trips in the database.';
@@ -380,6 +376,22 @@ app.post("/store-trips.html", async function (req, res) {
 });
 
 
+async function connectAndUpdateTrips(username, trips) {
+    const query = `UPDATE Accounts SET trips = @trips WHERE username = @username`;
+    const input = [
+        { name: 'username', type: sql.VarChar, value: username },
+        { name: 'trips', type: sql.NVarChar, value: typeof trips === 'string' ? trips : JSON.stringify(trips) } 
+        // Ensure trips is stringified only if it's not already a string
+    ];
+
+    try {
+        await executeQuery(query, input);
+        return 'Trips successfully stored';
+    } catch (err) {
+        console.error('Error in connectAndUpdateTrips:', err);
+        return 'Failed to update trips';
+    }
+}
 
 /** Query helper functions */
 

@@ -7,72 +7,32 @@
  */
 const urlBase = 'http://localhost:8080';
 
-let trips = []; // This stores all the trips as an array of Trip objects
+let trips = [];
 
 class Trip {
+    
     constructor(resort, hours, date, rating) {
         this.resort = resort;
         this.hours = hours;
         this.date = date; // (mm/dd/yyyy)
         this.rating = rating; // integer 0-5
-
-        // add this instance to the trips array
-        trips.push(this);
     }
 
-    // convert trips array to JSON
-    tripsToJson() {
+    // Convert trips array to JSON
+    static tripsToJson(trips) {
         return JSON.stringify(trips);
     }
 
-    // convert JSON back to trips array (and store them as Trip objects)
-    static jsonToArray(tripsJSON) {
-        trips = JSON.parse(tripsJSON).map(tripData => new Trip(tripData.resort, tripData.hours, tripData.date, tripData.rating));
+    // Convert JSON back to trips array (and store them as Trip objects)
+    static jsonToArray(tripsArray) {
+        trips = tripsArray.map(tripData => new Trip(tripData.resort, tripData.hours, tripData.date, tripData.rating));
     }
 
-    // Store the current list of trips in the database
-async storeInAccount(username) {
-    const tripsJSON = this.tripsToJson();  // Convert the trips array to JSON
 
-    // Query to store the trips in the database
-    const url = urlBase + '/store-trips.html';  // Endpoint for storing trips
-    console.log(`Posting to ${url}...`);
-
-    if (username) {
-        try {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, trips: tripsJSON })
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to store trips in the database.');
-            }
-
-            const result = await response.text();  // Get the error or success message from the backend
-            if (result.includes('successfully stored')) {
-                console.log('Trips successfully stored:', result);
-            } else {
-                // If the message indicates failure, display it
-                console.error('Error:', result);
-            }
-        } catch (error) {
-            console.error('Error storing trips:', error);
-        }
-    } else {
-        console.log("Username is required to store trips.");
-    }
-}
-
-
-
-    // Fetch stored trips for a user from the server
-    static async getAccountTrips(username) {
-        const url = urlBase + '/account-trips.html'; // Endpoint for fetching trips
-        console.log(`Posting to ${url}...`); // Debugging
+    // Store trips in the database for a specific user
+    static async storeTripsInAccount(username, trips) {
+        const tripsJSON = Trip.tripsToJson(trips); // Convert trips array to JSON
+        const url = `${urlBase}/store-trips.html`;
 
         if (username) {
             try {
@@ -81,19 +41,58 @@ async storeInAccount(username) {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ username })
+                    body: JSON.stringify({ username, trips: tripsJSON })
                 });
 
                 if (!response.ok) {
-                    throw new Error('Failed to fetch trips from the database.');
+                    throw new Error('Failed to store trips in the database.');
                 }
 
+                const result = await response.text();
+                if (result.includes('successfully stored')) {
+                    console.log('Trips successfully stored:', result);
+                } else {
+                    console.error('Error:', result);
+                }
+            } catch (error) {
+                console.error('Error storing trips:', error);
+            }
+        } else {
+            console.log("Username is required to store trips.");
+        }
+    }
+
+    // Fetch stored trips for a user from the server
+    static async getAccountTrips(username) {
+        const url = urlBase + '/account-trips.html';
+        console.log(`Posting to ${url}...`);
+    
+        if (username) {
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username }),
+                });
+    
+                if (!response.ok) {
+                    throw new Error('Failed to fetch trips from the database.');
+                }
+    
+                // Directly retrieve the JSON response
                 const result = await response.json();
-                if (result) {
-                    // Convert the JSON result into Trip objects
+                console.log("Parsed response from server:", result);
+    
+                if (Array.isArray(result)) {
+                    // If it's an array, convert it to Trip objects
                     Trip.jsonToArray(result);
                     console.log('Trips successfully retrieved:', trips);
-                    return trips;  // Return the trips array
+                    return trips;
+                } else {
+                    console.error("Unexpected response format:", result);
+                    return [];
                 }
             } catch (error) {
                 console.error('Error fetching trips:', error);
@@ -102,13 +101,17 @@ async storeInAccount(username) {
             console.log("Username is required to fetch trips.");
         }
     }
+    
+    
+    
+    
 }
 
-// Test to pull trips for the account with username "Testingt"
+// Test function for fetching trips
 async function testGetAccountTrips() {
-    const username = 'Testingt'; // Username for which we want to fetch trips
-    const retrievedTrips = await Trip.getAccountTrips(username); // Fetch trips for the user
-    console.log(retrievedTrips); // Log the trips retrieved
+    const username = 'Testingt'; // Example username
+    const retrievedTrips = await Trip.getAccountTrips(username);
+    console.log(retrievedTrips); // Log the retrieved trips
 }
 
 // Call the test function
