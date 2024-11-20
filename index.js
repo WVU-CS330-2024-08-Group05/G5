@@ -79,20 +79,19 @@ app.get('/search.html', async function (req, res) {
 async function generateSearchHtml(resorts, options) {
     let html = "";
     // Sort resorts by distance from location
-    if (options.distance) resorts.sort(function (a, b) {
-        if (a.distance < b.distance) return -1;
-        else if (a.distance > b.distance) return 1;
-        else return 0;
-    });
+    if (options.distance) {
+        resorts.sort((a, b) => a.distance - b.distance);
+    }
 
-    // Creat results html
+    // Create results HTML
     for (let i = 0; i < MAX_RESULTS && i < resorts.length; ++i) {
-        resort = resorts[i];
-        let html = await getResortsCardHtml(resort, options);
-        html = html.concat(html);
+        const resort = resorts[i];
+        const cardHtml = await getResortsCardHtml(resort, options); // Await the card HTML
+        html += cardHtml; // Append to accumulated HTML
     }
     return html;
 }
+
 
 async function getResortsCardHtml(resort, options) {
     // Set distance html
