@@ -1,8 +1,20 @@
 $(function () {
     let trips = 0; // take value from account data in database
-    let totalHours = 0; // take value from account data in database
-    let rank = 1; // take value from account data in database
     let username = "username"; // take value from account data
+    let rank = 1; // take value from account data in database
+    let totalHours = 0; // take value from account data in database
+    if (localStorage.getItem('trips') !== null) {
+        trips = JSON.parse(localStorage.getItem("trips"));
+    }
+    if (localStorage.getItem('totalHours') != null) {
+        totalHours = JSON.parse(localStorage.getItem('totalHours'));
+    }
+    if (localStorage.getItem('rank') != null) {
+        rank = localStorage.getItem('rank');
+    }
+    if (localStorage.getItem('username') != null) {
+        username = localStorage.getItem('username');
+    }
     let rating = 0;
 
     $("#username").textContent = username;
@@ -31,9 +43,9 @@ $(function () {
         document.getElementById('total-trips').textContent = ("Total Trips: " + trips);
         document.getElementById('total-hours').textContent = ("Total Hours: " + totalHours);
         // send account data to database
-
+        localStorage.setItem('trips', trips);
+        localStorage.setItem('totalHours', totalHours);
     });
-
     $('input[name="rating"]').change(function () {
         rating = $(this).val(); // Assign value to the variable
         $('#output').text(`Selected Value: ${rating}`); // Update the text
