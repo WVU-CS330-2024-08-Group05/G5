@@ -59,9 +59,9 @@ $(function () {
         $('#search-bar').on('input', function () {
             // Performs search as you give input
             
-            if (previousValue !== '') {
+            /*if (previousValue !== '') {
                 performSearch();
-            }
+            }*/
             const currentValue = $(this).val();
             if (currentValue === '' && previousValue !== '') {
                 console.log('Clearing results');
