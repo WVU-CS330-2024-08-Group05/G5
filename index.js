@@ -239,44 +239,30 @@ async function connectAndQueryPassword(username, password) {
  */
 
 app.post("/signing-up.html", async function (req, res) {
-   
     let msg = "";
 
-    let username = req.body.username;
-    let password = req.body.password;
-    let email = req.body.email;
+    const username = req.body.username;
+    const password = req.body.password;
+    const email = req.body.email;
 
+    try {
+        // Check if username is already taken
+        const usernameExists = await connectAndQueryUsername(username);
 
-    // check if username is already taken
-    let username_exists = await connectAndQueryUsername(username);
-    if(username_exists === "User found") {
-        msg = "Username taken."
-    } 
-    // if username not taken, proceed with creating account
-    else {
-    
-        const saltRounds = 10;
-        bcrypt.genSalt(saltRounds, function(err, salt) {
-            bcrypt.hash(password, salt, function(err, hash) {
-                
-                msg = connectAndInsertAccount(username, hash, email);
-                
-                // error handling
-                if(err) {
-                    console.error(err);
-                }
-            });
-            // error handling
-            if(err) {
-                console.error(err);
-            }
-        });
-
+        if (usernameExists === "User found") {
+            msg = "Username taken.";
+        } else {
+            // Proceed with creating account
+            msg = await connectAndInsertAccount(username, password, email); // Password hashing happens in connectAndInsertAccount
+        }
+    } catch (err) {
+        console.error(err.message);
+        msg = "Error signing up. Please try again later.";
     }
-    
 
     res.send(msg);
 });
+
 
 async function connectAndInsertAccount(username, password, email) {
     try {
