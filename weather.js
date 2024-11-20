@@ -31,7 +31,9 @@ period format:
 
 
 async function get_resort_weather(resort) {
+    console.log("Entering get_resort_weather...");
     data = await fetch(`https://api.weather.gov/points/${resort.lat},${resort.lon}`).json();
+    console.log("data");
     twevle_hour = await fetch(`${data.properties.forcast}`).json();
 
     return twelve_hour.periods;
@@ -43,3 +45,7 @@ async function get_resort_weather_hourly(resort) {
 
     return hourly.periods;
 }
+
+module.exports = {
+    get_resort_weather
+};
