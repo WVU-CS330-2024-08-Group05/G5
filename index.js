@@ -68,7 +68,9 @@ async function generateSearchHtml(resorts, options) {
         else if (a.distance > b.distance) return 1;
         else return 0;
     });
+    let i = 0;
     for (let resort of resorts) {
+        ++i;
         if (options.distance) {
             distance = `<p>Distance: ${resort.distance} miles</p>`;
         }
@@ -100,9 +102,9 @@ async function generateSearchHtml(resorts, options) {
                 <td>${weather[12].temperature}
             </tr>
         </table>
-        <p>Total Acres: ${resort.acres}<p>
         </div>
         <div class="other-resort-details">
+        <p>Total Acres: ${resort.acres}<p>
         ${distance}
         </div>
         <div class="resort-rating">
@@ -112,6 +114,7 @@ async function generateSearchHtml(resorts, options) {
 </div >
 `
         );
+        if (i > 10) break;
     }
     return html;
 }
