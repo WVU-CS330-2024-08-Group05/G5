@@ -12,7 +12,9 @@ const NodeGeolocation = require('nodejs-geolocation').default;
 const geo = new NodeGeolocation('App');
 const W = require('./weather.js')
 
-// serve files from root dir
+MAX_RESULTS = 10;
+
+// serve files from public dir
 app.use(express.static('public'));
 
 
@@ -46,36 +48,53 @@ const config = {
  * Search results include resorts with names that start with req.query.search and resorts that are in a state the the begins with req.query.search.
  */
 app.get('/search.html', async function (req, res) {
+    // Get all resorts
     resorts = [...RESORTS];
-    options = {distance: false};
+    options = { distance: false };
+    // Filter resorts by text segment
     if (req.query.search) {
         resorts = filterBySearch(resorts, req.query.search)
     }
+    // Filter resorts by distance from location
     if (req.query.lat && req.query.lon && req.query.range) {
         resorts = filterByDistance(resorts, req.query, req.query.range);
         options.distance = true;
     }
+    // Get search results html
     let html = await generateSearchHtml(resorts, options);
     res.send(html)
 });
 
 async function generateSearchHtml(resorts, options) {
     let html = "";
-    let distance = "";
-    let week_days = get_week_days();
+    // Sort resorts by distance from location
     if (options.distance) resorts.sort(function (a, b) {
         if (a.distance < b.distance) return -1;
         else if (a.distance > b.distance) return 1;
         else return 0;
     });
-    let i = 0;
-    for (let resort of resorts) {
-        ++i;
-        if (options.distance) {
-            distance = `<p>Distance: ${resort.distance} miles</p>`;
-        }
-        let weather = await W.get_resort_weather(resort);
-        html = html.concat(
+
+    // Creat results html
+    for (let i = 0; i < MAX_RESULTS && i < resorts.length; ++i) {
+        resort = resorts[i];
+        let html = await getResortsCardHtml(resort, options);
+        html = html.concat(html);
+    }
+    return html;
+}
+
+async function getResortsCardHtml(resort, options) {
+    // Set distance html
+    let distance = "";
+    if (options.distance) {
+        distance = `<p>Distance: ${resort.distance} miles</p>`;
+    }
+    // Get array of weekdays, starting with Today
+    let week_days = get_week_days();
+    // Get weather data (12-hour)
+    let weather = await W.get_resort_weather(resort);
+    
+    html =
 `<div class="resort-card">
     <h3>${resort.resort_name}</h3>
     <div class="resort-details">
@@ -113,10 +132,7 @@ async function generateSearchHtml(resorts, options) {
     </div>
 </div >
 `
-        );
-        if (i > 10) break;
-    }
-    return html;
+return html
 }
 
 function get_week_days() {
