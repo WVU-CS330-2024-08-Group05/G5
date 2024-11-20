@@ -10,6 +10,7 @@ const bcrypt = require('bcrypt');
 const RESORTS = require('./resortdata.json');
 const NodeGeolocation = require('nodejs-geolocation').default;
 const geo = new NodeGeolocation('App');
+const W = require('./weather.js')
 
 // serve files from root dir
 app.use(express.static('public'));
@@ -44,7 +45,7 @@ const config = {
  * 
  * Search results include resorts with names that start with req.query.search and resorts that are in a state the the begins with req.query.search.
  */
-app.get('/search.html', function (req, res) {
+app.get('/search.html', async function (req, res) {
     resorts = [...RESORTS];
     options = {distance: false};
     if (req.query.search) {
@@ -54,13 +55,14 @@ app.get('/search.html', function (req, res) {
         resorts = filterByDistance(resorts, req.query, req.query.range);
         options.distance = true;
     }
-
-    res.send(generateSearchHtml(resorts, options))
+    let html = await generateSearchHtml(resorts, options);
+    res.send(html)
 });
 
-function generateSearchHtml(resorts, options) {
+async function generateSearchHtml(resorts, options) {
     let html = "";
     let distance = "";
+    let week_days = get_week_days();
     if (options.distance) resorts.sort(function (a, b) {
         if (a.distance < b.distance) return -1;
         else if (a.distance > b.distance) return 1;
@@ -70,6 +72,7 @@ function generateSearchHtml(resorts, options) {
         if (options.distance) {
             distance = `<p>Distance: ${resort.distance} miles</p>`;
         }
+        let weather = await W.get_resort_weather(resort);
         html = html.concat(
 `<div class="resort-card">
     <h3>${resort.resort_name}</h3>
@@ -77,9 +80,26 @@ function generateSearchHtml(resorts, options) {
         <img src=flags/Flag_of_${resort.state.replaceAll(' ', '_')}.svg alt="State Logo" height="120" width="120">
         <div class="piechart">[['Difficulty', 'Acres'], ['Green', ${resort.green_acres}], ['Blue', ${resort.blue_acres}], ['Black', ${resort.black_acres}]]</div >
         <div class="acreage-details">
-        <p>Green Acres: ${resort.green_acres}<p>
-        <p>Blue Acres: ${resort.blue_acres}<p>
-        <p>Black Acres: ${resort.black_acres}<p>
+        <table>
+            <tr>
+                <th>${week_days[0]}
+                <th>${week_days[1]}
+                <th>${week_days[2]}
+                <th>${week_days[3]}
+                <th>${week_days[4]}
+                <th>${week_days[5]}
+                <th>${week_days[6]}
+            </tr>
+            <tr>
+                <td>${weather[0].temperature}
+                <td>${weather[2].temperature}
+                <td>${weather[4].temperature}
+                <td>${weather[6].temperature}
+                <td>${weather[8].temperature}
+                <td>${weather[10].temperature}
+                <td>${weather[12].temperature}
+            </tr>
+        </table>
         <p>Total Acres: ${resort.acres}<p>
         </div>
         <div class="other-resort-details">
@@ -94,6 +114,25 @@ function generateSearchHtml(resorts, options) {
         );
     }
     return html;
+}
+
+function get_week_days() {
+    let weekDays = {
+        1: 'Monday',
+        2: 'Tuesday',
+        3: 'Wednesday',
+        4: 'Thursday',
+        5: 'Friday',
+        6: 'Saturday',
+        7: 'Sunday'
+    };
+    let date = new Date();
+    let day = date.getDay();
+    let week_array = [];
+    for (i = 0; i < 6; ++i) {
+        week_array.push(weekDays[(day + i) % 7]);
+    }
+    return week_array;
 }
 
 function filterBySearch(resorts, search) {
