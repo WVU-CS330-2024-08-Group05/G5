@@ -28,7 +28,6 @@ class Trip {
         trips = tripsArray.map(tripData => new Trip(tripData.resort, tripData.hours, tripData.date, tripData.rating));
     }
 
-
     // Store trips in the database for a specific user
     static async storeTripsInAccount(username, trips) {
         const tripsJSON = Trip.tripsToJson(trips); // Convert trips array to JSON
@@ -101,10 +100,6 @@ class Trip {
             console.log("Username is required to fetch trips.");
         }
     }
-    
-    
-    
-    
 }
 
 // Test function for fetching trips
