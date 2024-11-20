@@ -71,12 +71,19 @@ app.get('/search.html', async function (req, res) {
         resorts = filterByDistance(resorts, req.query, req.query.range);
         options.distance = true;
     }
-    // Get search results html
-    let html = await getSearchResultHtml(resorts, options);
-    res.send(html)
+
+    // Try to send search results
+    try {
+        // Get search results html
+        const html = await getSearchResultsHtml(resorts, options);
+        res.send(html);
+    } catch (err) {
+        res.send(`<h2>I'm not in the mood right now, please try again...<h2>`);
+        console.error(err);
+    }
 });
 
-async function getSearchResultHtml(resorts, options) {
+async function getSearchResultsHtml(resorts, options) {
     let html = "";
     // Sort resorts by distance from location
     if (options.distance) {
@@ -87,7 +94,7 @@ async function getSearchResultHtml(resorts, options) {
     for (let i = 0; i < MAX_RESULTS && i < resorts.length; ++i) {
         const resort = resorts[i];
         const cardHtml = await getResortCardHtml(resort, options); // Await the card HTML
-        html += cardHtml; // Append to accumulated HTML
+        html = html + cardHtml; // Append to accumulated HTML
     }
     return html;
 }
