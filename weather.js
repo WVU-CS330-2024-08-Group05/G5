@@ -32,18 +32,33 @@ period format:
 
 async function get_resort_weather(resort) {
     console.log("Entering get_resort_weather...");
-    data = await fetch(`https://api.weather.gov/points/${resort.lat},${resort.lon}`).json();
-    console.log("data");
-    twevle_hour = await fetch(`${data.properties.forcast}`).json();
+    data = await fetch(`https://api.weather.gov/points/${resort.lat},${resort.lon}`);
+    if (!data.ok) {
+        throw new Error('Failed to fetch...');
+    }
+    data = await data.json();
+    let twelve_hour = await fetch(`${data.properties.forecast}`);
+    if (!twelve_hour.ok) {
+        throw new Error('Failed to fetch...');
+    }
+    twelve_hour = await twelve_hour.json();
 
-    return twelve_hour.periods;
+    return twelve_hour.properties.periods;
 }
 
 async function get_resort_weather_hourly(resort) {
-    data = await fetch(`https://api.weather.gov/points/${resort.lat},${resort.lon}`).json();
-    hourly = await fetch(`${data.properties.forcastHourly}`).json();
+    data = await fetch(`https://api.weather.gov/points/${resort.lat},${resort.lon}`)
+    if (!data.ok) {
+        throw new Error('Failed to fetch...');
+    }
+    data = await data.json();
+    hourly = await fetch(`${data.properties.forecastHourly}`);
+    if (!hourly.ok) {
+        throw new Error('Failed to fetch...');
+    }
+    hourly = await hourly.json;
 
-    return hourly.periods;
+    return hourly.properties.periods;
 }
 
 module.exports = {

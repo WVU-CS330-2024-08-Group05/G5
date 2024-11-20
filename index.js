@@ -72,7 +72,7 @@ async function generateSearchHtml(resorts, options) {
         if (options.distance) {
             distance = `<p>Distance: ${resort.distance} miles</p>`;
         }
-        let weather = W.get_resort_weather(resort);
+        let weather = await W.get_resort_weather(resort);
         html = html.concat(
 `<div class="resort-card">
     <h3>${resort.resort_name}</h3>
