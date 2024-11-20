@@ -72,11 +72,11 @@ app.get('/search.html', async function (req, res) {
         options.distance = true;
     }
     // Get search results html
-    let html = await generateSearchHtml(resorts, options);
+    let html = await getSearchResultHtml(resorts, options);
     res.send(html)
 });
 
-async function generateSearchHtml(resorts, options) {
+async function getSearchResultHtml(resorts, options) {
     let html = "";
     // Sort resorts by distance from location
     if (options.distance) {
@@ -86,23 +86,23 @@ async function generateSearchHtml(resorts, options) {
     // Create results HTML
     for (let i = 0; i < MAX_RESULTS && i < resorts.length; ++i) {
         const resort = resorts[i];
-        const cardHtml = await getResortsCardHtml(resort, options); // Await the card HTML
+        const cardHtml = await getResortCardHtml(resort, options); // Await the card HTML
         html += cardHtml; // Append to accumulated HTML
     }
     return html;
 }
 
 
-async function getResortsCardHtml(resort, options) {
+async function getResortCardHtml(resort, options) {
     // Set distance html
     let distance = "";
     if (options.distance) {
         distance = `<p>Distance: ${resort.distance} miles</p>`;
     }
     // Get array of weekdays, starting with Today
-    let week_days = get_week_days();
+    let week_days = getWeekDays();
     // Get weather data (12-hour)
-    let weather = await W.get_resort_weather(resort);
+    let weather = await W.getResortWeather(resort);
     
     html =
 `<div class="resort-card">
@@ -145,7 +145,7 @@ async function getResortsCardHtml(resort, options) {
 return html
 }
 
-function get_week_days() {
+function getWeekDays() {
     let weekDays = [
         'Sunday',
         'Monday',

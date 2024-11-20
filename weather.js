@@ -30,7 +30,7 @@ period format:
 */
 
 
-async function get_resort_weather(resort) {
+async function getResortWeather(resort) {
     console.log("Entering get_resort_weather...");
     let url = `https://api.weather.gov/points/${resort.lat},${resort.lon}`;
     data = await fetch(url);
@@ -52,7 +52,7 @@ async function get_resort_weather(resort) {
     return twelve_hour.properties.periods;
 }
 
-async function get_resort_weather_hourly(resort) {
+async function getResortWeatherHourly(resort) {
     data = await fetch(`https://api.weather.gov/points/${resort.lat},${resort.lon}`)
     if (!data.ok) {
         throw new Error('Failed to fetch...');
@@ -68,6 +68,6 @@ async function get_resort_weather_hourly(resort) {
 }
 
 module.exports = {
-    get_resort_weather,
-    get_resort_weather_hourly
+    getResortWeather,
+    getResortWeatherHourly
 };
