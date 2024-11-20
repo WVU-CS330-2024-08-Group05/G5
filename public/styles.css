@@ -10,11 +10,6 @@ body {
     background-color: #f5f5f5;
 }
 
-/* CSS for dark mode */
-body.dark-mode {
-    background-color: #121212;
-    color: #ffffff;
-}
 
 header {
     display: flex;
@@ -24,6 +19,58 @@ header {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
 }
+
+/* CSS for dark mode */
+
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+body.dark-mode header {
+    background-color: #333333; /* Set header background to gray */
+    color: #ffffff;
+}
+
+body.dark-mode #search-results {
+    background-color: black;
+    color: #ffffff;
+}
+
+.dark-mode-toggle {
+    margin-left: auto;
+    font-weight: bold;
+    background-color: black;
+    color: white;
+    border: 3px solid gray; 
+    padding: 5px 7px; 
+    border-radius: 8px; 
+    cursor: pointer;
+}
+
+.dark-mode-toggle.dark-mode-enabled {
+    background-color: #28a745; /* Green color */
+    color: white;
+}
+
+body.dark-mode .resort-card {
+    background-color: gray; 
+    color: white; 
+    border-bottom: 2px solid darkgray; 
+}
+
+body.dark-mode .resort-card h3 {
+    color: white; 
+}
+
+
+body.dark-mode .resort-details {
+    color: lightgray; 
+}
+
+/* End of CSS for dark mode */
+
+
 
 .nav-buttons {
     display: flex;

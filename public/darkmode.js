@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Check localStorage and apply saved mode
     if (localStorage.getItem('darkMode') === 'enabled') {
         document.body.classList.add('dark-mode');
+        toggleButton.classList.add('dark-mode-enabled');
     }
 
     // Toggle dark mode on button click
@@ -13,8 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Save preference in localStorage
         if (document.body.classList.contains('dark-mode')) {
             localStorage.setItem('darkMode', 'enabled');
+            toggleButton.classList.add('dark-mode-enabled');
         } else {
             localStorage.setItem('darkMode', 'disabled');
+            toggleButton.classList.remove('dark-mode-enabled');
         }
     });
 });
