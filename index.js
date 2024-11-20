@@ -38,6 +38,17 @@ const config = {
         enableArithAbort: true,
   },
 };
+// establishing a persistent pool connection
+let poolConnection;
+
+(async function initializePool() {
+    try {
+        poolConnection = await sql.connect(config);
+        console.log('Database connected');
+    } catch (err) {
+        console.error('Error connecting to database:', err.message);
+    }
+})();
 
 
 /**
@@ -191,58 +202,36 @@ app.post('/logging-in.html', async function (req, res) {
 
 async function connectAndQueryUsername(username) {
     try {
-        let poolConnection = await sql.connect(config);
+        const query = `SELECT id FROM Accounts WHERE username COLLATE Latin1_General_BIN = @username`;
+        const inputs = [{ name: 'username', type: sql.VarChar, value: username }];
+        const resultSet = await executeQuery(query, inputs);
 
-        let msg = "Username not found"; // Default message
-
-        // Run the query to fetch ID based on the username
-        const resultSet = await poolConnection.request()
-            .input('username', sql.VarChar, username) // Avoid SQL injections
-            .query(`SELECT id FROM Accounts WHERE username COLLATE Latin1_General_BIN = @username`); // case-sensitive search
-
-        // Check if any record was found in the database
-        if (resultSet.recordset.length > 0) {
-            msg = "User found"; // Username exists
-        } 
-        
-        poolConnection.close();
-        return msg;
-        
-    } catch (err) {
-        console.error(err.message);
-        return "Error checking username"; // Return a default error message in case of failure
-    } 
+        return resultSet.recordset.length > 0 ? "User found" : "Username not found";
+    } catch {
+        return "Error checking username";
+    }
 }
 
 async function connectAndQueryPassword(username, password) {
     try {
-        let poolConnection = await sql.connect(config);
+        const query = `SELECT password AS hash FROM Accounts WHERE username COLLATE Latin1_General_BIN = @username`;
+        const inputs = [{ name: 'username', type: sql.VarChar, value: username }];
+        const resultSet = await executeQuery(query, inputs);
 
-        let msg = "Password is incorrect"; // Default message
-
-        // Run the query to find if the password is correct
-        const resultSet = await poolConnection.request()
-            .input('username', sql.VarChar, username) // Avoid SQL injections
-            .query(`SELECT password AS hash FROM Accounts WHERE username COLLATE Latin1_General_BIN = @username`); // Case-sensitive search
-    
-        // Check if any record was found in the database
+        // Check if a matching record was found
         if (resultSet.recordset.length > 0) {
-            let hash = resultSet.recordset[0].hash;
+            const hash = resultSet.recordset[0].hash;
 
-            // Compare password with the hashed password
-            const isMatch = await bcrypt.compare(password, hash);
-            if (isMatch) {
-                msg = "Password is correct";
-            }
+            // Compare provided password with hashed password
+            const isMatch = await isPasswordCorrect(password, hash);
+            return isMatch ? "Password is correct" : "Password is incorrect";
+        } else {
+            return "Password is incorrect"; // User not found or wrong password
         }
-
-        poolConnection.close();
-        return msg;
-        
     } catch (err) {
         console.error(err.message);
-        return "Error checking username"; // Return a default error message in case of failure
-    } 
+        return "Error checking password";
+    }
 }
 
 /**
@@ -289,28 +278,48 @@ app.post("/signing-up.html", async function (req, res) {
     res.send(msg);
 });
 
-async function connectAndInsertAccount(username, hashedPassword, email) {
+async function connectAndInsertAccount(username, password, email) {
     try {
-        let poolConnection = await sql.connect(config);
+        const hashedPassword = await hashPassword(password); // Hash the password
 
-        let msg = "Account creation failed" // default msg
+        const query = `
+            INSERT INTO Accounts (username, password, email, settings, pinned_resorts, trips)
+            VALUES (@username, @hashedPassword, @email, NULL, NULL, NULL)
+        `;
+        const inputs = [
+            { name: 'username', type: sql.VarChar, value: username },
+            { name: 'hashedPassword', type: sql.VarChar, value: hashedPassword },
+            { name: 'email', type: sql.VarChar, value: email }
+        ];
+        const resultSet = await executeQuery(query, inputs);
 
-        // Run the query to insert new account
-        const resultSet = await poolConnection.request()
-        .input('username', sql.VarChar, username)
-        .input('hashedPassword', sql.VarChar, hashedPassword)
-        .input('email', sql.VarChar, email)
-        .query(`INSERT INTO Accounts (username, password, email, settings, pinned_resorts, trips)
-                VALUES (@username, @hashedPassword, @email, NULL, NULL, NULL)`);
-        
-        // checking if an insert was made
-        if (resultSet.rowsAffected[0] > 0) {
-            msg = "Account created successfully"
-        }
-
-        poolConnection.close();
-        return msg;
+        // Check if the insert was successful
+        return resultSet.rowsAffected[0] > 0 ? "Account created successfully" : "Account creation failed";
     } catch (err) {
-        console.error(err)
+        console.error(err.message);
+        return "Error creating account";
     }
+}
+
+async function executeQuery(query, inputs = []) {
+    try {
+        const request = poolConnection.request();
+        inputs.forEach(({ name, type, value }) => {
+            request.input(name, type, value);
+        });
+
+        return await request.query(query);
+    } catch (err) {
+        console.error('Database query error:', err.message);
+        throw err; // Throw to handle error higher up
+    }
+}
+
+async function hashPassword(password) {
+    const saltRounds = 10;
+    return await bcrypt.hash(password, saltRounds);
+}
+
+async function isPasswordCorrect(password, hash) {
+    return await bcrypt.compare(password, hash);
 }
