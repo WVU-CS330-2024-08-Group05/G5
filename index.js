@@ -113,7 +113,6 @@ async function getResortCardHtml(resort, options) {
     
     html =
 `<div class="resort-card">
-    <input id="pin-button" class="pin-button" type="image" src="pin-image.png"/>
     <h3>${resort.resort_name}</h3>
     <div class="resort-details">
         <img src=flags/Flag_of_${resort.state.replaceAll(' ', '_')}.svg alt="State Logo" height="120" width="120">
@@ -146,7 +145,8 @@ async function getResortCardHtml(resort, options) {
         </div>
         <div class="resort-rating">
             <p>Rating</p>
-        </div>
+            </div>
+        <input id="pin-button" class="pin-button" type="image" src="pin-image.png"/>
     </div>
 </div >
 `
