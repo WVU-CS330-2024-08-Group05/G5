@@ -129,13 +129,13 @@ async function getResortCardHtml(resort, options) {
                 <th>${week_days[6]}
             </tr>
             <tr>
-                <td>${weather[0].temperature}
-                <td>${weather[2].temperature}
-                <td>${weather[4].temperature}
-                <td>${weather[6].temperature}
-                <td>${weather[8].temperature}
-                <td>${weather[10].temperature}
-                <td>${weather[12].temperature}
+                <td>${weather[0].temperature}\u00b0F
+                <td>${weather[2].temperature}\u00b0F
+                <td>${weather[4].temperature}\u00b0F
+                <td>${weather[6].temperature}\u00b0F
+                <td>${weather[8].temperature}\u00b0F
+                <td>${weather[10].temperature}\u00b0F
+                <td>${weather[12].temperature}\u00b0F
             </tr>
         </table>
         </div>

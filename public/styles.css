@@ -48,7 +48,7 @@ body.dark-mode #search-results {
     cursor: pointer;
 }
 
-.dark-mode-toggle.dark-mode-enabled {
+.dark-mode-toggle .dark-mode-enabled {
     background-color: #28a745; /* Green color */
     color: white;
 }
@@ -60,12 +60,12 @@ body.dark-mode .resort-card {
 }
 
 body.dark-mode .resort-card h3 {
-    color: white; 
+    color: white;
 }
 
 
 body.dark-mode .resort-details {
-    color: lightgray; 
+    color: white; 
 }
 
 /* End of CSS for dark mode */
@@ -228,6 +228,8 @@ input[type="search"]::-webkit-search-cancel-button {
     .resort-card th, .resort-card td {
         text-align: center;
         font: bold 12px arial;
+        padding: 4px 4px 4px 4px;
+        border: 1px solid darkgrey;
     }
 
     .resort-card .pin-button {
