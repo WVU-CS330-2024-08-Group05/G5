@@ -7,10 +7,7 @@
  */
 const urlBase = 'http://localhost:8080';
 
-let trips = [];
-
 class Trip {
-    
     constructor(resort, hours, date, rating) {
         this.resort = resort;
         this.hours = hours;
@@ -20,8 +17,6 @@ class Trip {
 
     // Convert trips array to JSON
     static tripsToJson(tripsArray) {
-        console.log("tripsToJson, before" + tripsArray);
-        console.log("tripsToJson, after" + JSON.stringify(tripsArray));
         return JSON.stringify(tripsArray);
     }
 
@@ -29,16 +24,13 @@ class Trip {
     static jsonToArray(tripsJSON) {
         console.log("Converting JSON to Array. Input:", tripsJSON.length);
 
-        // Ensure trips are converted into Trip objects
         if (Array.isArray(tripsJSON)) {
             return tripsJSON.flatMap(tripData => {
                 if (Array.isArray(tripData)) {
-                    // Handle nested arrays
                     return tripData.map(innerTrip =>
                         new Trip(innerTrip.resort, innerTrip.hours, innerTrip.date, innerTrip.rating)
                     );
                 } else if (tripData.resort && tripData.hours && tripData.date && tripData.rating) {
-                    // Handle direct trip objects
                     return new Trip(tripData.resort, tripData.hours, tripData.date, tripData.rating);
                 } else {
                     console.warn("Unexpected trip data format:", tripData);
@@ -51,30 +43,14 @@ class Trip {
         }
     }
 
-    
-    
     // Store trips in the database for a specific user
-    static async storeTripsInAccount(username, trip) {
+    static async storeTripsInAccount(username, tripsArray) {
         const url = `${urlBase}/store-trips.html`;
 
         if (username) {
             try {
-                // get the current trips using the existing function
-                let currentTrips = await Trip.getAccountTrips(username);
-                
-                // add the new trip to the list of trips
-                if (Array.isArray(currentTrips)) {
-                    currentTrips.push(trip);
-                    console.log("Current:" + currentTrips);
-                } else {
-                    console.warn("Unexpected data format; resetting trips to an empty array.");
-                    currentTrips = [trip];
-                }
+                const tripsJSON = Trip.tripsToJson(tripsArray);
 
-                // convert updated trips array to JSON
-                const tripsJSON = Trip.tripsToJson(currentTrips);
-
-                // store updated trips in the database
                 const storeResponse = await fetch(url, {
                     method: 'POST',
                     headers: {
@@ -84,7 +60,7 @@ class Trip {
                 });
 
                 if (!storeResponse.ok) {
-                    throw new Error('Failed to store updated trips in the database.');
+                    throw new Error('Failed to store trips in the database.');
                 }
 
                 const result = await storeResponse.text();
@@ -103,9 +79,9 @@ class Trip {
 
     // Fetch stored trips for a user from the server
     static async getAccountTrips(username) {
-        const url = urlBase + '/account-trips.html';
+        const url = `${urlBase}/account-trips.html`;
         console.log(`Posting to ${url}...`);
-    
+
         if (username) {
             try {
                 const response = await fetch(url, {
@@ -115,35 +91,26 @@ class Trip {
                     },
                     body: JSON.stringify({ username }),
                 });
-    
+
                 if (!response.ok) {
                     throw new Error('Failed to fetch trips from the database.');
                 }
-    
+
                 const result = await response.json();
-                console.log("Parsed response from server:", result.length);
-    
+
                 if (Array.isArray(result)) {
-                    // Convert JSON to Trip objects and update the global trips array
-                    console.log("Pre jsonToArray: " + result.length);
-                    trips = Trip.jsonToArray(result); 
-                    console.log('Trips successfully retrieved:', trips.length);
-                    return trips;
+                    return Trip.jsonToArray(result); // Return Trip objects
                 } else {
                     console.error("Unexpected response format:", result);
-                    trips = []; // Reset trips if format is invalid
-                    return trips;
+                    return []; // Return an empty array if format is invalid
                 }
             } catch (error) {
                 console.error('Error fetching trips:', error);
-                trips = []; // Reset trips in case of an error
-                return trips;
+                return []; // Return an empty array in case of an error
             }
         } else {
             console.log("Username is required to fetch trips.");
             return [];
         }
     }
-    
 }
-
