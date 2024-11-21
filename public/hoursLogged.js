@@ -42,7 +42,6 @@ $(function () {
 
         // Create a new trip and add to the array
         const newTrip = new Trip(resort, newHours, date, rating);
-        trips.push(newTrip);
 
         tripsCount += 1;
         document.getElementById('total-trips').textContent = `Total Trips: ${tripsCount}`;
@@ -54,6 +53,6 @@ $(function () {
         document.getElementById('SkiTripList').append(listItem);
 
         // Store the trips in the database
-        await Trip.storeTripsInAccount(username, trips);
+        await Trip.storeTripsInAccount(username, newTrip);
     });
 });
