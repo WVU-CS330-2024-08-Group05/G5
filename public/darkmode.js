@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (localStorage.getItem('darkMode') === 'enabled') {
         document.body.classList.add('dark-mode');
         toggleButton.classList.add('dark-mode-enabled');
+        
     }
 
     // Toggle dark mode on button click

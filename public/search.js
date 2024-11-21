@@ -89,7 +89,8 @@ function drawCharts() {
         var options = { 'width': 100, 'height': 100,
             'colors': ['#6ad977', '#6070d6', '#161617'],
             legend: 'none',
-            'chartArea': { 'width': '100%', 'height': '100%' }
+            'chartArea': { 'width': '100%', 'height': '100%' },
+            'backgroundColor' : 'transparent'
         };
 
         // Display the chart inside the <div> element with id="piechart"

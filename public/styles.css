@@ -68,6 +68,11 @@ body.dark-mode .resort-details {
     color: white; 
 }
 
+body.dark-mode .piechart{
+    background-color: gray;
+}
+
+
 /* End of CSS for dark mode */
 
 .nav-buttons {
@@ -248,7 +253,10 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 
 .piechart {
-    
+    background-color: inherit;
+    border: none; 
+    margin: 0; 
+    padding: 0; 
 }
 
 .acreage-details {
