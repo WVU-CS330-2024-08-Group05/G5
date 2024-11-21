@@ -26,7 +26,6 @@ app.listen(8080, function () {
 app.use(express.json());
 
 
-
 /**
  * Connect to Database
  */
@@ -217,8 +216,6 @@ app.post('/logging-in.html', async function (req, res) {
         msg = password_matches;
     }
 
-    
-
     res.send(msg);
 });
 
@@ -293,8 +290,7 @@ async function connectAndInsertAccount(username, password, email) {
 
         const query = `
             INSERT INTO Accounts (username, password, email, settings, pinned_resorts, trips)
-            VALUES (@username, @hashedPassword, @email, NULL, NULL, NULL)
-        `;
+            VALUES (@username, @hashedPassword, @email, {}, {}, {}) `; // empty jsons
         const inputs = [
             { name: 'username', type: sql.VarChar, value: username },
             { name: 'hashedPassword', type: sql.VarChar, value: hashedPassword },
@@ -309,6 +305,95 @@ async function connectAndInsertAccount(username, password, email) {
         return "Error creating account";
     }
 }
+
+
+
+/** Trips Functionality */
+
+app.post("/account-trips.html", async function (req, res) {
+    let msg = null; // Default to no data
+
+    const username = req.body.username;
+    try {
+        msg = await connectAndQueryTrips(username);
+    } catch (err) {
+        console.error(err.message);
+        msg = { error: "Error retrieving trips. Please try again later." }; // Send error as JSON
+    }
+
+    res.json(msg); // Ensure response is always JSON
+});
+
+
+async function connectAndQueryTrips(username) {
+    let msg = null;
+
+    const query = `SELECT trips FROM Accounts WHERE username COLLATE Latin1_General_BIN = @username`;
+    const input = [{ name: 'username', type: sql.VarChar, value: username }];
+    const resultSet = await executeQuery(query, input);
+
+    if (resultSet.recordset && resultSet.recordset.length > 0) {
+        const tripsString = resultSet.recordset[0].trips;
+
+        // Ensure `tripsString` is valid JSON
+        if (tripsString) {
+            try {
+                const trips = JSON.parse(tripsString); // Parse JSON
+                msg = trips; // Assign parsed JSON to msg
+            } catch (error) {
+                console.error("Failed to parse JSON from database:", error);
+                msg = []; // Return empty array on parsing failure
+            }
+        } else {
+            msg = []; // Handle null or empty trips column
+        }
+    } else {
+        msg = []; // No records found
+    }
+    return msg;
+}
+
+
+app.post("/store-trips.html", async function (req, res) {
+    let msg = "Storing account failed";  // Default error message
+
+    const username = req.body.username;
+    const trips = req.body.trips; 
+
+    if (!username || !trips) {
+        msg = "Username and trips are required.";
+        return res.send(msg);
+    }
+
+    try {
+        msg = await connectAndUpdateTrips(username, trips);
+    } catch (err) {
+        console.error('Error storing trips:', err);
+        msg = 'Failed to store trips in the database.';
+    }
+
+    res.send(msg);
+});
+
+
+async function connectAndUpdateTrips(username, trips) {
+    const query = `UPDATE Accounts SET trips = @trips WHERE username = @username`;
+    const input = [
+        { name: 'username', type: sql.VarChar, value: username },
+        { name: 'trips', type: sql.NVarChar, value: typeof trips === 'string' ? trips : JSON.stringify(trips) } 
+        // Ensure trips is stringified only if it's not already a string
+    ];
+
+    try {
+        await executeQuery(query, input);
+        return 'Trips successfully stored';
+    } catch (err) {
+        console.error('Error in connectAndUpdateTrips:', err);
+        return 'Failed to update trips';
+    }
+}
+
+/** Query helper functions */
 
 async function executeQuery(query, inputs = []) {
     try {

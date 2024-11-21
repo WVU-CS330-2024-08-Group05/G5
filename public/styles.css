@@ -424,3 +424,33 @@ input[type="search"]::-webkit-search-cancel-button {
 .ski-logger #SkiingLeaderboard li:hover {
     background-color: #f0f8ff;
 }
+
+/* Star rating test */
+.rating {
+    display: flex;
+    flex-direction: row-reverse; /* Stars align from right to left */
+    justify-content: left; /* Center the stars */
+}
+
+.rating input {
+    display: none; /* Hide the radio buttons */
+}
+
+.rating label {
+    font-size: 2rem; /* Size of the stars */
+    color: #ccc; /* Default color of stars */
+    cursor: pointer; /* Change cursor to pointer */
+    padding: 0 5px; /* Spacing between stars */
+    transition: color 0.2s; /* Smooth transition when hovering */
+}
+
+/* Highlight stars on hover */
+.rating label:hover,
+.rating label:hover ~ label {
+    color: #ffcc00; /* Highlight color (gold) */
+}
+
+/* Highlight stars when selected */
+.rating input:checked ~ label {
+    color: #ffcc00; /* Gold color for selected stars */
+}

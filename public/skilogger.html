@@ -8,6 +8,7 @@
     <script src="jquery.js"></script>
     <script src="hoursLogged.js"></script>
     <script src="search.js"></script>
+    <script src="completedTrips.js"></script>
     <script src="script.js"></script>
 </head>
 
@@ -23,9 +24,7 @@
         <div class="container" id="main">
             <div class="left">
                 <div id="Account-info">
-                    <h1 id="username">
-                        (Username)
-                    </h1>
+                    <h1 id="username-written">(Username)</h1>
                     <div id="HoursSpent-Text">
                         <p id="total-trips">Total Trips: </p>
                         <p id="total-hours">Total Hours: </p>
@@ -36,15 +35,19 @@
                 <input type="text" id="Resort" name="Resort" placeholder="Enter Name of Resort:">
                 <input type="date" id="Date" name="Date" placeholder="Enter Date:" />
                 <div class="rating">
-                    <input type="radio" name="rating" value="1"/>
-                    <input type="radio" name="rating" value="2"/>
-                    <input type="radio" name="rating" value="3"/>
-                    <input type="radio" name="rating" value="4"/>
-                    <input type="radio" name="rating" value="5"/>
+                    <input type="radio" id="star5" name="rating" value="5">
+                    <label for="star5" title="5 stars">★</label>
+                    <input type="radio" id="star4" name="rating" value="4">
+                    <label for="star4" title="4 stars">★</label>
+                    <input type="radio" id="star3" name="rating" value="3">
+                    <label for="star3" title="3 stars">★</label>
+                    <input type="radio" id="star2" name="rating" value="2">
+                    <label for="star2" title="2 stars">★</label>
+                    <input type="radio" id="star1" name="rating" value="1">
+                    <label for="star1" title="1 star">★</label>
                 </div>
                 <button type="button" id="hourSubmit">submit</button>
             </div>
-
             <div class="right">
                 <div>
                     <h2>
@@ -63,10 +66,12 @@
                         <li>Fourth Place</li>
                         <li>Fifth Place</li>
                     </ol>
-
                 </div>
             </div>
         </div>
+
+        <!-- Test Button to fetch trips for Testingt -->
+        <button type="button" onclick=testGetAccountTrips()>Test Fetch Trips for 'Testingt'</button>
 
     <div id="search-results" hidden></div>
 </body>
