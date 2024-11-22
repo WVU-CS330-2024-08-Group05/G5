@@ -2,7 +2,7 @@ const baseUrl = 'http://localhost:8080';
 
 
 $(function () {
-    $('#signup').on('click', async function () {
+   async function performSignup() {
         let username = $('#username').val();
         let password = $('#password').val();
         let email = $('#email').val();
@@ -41,7 +41,7 @@ $(function () {
                 
                 // Update sessionStorage to indicate a logged-in user (not a guest)
                 sessionStorage.setItem("isGuest", "false");
-
+                
                 sessionStorage.setItem("username", username);
                 
                 // Update the DOM and redirect
@@ -50,7 +50,16 @@ $(function () {
                 }, 100);
             }
         }
-    });
+    }
+    // Listens for when the sign up button is pressed
+    $('#signup').on('click', performSignup);
+    // Listens for when enter is pressed when typing in any of the fields
+    $('#password, #username, #email').on('keypress', function (e) {
+        if (e.which === 13) { // Enter key code is 13
+            e.preventDefault();
+            performSignup();
+        }
+    })
 });
 
 
