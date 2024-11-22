@@ -5,7 +5,7 @@ console.log("logging in...");
 $(function () {
     console.log("ready");
 
-    $('#login').on('click', async function () {
+    async function performLogin() {
         console.log("login attempt");
     
         // Gather user inputs
@@ -64,6 +64,14 @@ $(function () {
                 console.error('Error:', error);
             });
         }
-    });
-
+    }
+    // Logs in when login button clicked
+    $('#login').on('click', performLogin);
+    // Logs in when enter button is clicked
+    $('#username, #password').on('keypress', function (e) {
+        if (e.which === 13) {
+            e.preventDefault();
+            performLogin();
+        }
+    })
 });
