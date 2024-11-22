@@ -270,7 +270,7 @@ app.post("/signing-up.html", async function (req, res) {
         const usernameExists = await connectAndQueryUsername(username);
 
         if (usernameExists === "User found") {
-            msg = "Username taken.";
+            msg = "Username taken";
         } else {
             // Proceed with creating account
             msg = await connectAndInsertAccount(username, password, email); // Password hashing happens in connectAndInsertAccount
