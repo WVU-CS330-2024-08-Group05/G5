@@ -366,30 +366,11 @@ input[type="search"]::-webkit-search-cancel-button {
     flex-direction: column;
     margin-right: 2%;
 }
+
 /*changes the font and the color of the web page background*/
 .ski-logger body {
     font-family: Arial, sans-serif;
     background-color: #f5f5f5;
-}
-
-
-/*changes the totalHours input box to a different color and size*/
-.ski-logger #totalHours {
-    width: 150px;
-    height: 50px;
-    font-size: 25px;
-    padding: 10px;
-    border: 2px solid red;
-    border-radius: 8px;
-    background-color: whitesmoke;
-    text-align: center;
-}
-
-/*adds a glow around the box when totalHours is clicked on*/
-.ski-logger #totalHours:focus {
-    border-color: red;
-    box-shadow: 0 0 10px red;
-    outline: none;
 }
 
 .ski-logger #SkiTripList {
@@ -418,6 +399,7 @@ input[type="search"]::-webkit-search-cancel-button {
     list-style: decimal;
     padding-left: 20px;
 }
+
 
 .ski-logger #SkiingLeaderboard li {
     padding: 8px 0;
