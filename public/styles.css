@@ -63,7 +63,6 @@ body.dark-mode .resort-card h3 {
     color: white;
 }
 
-
 body.dark-mode .resort-details {
     color: white; 
 }
@@ -72,9 +71,7 @@ body.dark-mode .piechart{
     background-color: gray;
 }
 
-
 /* End of CSS for dark mode */
-
 .nav-buttons {
     display: flex;
     flex-direction: row;
