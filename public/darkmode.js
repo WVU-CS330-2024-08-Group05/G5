@@ -4,21 +4,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // Check localStorage and apply saved mode
     if (localStorage.getItem('darkMode') === 'enabled') {
         document.body.classList.add('dark-mode');
-        toggleButton.classList.add('dark-mode-enabled');
-        
+        toggleButton.checked = true;
+    }
+    else {
+        document.body.classList.remove('dark-mode');
+        toggleButton.checked = false;
     }
 
-    // Toggle dark mode on button click
-    toggleButton.addEventListener('click', () => {
-        document.body.classList.toggle('dark-mode');
+    // Toggle dark mode on slider change
+    toggleButton.addEventListener('change', () => {
 
-        // Save preference in localStorage
-        if (document.body.classList.contains('dark-mode')) {
+        // Apply dark mode based on the slider state
+        if (toggleButton.checked) {
+            document.body.classList.add('dark-mode');
             localStorage.setItem('darkMode', 'enabled');
-            toggleButton.classList.add('dark-mode-enabled');
         } else {
+            document.body.classList.remove('dark-mode');
             localStorage.setItem('darkMode', 'disabled');
-            toggleButton.classList.remove('dark-mode-enabled');
         }
     });
 });

@@ -20,48 +20,74 @@
             <input type="search" placeholder="Search For Specific Resort or Location" id="search-bar" class="search-bar">
             <button id="search-button" class="search-button">Search</button>
         </div>
+
+        <!-- temporary darkmode button-->
+        <label class="switch">
+            <input type="checkbox" id="darkModeToggle">
+            <span class="slider"></span>
+        </label>
     </header>
-        <div class="container" id="main">
-            <div class="left">
-                <div id="Account-info">
-                    <h1 id="username-written">(Username)</h1>
-                    <div id="HoursSpent-Text">
-                        <p id="total-trips">Total Trips: </p>
-                        <p id="total-hours">Total Hours: </p>
-                        <p id="rank">Global Rank: </p>
-                    </div>
+    <div class="container" id="main">
+        <div class="left">
+            <div id="Account-info">
+                <h1 id="username-written">(Username)</h1>
+                <div id="HoursSpent-Text">
+                    <p id="total-trips">Total Trips: </p>
+                    <p id="total-hours">Total Hours: </p>
+                    <p id="rank">Global Rank: </p>
                 </div>
-                <input type="number" id="Hours" name="Hours" placeholder="Log Hours:">
-                <input type="text" id="Resort" name="Resort" placeholder="Enter Name of Resort:">
-                <input type="date" id="Date" name="Date" placeholder="Enter Date:" />
-                <div class="rating">
-                    <input type="radio" id="star5" name="rating" value="5">
-                    <label for="star5" title="5 stars">★</label>
-                    <input type="radio" id="star4" name="rating" value="4">
-                    <label for="star4" title="4 stars">★</label>
-                    <input type="radio" id="star3" name="rating" value="3">
-                    <label for="star3" title="3 stars">★</label>
-                    <input type="radio" id="star2" name="rating" value="2">
-                    <label for="star2" title="2 stars">★</label>
-                    <input type="radio" id="star1" name="rating" value="1">
-                    <label for="star1" title="1 star">★</label>
-                </div>
-                <button type="button" id="hourSubmit">submit</button>
             </div>
-            <div class="right">
-                <div>
-                    <h2>
-                        Previous Ski Trips:
-                    </h2>
-                    <ul id="skiTripList"></ul>
-                </div>
+            <input type="number" id="Hours" name="Hours" placeholder="Log Hours:">
+            <input type="text" id="Resort" name="Resort" placeholder="Enter Name of Resort:">
+            <input type="date" id="Date" name="Date" placeholder="Enter Date:" />
+            <div class="rating">
+                <input type="radio" id="star5" name="rating" value="5">
+                <label for="star5" title="5 stars">★</label>
+                <input type="radio" id="star4" name="rating" value="4">
+                <label for="star4" title="4 stars">★</label>
+                <input type="radio" id="star3" name="rating" value="3">
+                <label for="star3" title="3 stars">★</label>
+                <input type="radio" id="star2" name="rating" value="2">
+                <label for="star2" title="2 stars">★</label>
+                <input type="radio" id="star1" name="rating" value="1">
+                <label for="star1" title="1 star">★</label>
+            </div>
+            <button type="button" id="hourSubmit">submit</button>
+        </div>
+        <div class="right">
+            <div>
+                <h2>
+                    Previous Ski Trips:
+                </h2>
+                <ul id="SkiTripList"></ul>
+            </div>
+            <div>
+                <h2>
+                    Leaderboard
+                </h2>
+                <ol id="SkiingLeaderboard">
+                    <li>First Place</li>
+                    <li>Second Place</li>
+                    <li>Third Place</li>
+                    <li>Fourth Place</li>
+                    <li>Fifth Place</li>
+                </ol>
             </div>
         </div>
+    </div>
 
-        <!-- Test Button to fetch trips for Testingt -->
-        <button type="button" onclick=testGetAccountTrips()>Test Fetch Trips for 'Testingt'</button>
+
+
+
+    <!-- Test Button to fetch trips for Testingt -->
+    <button type="button" onclick=testGetAccountTrips()>Test Fetch Trips for 'Testingt'</button>
 
     <div id="search-results" hidden></div>
+
+
+    <!-- Reference the darkmode.js file here -->
+    <script src="darkmode.js"></script>
+
 </body>
 
 </html>
