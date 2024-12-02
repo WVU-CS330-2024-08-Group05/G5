@@ -37,10 +37,10 @@ const config = {
     options: {
         encrypt: true, // Enables encryption for Azure SQL
         enableArithAbort: true,
-  },
+    },
 };
 // establishing a persistent pool connection
-let poolConnection;
+let poolConnection; //CHECK
 
 (async function initializePool() {
     try {
@@ -109,12 +109,12 @@ async function getResortCardHtml(resort, options) {
     let week_days = getWeekDays();
     // Get weather data (12-hour)
     let weather = await W.getResortWeather(resort);
-    
+
     html =
-`<div class="resort-card">
+        `<div class="resort-card">
     <h3>${resort.resort_name}</h3>
     <div class="resort-details">
-        <img src=flags/Flag_of_${resort.state.replaceAll(' ', '_')}.svg alt="State Logo" height="120" width="120">
+        <img src=flags/Flag_of_${resort.state.replaceAll(' ', '_')}.svg alt="State Logo">
         <div class="piechart">[['Difficulty', 'Acres'], ['Green', ${resort.green_acres}], ['Blue', ${resort.blue_acres}], ['Black', ${resort.black_acres}]]</div >
         <div class="acreage-details">
         <table>
@@ -145,11 +145,11 @@ async function getResortCardHtml(resort, options) {
         <div class="resort-rating">
             <p>Rating</p>
             </div>
-        <input id="pin-button" class="pin-button" type="image" src="pin-image.png"/>
+        <input class="pin-button" type="image" src="pin-image.png"/>
     </div>
 </div >
 `
-return html
+    return html
 }
 
 function getWeekDays() {
@@ -205,13 +205,13 @@ app.post('/logging-in.html', async function (req, res) {
 
     let username = req.body.username;
     let password = req.body.password;
-    
+
     let username_exists = await connectAndQueryUsername(username);
     let password_matches;
 
     msg = username_exists;
 
-    if(username_exists === "User found") {
+    if (username_exists === "User found") {
         password_matches = await connectAndQueryPassword(username, password);
         msg = password_matches;
     }
@@ -270,7 +270,7 @@ app.post("/signing-up.html", async function (req, res) {
         const usernameExists = await connectAndQueryUsername(username);
 
         if (usernameExists === "User found") {
-            msg = "Username taken.";
+            msg = "Username taken";
         } else {
             // Proceed with creating account
             msg = await connectAndInsertAccount(username, password, email); // Password hashing happens in connectAndInsertAccount
@@ -358,7 +358,7 @@ app.post("/store-trips.html", async function (req, res) {
     let msg = "Storing account failed";  // Default error message
 
     const username = req.body.username;
-    const trips = req.body.trips; 
+    const trips = req.body.trips;
 
     if (!username || !trips) {
         msg = "Username and trips are required.";
@@ -380,7 +380,7 @@ async function connectAndUpdateTrips(username, trips) {
     const query = `UPDATE Accounts SET trips = @trips WHERE username = @username`;
     const input = [
         { name: 'username', type: sql.VarChar, value: username },
-        { name: 'trips', type: sql.NVarChar, value: typeof trips === 'string' ? trips : JSON.stringify(trips) } 
+        { name: 'trips', type: sql.NVarChar, value: typeof trips === 'string' ? trips : JSON.stringify(trips) }
         // Ensure trips is stringified only if it's not already a string
     ];
 

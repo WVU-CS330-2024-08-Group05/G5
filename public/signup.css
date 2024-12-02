@@ -15,8 +15,6 @@ body {
     justify-content: center;
     height: 100vh;
     background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background for contrast */
-    padding: 20px; /* Add padding to the container */
-    border-radius: 10px; /* Optional: add rounded corners */
 }
 
 header {

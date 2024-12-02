@@ -63,7 +63,6 @@ body.dark-mode .resort-card h3 {
     color: white;
 }
 
-
 body.dark-mode .resort-details {
     color: white; 
 }
@@ -331,6 +330,7 @@ input[type="search"]::-webkit-search-cancel-button {
     }
 
     .resort-card img {
+        height: 100%;
         height: 100px;
         width: 100px;
     }
@@ -358,10 +358,11 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 
 .piechart {
+    height: 100%;
     background-color: inherit;
-    border: none; 
-    margin: 0; 
-    padding: 0; 
+    border: none;
+    margin: 0;
+    padding: 0;
 }
 
 .acreage-details {
