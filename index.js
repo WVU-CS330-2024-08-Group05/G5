@@ -15,12 +15,15 @@ const W = require('./weather.js')
 MAX_RESULTS = 10;
 
 // serve files from public dir
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 
-app.listen(8080, function () {
-    console.log('Listening on port 8080...');
+//dynamic porting
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+    console.log(`Listening on port ${PORT}...`);
 });
+
 
 // Middleware to parse json
 app.use(express.json());
