@@ -31,7 +31,6 @@ jobs:
         # Runs the necessary npm commands to install dependencies, build the app, and run tests if they exist.
         run: |
           npm install
-          npm run install:public
           npm run build
           npm run test --if-present
 
