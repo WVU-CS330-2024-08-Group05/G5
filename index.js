@@ -206,6 +206,8 @@ function filterByDistance(trips, location, range) {
 app.post('/logging-in.html', async function (req, res) {
     let msg = "";
 
+    console.log("hit");
+
     let username = req.body.username;
     let password = req.body.password;
 
