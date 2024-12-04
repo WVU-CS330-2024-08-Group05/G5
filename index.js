@@ -1,5 +1,5 @@
 /**
- * Server on http://localhost:8080
+ * Server on https://cs330-5-webapp-eqbjb0c6f2hfbxft.canadacentral-01.azurewebsites.net/
  */
 require('dotenv').config();
 const express = require('express');
@@ -232,7 +232,8 @@ async function connectAndQueryUsername(username) {
         const resultSet = await executeQuery(query, inputs);
 
         return resultSet.recordset.length > 0 ? "User found" : "Username not found";
-    } catch {
+    } catch (err) {
+        console.error('Username query error:', err.message);
         return "Error checking username";
     }
 }
