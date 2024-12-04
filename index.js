@@ -42,17 +42,32 @@ const config = {
         enableArithAbort: true,
     },
 };
-// establishing a persistent pool connection
-let poolConnection; //CHECK
 
-(async function initializePool() {
-    try {
-        poolConnection = await sql.connect(config);
-        console.log('Database connected');
-    } catch (err) {
-        console.error('Error connecting to database:', err.message);
+// establishing a persistent pool connection
+let poolConnection;
+
+async function initializePool() {
+    while (true) {
+        try {
+            poolConnection = await sql.connect(config);
+            console.log('Database connected');
+            break;
+        } catch (err) {
+            console.error('Database connection error:', err.message);
+            console.log('Retrying connection in 5 seconds...');
+            await new Promise(resolve => setTimeout(resolve, 5000));
+        }
     }
-})();
+
+    // Set up automatic reconnection if connection is lost
+    poolConnection.on('error', async (err) => {
+        console.error('Database pool error:', err.message);
+        await initializePool();
+    });
+}
+
+// Initial connection attempt
+initializePool();
 
 
 /**
@@ -227,6 +242,7 @@ app.post('/logging-in.html', async function (req, res) {
 
 async function connectAndQueryUsername(username) {
     try {
+        
         const query = `SELECT id FROM Accounts WHERE username COLLATE Latin1_General_BIN = @username`;
         const inputs = [{ name: 'username', type: sql.VarChar, value: username }];
         const resultSet = await executeQuery(query, inputs);
