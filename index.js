@@ -1,5 +1,5 @@
 /**
- * Server on http://localhost:8080
+ * Server on https://cs330-5-webapp-eqbjb0c6f2hfbxft.canadacentral-01.azurewebsites.net/
  */
 require('dotenv').config();
 const express = require('express');
@@ -42,17 +42,43 @@ const config = {
         enableArithAbort: true,
     },
 };
-// establishing a persistent pool connection
-let poolConnection; //CHECK
 
-(async function initializePool() {
+
+async function testConnection() {
     try {
-        poolConnection = await sql.connect(config);
-        console.log('Database connected');
+        await sql.connect(config);
+        console.log('Connection successful!');
     } catch (err) {
-        console.error('Error connecting to database:', err.message);
+        console.error('Connection error:', err.message);
     }
-})();
+}
+
+testConnection();
+
+// establishing a persistent pool connection
+let poolConnection;
+
+async function initializePool() {
+    let retries = 5; // Set a retry limit
+    while (retries > 0) {
+        try {
+            poolConnection = await sql.connect(config);
+            console.log('Database connected');
+            break;
+        } catch (err) {
+            console.error('Database connection error:', err.message);
+            retries--;
+            if (retries === 0) {
+                throw new Error("Failed to connect to the database after multiple attempts.");
+            }
+            console.log(`Retrying connection in 5 seconds... (${retries} retries left)`);
+            await new Promise(resolve => setTimeout(resolve, 5000));
+        }
+    }
+}
+
+// Initial connection attempt
+initializePool();
 
 
 /**
@@ -225,13 +251,15 @@ app.post('/logging-in.html', async function (req, res) {
 
 async function connectAndQueryUsername(username) {
     try {
+        
         const query = `SELECT id FROM Accounts WHERE username COLLATE Latin1_General_BIN = @username`;
         const inputs = [{ name: 'username', type: sql.VarChar, value: username }];
         const resultSet = await executeQuery(query, inputs);
 
         return resultSet.recordset.length > 0 ? "User found" : "Username not found";
-    } catch {
-        return "Error checking username";
+    } catch (err) {
+        console.error('Username query error:', err.message);
+        return err.message;
     }
 }
 
@@ -399,6 +427,9 @@ async function connectAndUpdateTrips(username, trips) {
 /** Query helper functions */
 
 async function executeQuery(query, inputs = []) {
+    if (!poolConnection) {
+        throw new Error("Database connection is not initialized.");
+    }
     try {
         const request = poolConnection.request();
         inputs.forEach(({ name, type, value }) => {
@@ -411,6 +442,7 @@ async function executeQuery(query, inputs = []) {
         throw err; // Throw to handle error higher up
     }
 }
+
 
 async function hashPassword(password) {
     const saltRounds = 10;
