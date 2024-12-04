@@ -221,8 +221,6 @@ function filterByDistance(trips, location, range) {
 app.post('/logging-in.html', async function (req, res) {
     let msg = "";
 
-    console.log("hit");
-
     let username = req.body.username;
     let password = req.body.password;
 
@@ -250,7 +248,7 @@ async function connectAndQueryUsername(username) {
         return resultSet.recordset.length > 0 ? "User found" : "Username not found";
     } catch (err) {
         console.error('Username query error:', err.message);
-        return "Error checking username";
+        return err.message;
     }
 }
 
