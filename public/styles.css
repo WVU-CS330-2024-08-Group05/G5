@@ -10,7 +10,6 @@ body {
     background-color: #f5f5f5;
 }
 
-
 header {
     display: flex;
     justify-content: space-between;
@@ -87,7 +86,9 @@ body.dark-mode #settings-text {
 
 /* ski logger dark mode */
 
-
+body.dark-mode #SkiTripList li {
+    background-color: gray;
+}
 
 /* SkiingLeaderboard */
 body.dark-mode #SkiingLeaderboard li {
@@ -222,43 +223,6 @@ input[type="search"]::-webkit-search-cancel-button {
     cursor: pointer;
 }
 
-/*Nav Buttons When hovered on*/
-.skilogger-button:hover {
-    background-color: darkblue;
-}
-
-.account-button:hover{
-    background-color: darkblue;
-}
-
-.search-button:hover{
-    background-color:darkblue;
-}
-
-.to-login-button:hover{
-    background-color:darkblue;
-}
-
-.to-signup-button:hover{
-    background-color:darkblue;
-}
-
-.resort-card:hover {
-    background-color: lightgray;
-}
-
-.resort-rating:hover{
-    background-color:darkblue;
-}
-
-#return-home:hover{
-    background-color:darkblue;
-}
-
-#return-home:hover {
-    background-color: darkblue;
-}
-
 /* Search */
 
 .resort-card {
@@ -347,6 +311,7 @@ input[type="search"]::-webkit-search-cancel-button {
     align-items: center;
 }
 
+
 /*All for sk-logger*/
 
 .ski-logger header {
@@ -397,7 +362,7 @@ input[type="search"]::-webkit-search-cancel-button {
     cursor: pointer;
 }
 
-.ski-logger #return-home {
+#return-home {
     margin-left: 3%;
     font-weight: bold;
     border-radius: 4px;
@@ -411,66 +376,56 @@ input[type="search"]::-webkit-search-cancel-button {
     text-decoration: none;
     text-align: center;
 }
-
+/*remove*/
 .ski-logger .left {
     width: 65%;
     margin-right: 5%;
     display: flex;
     flex-direction: column;
 }
-
+/*remove*/
 .ski-logger .right {
     width: 30%;
     display: flex;
     flex-direction: column;
     margin-right: 2%;
 }
+/*remove*/
 
-/*changes the font and the color of the web page background*/
 .ski-logger body {
     font-family: Arial, sans-serif;
     background-color: #f5f5f5;
 }
+/*remove*/
 
 .ski-logger #SkiTripList {
     list-style: none;
     padding-left: 0;
 }
-
-.ski-logger #SkiTripList li {
+#SkiTripList li {
     background-color: #fff;
     padding: 10px;
     margin-bottom: 5px;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+     list-style-type: none;
 }
 
-.ski-logger #SkiTripList li:hover {
-    background-color: #f0f8ff;
-}
+/*Ski Logger Dark Mode*/
 
-.ski-logger #SkiingLeaderboard {
-    list-style: decimal;
-    padding-left: 20px;
-}
-
-.ski-logger #SkiingLeaderboard {
-    list-style: decimal;
-    padding-left: 20px;
-}
-
-
-.ski-logger #SkiingLeaderboard li {
-    padding: 8px 0;
-    background-color: #fff;
-    padding: 10px;
-    margin-bottom: 5px;
+body input[type="number"],
+body input[type="text"],
+body input[type="date"] {
+    border: 1px solid #555;
     border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 10px;
 }
 
-.ski-logger #SkiingLeaderboard li:hover {
-    background-color: #f0f8ff;
+body #hourSubmit {
+    border: 1px solid #777; /* Border color */
+    border-radius: 5px; /* Optional for rounded edges */
+    padding: 10px 15px; /* Padding for a nice appearance */
+    cursor: pointer; /* Add pointer cursor for better UX */
 }
 
 /* Star rating test */
@@ -485,7 +440,7 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 
 .rating label {
-    font-size: 2rem; /* Size of the stars */
+    font-size: 5rem; /* Size of the stars */
     color: #ccc; /* Default color of stars */
     cursor: pointer; /* Change cursor to pointer */
     padding: 0 5px; /* Spacing between stars */
@@ -501,4 +456,37 @@ input[type="search"]::-webkit-search-cancel-button {
 /* Highlight stars when selected */
 .rating input:checked ~ label {
     color: #ffcc00; /* Gold color for selected stars */
+}
+
+/*Nav Buttons When hovered on*/
+.skilogger-button:hover {
+    background-color: darkblue;
+}
+
+.account-button:hover {
+    background-color: darkblue;
+}
+
+.search-button:hover {
+    background-color: darkblue;
+}
+
+.to-login-button:hover {
+    background-color: darkblue;
+}
+
+.to-signup-button:hover {
+    background-color: darkblue;
+}
+
+.resort-card:hover {
+    background-color: lightgray;
+}
+
+.resort-rating:hover {
+    background-color: darkblue;
+}
+
+#return-home:hover {
+    background-color: darkblue;
 }
