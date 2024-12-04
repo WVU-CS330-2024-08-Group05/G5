@@ -43,27 +43,38 @@ const config = {
     },
 };
 
+
+async function testConnection() {
+    try {
+        await sql.connect(config);
+        console.log('Connection successful!');
+    } catch (err) {
+        console.error('Connection error:', err.message);
+    }
+}
+
+testConnection();
+
 // establishing a persistent pool connection
 let poolConnection;
 
 async function initializePool() {
-    while (true) {
+    let retries = 5; // Set a retry limit
+    while (retries > 0) {
         try {
             poolConnection = await sql.connect(config);
             console.log('Database connected');
             break;
         } catch (err) {
             console.error('Database connection error:', err.message);
-            console.log('Retrying connection in 5 seconds...');
+            retries--;
+            if (retries === 0) {
+                throw new Error("Failed to connect to the database after multiple attempts.");
+            }
+            console.log(`Retrying connection in 5 seconds... (${retries} retries left)`);
             await new Promise(resolve => setTimeout(resolve, 5000));
         }
     }
-
-    // Set up automatic reconnection if connection is lost
-    poolConnection.on('error', async (err) => {
-        console.error('Database pool error:', err.message);
-        await initializePool();
-    });
 }
 
 // Initial connection attempt
@@ -416,6 +427,9 @@ async function connectAndUpdateTrips(username, trips) {
 /** Query helper functions */
 
 async function executeQuery(query, inputs = []) {
+    if (!poolConnection) {
+        throw new Error("Database connection is not initialized.");
+    }
     try {
         const request = poolConnection.request();
         inputs.forEach(({ name, type, value }) => {
@@ -428,6 +442,7 @@ async function executeQuery(query, inputs = []) {
         throw err; // Throw to handle error higher up
     }
 }
+
 
 async function hashPassword(password) {
     const saltRounds = 10;
