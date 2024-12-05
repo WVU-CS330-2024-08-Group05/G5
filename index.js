@@ -44,17 +44,6 @@ const config = {
 };
 
 
-async function testConnection() {
-    try {
-        await sql.connect(config);
-        console.log('Connection successful!');
-    } catch (err) {
-        console.error('Connection error:', err.message);
-    }
-}
-
-testConnection();
-
 // establishing a persistent pool connection
 let poolConnection;
 
@@ -428,7 +417,7 @@ async function connectAndUpdateTrips(username, trips) {
 
 async function executeQuery(query, inputs = []) {
     if (!poolConnection) {
-        throw new Error("Database connection is not initialized.");
+        await initializePool();
     }
     try {
         const request = poolConnection.request();
