@@ -417,7 +417,7 @@ async function connectAndUpdateTrips(username, trips) {
 
 async function executeQuery(query, inputs = []) {
     if (!poolConnection) {
-        await initializePool();
+        throw new Error("Database connection is not initialized.");
     }
     try {
         const request = poolConnection.request();
