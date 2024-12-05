@@ -220,7 +220,10 @@ function filterByDistance(trips, location, range) {
 
 app.post('/login', async function (req, res) {
     let msg = "";
-    initializePool();
+    if(!poolConnection) {
+        await initializePool();
+    }
+    
     let username = req.body.username;
     let password = req.body.password;
 
