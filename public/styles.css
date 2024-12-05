@@ -253,9 +253,7 @@ input[type="search"]::-webkit-search-cancel-button {
 
     .resort-card th, .resort-card td {
         text-align: center;
-        font-weight: bold;
-        font-size: 12px;
-        font-family: Arial;
+        font: bold 12px Arial, sans-serif;
         padding: 4px 4px 4px 4px;
         border: 1px solid darkgrey;
     }
