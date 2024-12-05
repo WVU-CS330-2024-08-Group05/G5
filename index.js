@@ -220,7 +220,7 @@ function filterByDistance(trips, location, range) {
 
 app.post('/login', async function (req, res) {
     let msg = "";
-
+    initializePool();
     let username = req.body.username;
     let password = req.body.password;
 
@@ -280,7 +280,7 @@ async function connectAndQueryPassword(username, password) {
 
 app.post("/signing-up.html", async function (req, res) {
     let msg = "";
-
+    initializePool();
     const username = req.body.username;
     const password = req.body.password;
     const email = req.body.email;
@@ -332,7 +332,7 @@ async function connectAndInsertAccount(username, password, email) {
 
 app.post("/account-trips.html", async function (req, res) {
     let msg = null; // Default to no data
-
+    initializePool();
     const username = req.body.username;
     try {
         msg = await connectAndQueryTrips(username);
@@ -376,7 +376,7 @@ async function connectAndQueryTrips(username) {
 
 app.post("/store-trips.html", async function (req, res) {
     let msg = "Storing account failed";  // Default error message
-
+    initializePool();
     const username = req.body.username;
     const trips = req.body.trips;
 
