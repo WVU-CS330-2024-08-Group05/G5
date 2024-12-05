@@ -5,7 +5,7 @@
  * 
  *      Each trip will be it's own object, that way we can store a list of object in the database's json
  */
-const urlBase = 'https://cs330-5-webapp-eqbjb0c6f2hfbxft.canadacentral-01.azurewebsites.net/';
+const urlBase = 'https://cs330-5-webapp-eqbjb0c6f2hfbxft.canadacentral-01.azurewebsites.net';
 
 class Trip {
     constructor(resort, hours, date, rating) {
