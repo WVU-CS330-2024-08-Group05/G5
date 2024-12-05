@@ -218,7 +218,7 @@ function filterByDistance(trips, location, range) {
  * check if username is in database, then check if password matches
 */
 
-app.post('/logging-in.html', async function (req, res) {
+app.post('/login', async function (req, res) {
     let msg = "";
 
     let username = req.body.username;

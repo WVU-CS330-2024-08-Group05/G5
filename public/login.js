@@ -21,7 +21,7 @@ $(function () {
         passwordErrorDiv.html("");
 
         // Define the URL for the POST request
-        let url = `${baseUrl}/logging-in.html`;
+        let url = `${baseUrl}/login`;
     
         // Only send the request if username is provided
         if (username && password) {
