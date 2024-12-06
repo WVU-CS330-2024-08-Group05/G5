@@ -5,7 +5,7 @@
  * 
  *      Each trip will be it's own object, that way we can store a list of object in the database's json
  */
-const urlBase = 'https://cs330-5-webapp-eqbjb0c6f2hfbxft.canadacentral-01.azurewebsites.net';
+const urlBase = 'http://localhost:8080';
 
 class Trip {
     constructor(resort, hours, date, rating) {
@@ -45,7 +45,7 @@ class Trip {
 
     // Store trips in the database for a specific user
     static async storeTripsInAccount(username, tripsArray) {
-        const url = `${urlBase}/store-trips.html`;
+        const url = `${urlBase}/store-trips`;
 
         if (username) {
             try {
@@ -79,7 +79,7 @@ class Trip {
 
     // Fetch stored trips for a user from the server
     static async getAccountTrips(username) {
-        const url = `${urlBase}/account-trips.html`;
+        const url = `${urlBase}/account-trips`;
         console.log(`Posting to ${url}...`);
 
         if (username) {
@@ -101,6 +101,7 @@ class Trip {
                 if (Array.isArray(result)) {
                     return Trip.jsonToArray(result); // Return Trip objects
                 } else {
+                    console.error("Format: ", typeof result);
                     console.error("Unexpected response format:", result);
                     return []; // Return an empty array if format is invalid
                 }

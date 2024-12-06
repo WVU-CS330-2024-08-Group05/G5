@@ -88,7 +88,7 @@ function usernameExists(username, password, email) {
         let usernameErrorDiv = $('#username-error');
         usernameErrorDiv.html(""); // Clear previous error messages
 
-        let url = `${baseUrl}/signing-up.html`;
+        let url = `${baseUrl}/signing-up`;
         
         fetch(url, {
             method: 'POST',
