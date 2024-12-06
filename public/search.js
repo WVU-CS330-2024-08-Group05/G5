@@ -1,4 +1,4 @@
-const baseUrl = 'https://cs330-5-webapp-eqbjb0c6f2hfbxft.canadacentral-01.azurewebsites.net/';
+const baseUrl = 'http://localhost:8080';
 
 // Search functionality
 console.log('search functionality...');

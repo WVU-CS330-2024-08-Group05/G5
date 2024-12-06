@@ -1,5 +1,5 @@
 /**
- * Server on https://cs330-5-webapp-eqbjb0c6f2hfbxft.canadacentral-01.azurewebsites.net/
+ * Server on http://localhost:8080
  */
 require('dotenv').config();
 const express = require('express');
