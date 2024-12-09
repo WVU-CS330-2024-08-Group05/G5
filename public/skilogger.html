@@ -1,16 +1,11 @@
-<!DOCTYPE html>
-<html lang="en" class="ski-logger">
+<!doctype html>
+<html lang="en">
 <head>
-    <title>SkiLogging</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Ski Resort Reviews</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="styles.css">
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 
     <script src="jquery.js"></script>
     <script src="hoursLogged.js"></script>
@@ -18,7 +13,6 @@
     <script src="completedTrips.js"></script>
     <script src="script.js"></script>
 </head>
-
 <body>
     <header>
         <a href="index.html" id="return-home">Return to Home <br> &#8592</a>
@@ -29,68 +23,48 @@
 
         <!-- temporary darkmode button-->
         <button id="darkModeToggle" class="dark-mode-toggle">Dark Mode</button>
-
     </header>
+
     <div class="container" id="main">
-        <div class="left">
-            <div id="Account-info">
-                <h1 id="username-written">(Username)</h1>
-                <div id="HoursSpent-Text">
-                    <p id="total-trips">Total Trips: </p>
-                    <p id="total-hours">Total Hours: </p>
-                    <p id="rank">Global Rank: </p>
+        <div class="row align-items-start">
+            <div class="col-sm-8 align-text-start" id="review">
+                <div id="Account-info">
+                    <div class="row">
+                        <h1 id="username-written">(Username)</h1>
+                    </div>
+                    <div class="row" id="HoursSpent-Text">
+                        <p id="total-trips">Total Trips: </p>
+                        <p id="total-hours">Total Hours: </p>
+                    </div>
                 </div>
-            </div>
 
-            <input type="number" id="Hours" name="Hours" placeholder="Log Hours:">
-            <input type="text" id="Resort" name="Resort" placeholder="Enter Name of Resort:">
-            <input type="date" id="Date" name="Date" placeholder="Enter Date:" />
+                <input type="number" id="Hours" name="Hours" placeholder="Log Hours:">
+                <input type="text" id="Resort" name="Resort" placeholder="Enter Name of Resort:">
+                <input type="date" id="Date" name="Date" placeholder="Enter Date:" />
 
-            <div class="rating">
-                <input type="radio" id="star5" name="rating" value="5">
-                <label for="star5" title="5 stars">★</label>
-                <input type="radio" id="star4" name="rating" value="4">
-                <label for="star4" title="4 stars">★</label>
-                <input type="radio" id="star3" name="rating" value="3">
-                <label for="star3" title="3 stars">★</label>
-                <input type="radio" id="star2" name="rating" value="2">
-                <label for="star2" title="2 stars">★</label>
-                <input type="radio" id="star1" name="rating" value="1">
-                <label for="star1" title="1 star">★</label>
+                <div class="rating">
+                    <input type="radio" id="star5" name="rating" value="5">
+                    <label for="star5" title="5 stars">★</label>
+                    <input type="radio" id="star4" name="rating" value="4">
+                    <label for="star4" title="4 stars">★</label>
+                    <input type="radio" id="star3" name="rating" value="3">
+                    <label for="star3" title="3 stars">★</label>
+                    <input type="radio" id="star2" name="rating" value="2">
+                    <label for="star2" title="2 stars">★</label>
+                    <input type="radio" id="star1" name="rating" value="1">
+                    <label for="star1" title="1 star">★</label>
+                </div>
+                <button class="bg-success text-white" type="button" id="hourSubmit">submit</button>
             </div>
-            <button type="button" id="hourSubmit">submit</button>
-        </div>
-        <div class="right">
-            <div>
-                <h2>
-                    Previous Ski Trips:
-                </h2>
-                <ul id="SkiTripList"></ul>
-            </div>
-            <div>
-                <h2>
-                    Leaderboard
-                </h2>
-                <ol id="SkiingLeaderboard">
-                    <li>First Place</li>
-                    <li>Second Place</li>
-                    <li>Third Place</li>
-                    <li>Fourth Place</li>
-                    <li>Fifth Place</li>
-                </ol>
+            <div class="col-sm-4 text-end" id="prev-reviews">
+                <div>
+                    <h2>Previous Reviews</h2>
+                    <ul id="SkiTripList"></ul>
+                </div>
             </div>
         </div>
     </div>
-
-
-    <!-- Test Button to fetch trips for Testingt -->
-    <button type="button" onclick=testGetAccountTrips()>Test Fetch Trips for 'Testingt'</button>
-    <div id="search-results" hidden></div>
-
-
-    <!-- Reference the darkmode.js file here -->
     <script src="darkmode.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
-
 </html>
