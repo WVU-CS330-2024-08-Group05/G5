@@ -138,7 +138,7 @@ class Trip {
     }
     
 
-    async getRating(){
+    async getRatings(){
         const url = urlBase + '/pull-ratings';
         console.log(`Getting from ${url}...`);
         try {
