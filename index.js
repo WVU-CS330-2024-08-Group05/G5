@@ -213,13 +213,15 @@ function filterByDistance(trips, location, range) {
 }
 
 /** Get resort names */
-app.get('/resort-names', async function (res) {
-    
+
+app.get('/resort-names', async function (req, res) {
     let resorts = [...RESORTS];
 
-    let resort_names = resorts.resort_name;
+    // Extract resort names using map
+    let resort_names = resorts.map(resort => resort.resort_name);
 
-    res.send(resort_names)
+    // Send the array of resort names as the response
+    res.send(resort_names);
 });
 
 
