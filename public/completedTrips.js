@@ -19,15 +19,12 @@ class Trip {
     }
 
     // Convert trips array to JSON
-    static tripsToJson(tripsArray) {
-        console.log("tripsToJson, before" + tripsArray);
-        console.log("tripsToJson, after" + JSON.stringify(tripsArray));
+    static tripsToJson(tripsArray) {;
         return JSON.stringify(tripsArray);
     }
 
     // Convert JSON back to trips array (and store them as Trip objects)
     static jsonToArray(tripsJSON) {
-        console.log("Converting JSON to Array. Input:", tripsJSON.length);
         // Ensure trips are converted into Trip objects
         if (Array.isArray(tripsJSON)) {
             return tripsJSON.flatMap(tripData => {
@@ -64,7 +61,7 @@ class Trip {
                 // add the new trip to the list of trips
                 if (Array.isArray(currentTrips)) {
                     currentTrips.push(trip);
-                    console.log("Current:" + currentTrips);
+
                 } else {
                     console.warn("Unexpected data format; resetting trips to an empty array.");
                     currentTrips = [trip];
@@ -119,14 +116,10 @@ class Trip {
 
                 // Directly retrieve the JSON response
                 const result = await response.json();
-                console.log("Parsed response from server:", result);
-                console.log("Parsed response from server:", result.length);
 
                 if (Array.isArray(result)) {
                     // Convert JSON to Trip objects and update the global trips array
-                    console.log("Pre jsonToArray: " + result.length);
                     trips = Trip.jsonToArray(result); 
-                    console.log('Trips successfully retrieved:', trips.length);
                     return trips;
                 } else {
                     console.error("Unexpected response format:", result);
@@ -144,4 +137,33 @@ class Trip {
         }
     }
     
+
+    async getRating(){
+        const url = urlBase + '/pull-ratings';
+        console.log(`Getting from ${url}...`);
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch trips from the database.');
+            }
+
+            // Directly retrieve the JSON response
+            const result = await response.json();
+            
+            return result;
+
+        }  catch(err) {
+                console.error('Error fetching ratings:', error);
+                ratings = []; // Reset trips in case of an error
+                return trips;
+        }
+    }
+
 }
+

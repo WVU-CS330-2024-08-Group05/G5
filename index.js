@@ -309,7 +309,7 @@ async function connectAndInsertAccount(username, password, email) {
 
         const query = `
             INSERT INTO Accounts (username, password, email, settings, pinned_resorts, trips)
-            VALUES (@username, @hashedPassword, @email, {}, {}, {}) `; // empty jsons
+            VALUES (@username, @hashedPassword, @email, NULL, NULL, NULL) `; // empty jsons
         const inputs = [
             { name: 'username', type: sql.VarChar, value: username },
             { name: 'hashedPassword', type: sql.VarChar, value: hashedPassword },
@@ -325,6 +325,35 @@ async function connectAndInsertAccount(username, password, email) {
     }
 }
 
+/** Pulling Ratings */
+
+// Function to get the list of ratings
+app.get('/pull-ratings', async (req, res) => {
+    try {
+        // Query to retrieve ratings
+        const query = `
+            SELECT 
+                JSON_VALUE(trip.value, '$.resort') AS resort_name,
+                CAST(JSON_VALUE(trip.value, '$.rating') AS FLOAT) AS rating
+            FROM 
+                Accounts
+            CROSS APPLY 
+                OPENJSON(CAST(trips AS NVARCHAR(MAX))) AS trip
+            WHERE 
+                JSON_VALUE(trip.value, '$.rating') IS NOT NULL;
+        `;
+
+        // Execute the query
+        const result = await poolConnection.request().query(query);
+
+        // Send the results as JSON
+        res.json(result.recordset);
+
+    } catch (error) {
+        console.error('Error executing query:', error);
+        res.send('Error retrieving ratings');
+    }
+});
 
 
 /** Trips Functionality */
@@ -438,3 +467,4 @@ async function hashPassword(password) {
 async function isPasswordCorrect(password, hash) {
     return await bcrypt.compare(password, hash);
 }
+
