@@ -84,6 +84,10 @@ body.dark-mode #settings-text {
     background-color: #333333;
 }
 
+body.dark-mode #account-name {
+    background-color: #333333;
+}
+
 /* ski logger dark mode */
 
 body.dark-mode #SkiTripList li {
