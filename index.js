@@ -139,6 +139,7 @@ function filterByDistance(trips, location, range) {
     return new_resorts;
 }
 
+
 /** Get resort names */
 
 app.get('/resort-names', async function (req, res) {
@@ -378,6 +379,65 @@ async function connectAndUpdateTrips(username, trips) {
         return 'Failed to update trips';
     }
 }
+
+/** Pin Resorts */
+
+app.post("/set-pinned-resorts", async function (req, res) {
+    let username = req.body.username;
+    let pinned = req.body.pinned_resorts;
+
+    const query = `UPDATE Accounts SET pinned_resorts = @pinned WHERE username = @username`;
+    const input = [
+        { name: 'username', type: sql.VarChar, value: username },
+        { name: 'pinned', type: sql.NVarChar, value: typeof pinned === 'string' ? pinned : JSON.stringify(pinned) }
+    ];
+
+    try {
+        await executeQuery(query, input);
+        res.send("Successful");
+    } catch (err) {
+        console.error('Error in saving pinned resorts:', err);
+        res.send("Failed");
+    }
+
+})
+
+
+// POST route handler
+app.post("/get-pinned-resorts", async function (req, res) {
+    const username = req.body.username;
+    const pinnedResorts = await getPinnedResorts(username); // Call the function to get pinned resorts
+    res.send(pinnedResorts); // Send the result back to the client
+});
+
+// Function to handle the query and return the pinned resorts
+async function getPinnedResorts(username) {
+    let msg = []; // Default to empty array if no resorts are found
+
+    const query = "SELECT pinned_resorts FROM Accounts WHERE username COLLATE Latin1_General_BIN = @username";
+    const input = [{ name: 'username', type: sql.VarChar, value: username }];
+    const resultSet = await executeQuery(query, input);
+
+    if (resultSet.recordset && resultSet.recordset.length > 0) {
+        const pinnedString = resultSet.recordset[0].pinned_resorts;
+
+        // Ensure pinnedString is valid JSON
+        if (pinnedString) {
+            try {
+                const pinned = JSON.parse(pinnedString); // Parse JSON
+                msg = pinned; // Assign parsed JSON to msg
+            } catch (error) {
+                console.error("Failed to parse JSON from database:", error);
+                msg = []; // Return empty array on parsing failure
+            }
+        }
+    }
+
+    return msg; // Return the result
+}
+
+
+
 
 /** Query helper functions */
 
