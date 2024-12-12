@@ -2,6 +2,7 @@
  * Database functionality
  */
 
+const bcrypt = require('bcrypt');
 const mssql = require('mssql');
 
 /**
@@ -173,4 +174,13 @@ async function hashPassword(password) {
 
 async function isPasswordCorrect(password, hash) {
     return await bcrypt.compare(password, hash);
+}
+
+module.exports = {
+    creatAccount,
+    getId,
+    getPassword,
+    getTrips,
+    setTrips,
+    executeQuery
 }

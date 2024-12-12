@@ -213,9 +213,6 @@ app.post("/account-trips", async function (req, res) {
 });
 
 
-
-
-
 app.post("/store-trips", async function (req, res) {
     let msg = "Storing account failed";  // Default error message
     const username = req.body.username;
@@ -249,7 +246,7 @@ app.post("/set-pinned-resorts", async function (req, res) {
     ];
 
     try {
-        await executeQuery(query, input);
+        await sql.executeQuery(query, input);
         res.send("Successful");
     } catch (err) {
         console.error('Error in saving pinned resorts:', err);
@@ -272,7 +269,7 @@ async function getPinnedResorts(username) {
 
     const query = "SELECT pinned_resorts FROM Accounts WHERE username COLLATE Latin1_General_BIN = @username";
     const input = [{ name: 'username', type: sql.VarChar, value: username }];
-    const resultSet = await executeQuery(query, input);
+    const resultSet = await sql.executeQuery(query, input);
 
     if (resultSet.recordset && resultSet.recordset.length > 0) {
         const pinnedString = resultSet.recordset[0].pinned_resorts;
