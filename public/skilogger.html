@@ -56,44 +56,47 @@
                 <style>
                     /* Override Select2 container width */
                     .select2-container {
-                        width: 200px !important;  /* Make it take up the full width of the parent container */
+                        width: 50% !important; /* Make it take up the full width of the parent container */
                     }
-                
+
                     /* Style for Select2 input field (the one used for search) */
                     .select2-selection {
                         font-size: 16px;
-                        padding: 10px;      
-                        height: 40px;      
-                        border: 1px solid #ccc;  
-                        border-radius: 5px; 
+                        padding: 10px;
+                        height: 40px;
+                        border: 1px solid #ccc;
+                        border-radius: 5px;
                     }
-                
+
                     /* Adjust line height for text inside the selection box */
                     .select2-selection__rendered {
-                        line-height: 40px; 
+                        line-height: 40px;
                     }
-                
+
                     /* Style for the dropdown list */
                     .select2-dropdown {
                         font-size: 16px;
                         border-radius: 5px;
+                        color: black;
                     }
-                
+
                     /* Optional: Adjust the appearance of the selected item */
                     .select2-container--default .select2-selection--single {
                         height: 40px !important;
                     }
-                
+
                     /* Optional: Adjust padding and font of the dropdown options */
                     .select2-results__option {
                         font-size: 16px;
-                        padding: 8px 10px; 
+                        padding: 8px 10px;
                     }
                 </style>
-                <select id="Resort" name="Resort"></select>
+                <select class="Resort" id="Resort" name="Resort"></select>
 
                 <input type="date" id="Date" name="Date" placeholder="Enter Date:" />
-
+                <div class='description'>
+                    <input id="description" type="text" placeholder="description of trip" />
+                </div>
                 <div class="rating">
                     <input type="radio" id="star5" name="rating" value="5">
                     <label for="star5" title="5 stars">★</label>
@@ -106,6 +109,8 @@
                     <input type="radio" id="star1" name="rating" value="1">
                     <label for="star1" title="1 star">★</label>
                 </div>
+
+
                 <button class="bg-success text-white" type="button" id="hourSubmit">submit</button>
             </div>
             <div class="col-sm-4 text-end" id="prev-reviews">

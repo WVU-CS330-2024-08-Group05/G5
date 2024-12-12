@@ -352,6 +352,25 @@ input[type="search"]::-webkit-search-cancel-button {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+#description {
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 99.1%;
+    height:40%;
+}
+
+.rating{
+    width:100%;
+}
+
+#Hours{
+    width:20%;
+}
+
+#Date{
+    width:28%;
+}
+
 .ski-logger .container {
     display: flex;
     height: 80vh;

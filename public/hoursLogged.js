@@ -18,7 +18,7 @@ $(function () {
 
             trips.forEach(trip => {
                 let listItem = document.createElement('li');
-                listItem.textContent = `Trip to ${trip.resort} on ${trip.date}, for ${trip.hours} hours, Rating: ${trip.rating} stars`;
+                listItem.textContent = `Trip to ${trip.resort} on ${trip.date}, for ${trip.hours} hours, Review: ${trip.description}, Rating: ${trip.rating} stars`;
                 document.getElementById('SkiTripList').append(listItem);
             });
         }
@@ -30,6 +30,7 @@ $(function () {
         const resort = $('#Resort').val();
         const date = $('#Date').val();
         const rating = $("input[name='rating']:checked").val();
+        const description = $("#description").val();
 
         if (!newHours || !resort || !date || !rating) {
             alert('Please fill in all fields before submitting.');
@@ -41,7 +42,7 @@ $(function () {
         $("#Hours").val('');
 
         // Create a new trip and add to the array
-        const newTrip = new Trip(resort, newHours, date, rating);
+        const newTrip = new Trip(resort, newHours, date, rating, description);
 
         tripsCount += 1;
         document.getElementById('total-trips').textContent = `Total Trips: ${tripsCount}`;
@@ -49,10 +50,11 @@ $(function () {
 
         // Add trip to the UI
         let listItem = document.createElement('li');
-        listItem.textContent = `Trip to ${resort} on ${date}, for ${newHours} hours, Rating: ${rating} stars`;
+        listItem.textContent = `Trip to ${resort} on ${date}, for ${newHours} hours, Rating: ${rating} stars, Review: ${description}`;
         document.getElementById('SkiTripList').append(listItem);
 
         // Store the trips in the database
         await Trip.storeTripsInAccount(username, newTrip);
     });
 });
+

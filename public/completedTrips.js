@@ -11,11 +11,12 @@ let trips = [];
 
 class Trip {
 
-    constructor(resort, hours, date, rating) {
+    constructor(resort, hours, date, rating, description) {
         this.resort = resort;
         this.hours = hours;
         this.date = date; // (mm/dd/yyyy)
         this.rating = rating; // integer 0-5
+        this.description = this.description;
     }
 
     // Convert trips array to JSON
@@ -31,11 +32,11 @@ class Trip {
                 if (Array.isArray(tripData)) {
                     // Handle nested arrays
                     return tripData.map(innerTrip =>
-                        new Trip(innerTrip.resort, innerTrip.hours, innerTrip.date, innerTrip.rating)
+                        new Trip(innerTrip.resort, innerTrip.hours, innerTrip.date, innerTrip.rating, innerTrip.description)
                     );
-                } else if (tripData.resort && tripData.hours && tripData.date && tripData.rating) {
+                } else if (tripData.resort && tripData.hours && tripData.date && tripData.rating, tripData.description) {
                     // Handle direct trip objects
-                    return new Trip(tripData.resort, tripData.hours, tripData.date, tripData.rating);
+                    return new Trip(tripData.resort, tripData.hours, tripData.date, tripData.rating, tripData.description);
                 } else {
                     console.warn("Unexpected trip data format:", tripData);
                     return [];
