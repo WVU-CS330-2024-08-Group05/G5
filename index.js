@@ -241,8 +241,8 @@ app.post("/set-pinned-resorts", async function (req, res) {
 
     const query = `UPDATE Accounts SET pinned_resorts = @pinned WHERE username = @username`;
     const input = [
-        { name: 'username', type: sql.VarChar, value: username },
-        { name: 'pinned', type: sql.NVarChar, value: typeof pinned === 'string' ? pinned : JSON.stringify(pinned) }
+        { name: 'username', type: mssql.VarChar, value: username },
+        { name: 'pinned', type: mssql.NVarChar, value: typeof pinned === 'string' ? pinned : JSON.stringify(pinned) }
     ];
 
     try {
@@ -268,8 +268,9 @@ async function getPinnedResorts(username) {
     let msg = []; // Default to empty array if no resorts are found
 
     const query = "SELECT pinned_resorts FROM Accounts WHERE username COLLATE Latin1_General_BIN = @username";
-    const input = [{ name: 'username', type: sql.VarChar, value: username }];
+    const input = [{ name: 'username', type: mssql.VarChar, value: username }];
     const resultSet = await sql.executeQuery(query, input);
+
 
     if (resultSet.recordset && resultSet.recordset.length > 0) {
         const pinnedString = resultSet.recordset[0].pinned_resorts;
