@@ -49,8 +49,10 @@ async function html(resort, options) {
         <div class="resort-rating">
             <p>Rating</p>
             </div>
-        <input class="pin-button" type="image" src="pin-image.png"/>
-    </div>
+                <button class="pin-button" data-resort-name="${resort.resort_name}">
+                    <img src="pin-image.png" alt="Pin this resort" />
+                </button>
+            </div>
 </div >
 `
     return html
