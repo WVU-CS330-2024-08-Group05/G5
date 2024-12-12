@@ -123,13 +123,13 @@ app.post('/login', async function (req, res) {
     let username = req.body.username;
     let password = req.body.password;
 
-    let username_exists = await connectAndQueryUsername(username);
+    let username_exists = await sql.getId(username);
     let password_matches;
 
     msg = username_exists;
 
     if (username_exists === "User found") {
-        password_matches = await connectAndQueryPassword(username, password);
+        password_matches = await sql.getPassword(username, password);
         msg = password_matches;
     }
 
@@ -149,13 +149,13 @@ app.post("/signing-up", async function (req, res) {
 
     try {
         // Check if username is already taken
-        const usernameExists = await connectAndQueryUsername(username);
+        const usernameExists = await sql.getId(username);
 
         if (usernameExists === "User found") {
             msg = "Username taken";
         } else {
             // Proceed with creating account
-            msg = await connectAndInsertAccount(username, password, email); // Password hashing happens in connectAndInsertAccount
+            msg = await sql.creatAccount(username, password, email); // Password hashing happens in connectAndInsertAccount
         }
     } catch (err) {
         console.error(err.message);
@@ -203,7 +203,7 @@ app.post("/account-trips", async function (req, res) {
     let msg = null; // Default to no data
     const username = req.body.username;
     try {
-        msg = await connectAndQueryTrips(username);
+        msg = await sql.getTrips(username);
     } catch (err) {
         console.error(err.message);
         msg = { error: "Error retrieving trips. Please try again later." }; // Send error as JSON
@@ -224,7 +224,7 @@ app.post("/store-trips", async function (req, res) {
     }
 
     try {
-        msg = await connectAndUpdateTrips(username, trips);
+        msg = await sql.setTrips(username, trips);
     } catch (err) {
         console.error('Error storing trips:', err);
         msg = 'Failed to store trips in the database.';
