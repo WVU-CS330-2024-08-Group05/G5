@@ -5,7 +5,7 @@
  * 
  *      Each trip will be it's own object, that way we can store a list of object in the database's json
  */
-const urlBase = 'http://localhost:8080';
+const urlBase = 'http://135.237.82.237:5000';
 
 let trips = [];
 

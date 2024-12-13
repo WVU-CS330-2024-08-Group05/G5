@@ -1,5 +1,5 @@
 /**
- * Server on http://localhost:8080
+ * Server on http://135.237.82.237:5000
  */
 require('dotenv').config();
 const express = require('express');
@@ -13,6 +13,7 @@ const geo = new NodeGeolocation('App');
 const Weather = require('./weather.js');
 const ResortCard = require('./ResortCard.js');
 const sql = require('./sql');
+const cors = require('cors');
 
 MAX_RESULTS = 10;
 
@@ -21,7 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 //dynamic porting
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}...`);
 });
@@ -29,6 +30,17 @@ app.listen(PORT, () => {
 
 // Middleware to parse json
 app.use(express.json());
+
+
+// Allow requests from specific origins
+const corsOptions = {
+    origin: 'http://135.237.82.237:5000', // Frontend's URL
+    methods: ['GET', 'POST'], // Allow specific methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
+};
+
+// Apply CORS middleware
+app.use(cors(corsOptions));
 
 
 /**

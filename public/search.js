@@ -1,4 +1,4 @@
-const baseUrl = 'http://localhost:8080';
+const baseUrl = 'http://135.237.82.237:5000';
 
 // Search functionality
 console.log('search functionality...');

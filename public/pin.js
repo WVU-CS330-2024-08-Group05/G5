@@ -1,4 +1,4 @@
-const urlBase = 'http://localhost:8080';
+const urlBase = 'http://135.237.82.237:5000';
 let pinned_resorts = []; // initialize as empty, to be fetched later
 
 
