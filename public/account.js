@@ -1,79 +1,30 @@
-//ES13
+console.log("getting trips...");
+$(async function () {
+    const username = sessionStorage.getItem("username");
 
-class Account {
-    //private variables
-    #username;
-    #password;
-    #email;
-    darkMode = false; //initialize light mode
+    if (window.location.pathname.endsWith('account.html') || window.location.pathname === '/') {
+        if (username) {
+            $('#username-written').text(username);
 
-    #hours;
-    #trips;
-    #rank;
+            try {
+                // Fetch trips from the server
+                const trips = await Trip.getAccountTrips(username);
 
-    //Constructor
-    constructor(username, password, email) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
+                if (trips && trips.length > 0) {
+                    // Generate HTML for each trip and wait for all promises to resolve
+                    const tripCardsHtml = await Promise.all(trips.map(trip => Trip.html(trip)));
 
-        this.trips = 0;
-        this.rank = 0;
-        this.hours = 0;
-    };
-
-    //setters and getters
-    set username(username){
-        this.username = username;
-    };
-    
-    get username(){
-        return username;
-    };
-
-    set password(password){
-        this.password = password;
-    };
-
-    get password(){
-        return password;
-    };
-
-    set email(email){
-        this.email = email;
-    };
-
-    get email(){
-        return email;
-    };
-
-
-    //user settings
-    changeBrowserMode(){
-        darkMode = !darkMode;
-    };
-
-    set hours(hours) {
-        this.hours = hours;
+                    // Append the resolved HTML to the 'user-locations' div and show it
+                    $('#user-locations').html(tripCardsHtml.join('')).show();
+                } else {
+                    console.log("No trips found for this user.");
+                    $('#user-locations').html('<p>No trips to display.</p>').show();
+                }
+            } catch (error) {
+                console.error("Error loading trips:", error);
+            }
+        } else {
+            console.log("No username found in session storage.");
+        }
     }
-
-    set rank(rank) {
-        this.rank = rank;
-    }
-
-    set trips(trips) {
-        this.trips = trips;
-    }
-
-    get trips() {
-        return this.trips;
-    }
-
-    get rank() {
-        return this.rank;
-    }
-
-    get hours() {
-        return this.hours;
-    }
-}
+});
