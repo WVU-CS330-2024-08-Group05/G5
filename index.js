@@ -15,6 +15,7 @@ const ResortCard = require('./ResortCard.js');
 const sql = require('./sql');
 
 MAX_RESULTS = 10;
+MAX_FETCH_ATTEMPTS = 5;
 
 // serve files from public dir
 app.use(express.static(path.join(__dirname, 'public')));
@@ -51,18 +52,20 @@ app.get('/search.html', async function (req, res) {
     }
 
     // Try to send search results
-    try {
-        // Get search results html
-        const html = await getSearchResultsHtml(resorts, options);
-        res.send(html);
-    } catch (err) {
-        res.send(`<h2>I'm not in the mood right now, please try again...<h2>`);
-        console.error(err);
+    for (i = 0; i < MAX_FETCH_ATTEMPTS; ++i) {
+        try {
+            // Get search results html
+            const html = await searchResultsHtml(resorts, options);
+            res.send(html);
+        } catch (err) {
+            res.send('<h2> Failed to from fetch National Weather Service API</h2>' +
+                '<h3>Please try again later...</h3>');
+        }
     }
 });
 
-async function getSearchResultsHtml(resorts, options) {
-    let html = "";
+async function searchResultsHtml(resorts, options) {
+    let results_html = "";
     // Sort resorts by distance from location
     if (options.distance) {
         resorts.sort((a, b) => a.distance - b.distance);
@@ -71,10 +74,24 @@ async function getSearchResultsHtml(resorts, options) {
     // Create results HTML
     for (let i = 0; i < MAX_RESULTS && i < resorts.length; ++i) {
         const resort = resorts[i];
-        const cardHtml = await ResortCard.html(resort, options); // Await the card HTML
-        html = html + cardHtml; // Append to accumulated HTML
+        for (let j = 0; j < MAX_FETCH_ATTEMPTS; ++j) {
+            try {
+                const cardHtml = await ResortCard.html(resort, options); // Await the card HTML
+                html = html + cardHtml; // Append to accumulated HTML
+            } catch (err) {
+                if (i == 4) {
+                    throw err;
+                }
+                else {
+                    console.error(`Nation weather service api timed out: try ${i + 1}/5.`);
+                }
+            }
+        }
     }
-    return html;
+
+    let page_footer = '';
+
+    return results_html + page_footer;
 }
 
 function filterBySearch(resorts, search) {

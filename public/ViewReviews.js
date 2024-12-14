@@ -1,6 +1,6 @@
 
 
-document.addEventListener('DOMContentLoaded', function () {
+/*document.addEventListener('DOMContentLoaded', function () {
     const reviewClick = document.getElementsByClassName('resort-rating');
 
 
@@ -21,4 +21,4 @@ document.body.addEventListener('click', (event) => {
     if (event.target.classList.contains('resort-rating')) {
         window.location.href = 'ratings.html';
     }
-});
+});*/
