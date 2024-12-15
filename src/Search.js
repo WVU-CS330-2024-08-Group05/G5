@@ -26,8 +26,9 @@ async function html(options) {
     }
 
     // Create results HTML
-    for (let i = 0; i < MAX_RESULTS && i < resorts.length; ++i) {
-        const resort = resorts[i];
+    const base = (options.page - 1) * MAX_RESULTS;
+    for (let i = 0; i < MAX_RESULTS && i + base < resorts.length; ++i) {
+        const resort = resorts[i + base];
         for (let j = 1; j <= MAX_FETCH_ATTEMPTS; ++j) {
             try {
                 const cardHtml = await ResortCard.html(resort, options);
@@ -44,6 +45,7 @@ async function html(options) {
         }
     }
 
+    // Create page footer html
     function pageBtnHtml(num) {
         if (options.page == num) {
             return `<li class="page-item active" aria-current="page">

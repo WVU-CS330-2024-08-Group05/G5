@@ -94,7 +94,7 @@ async function performSearch(url) {
         // Set handlers for page-links
         .then(() => {
             $('.page-link').on('click', (e) => {
-                performSearch(this.href);
+                performSearch(e.target.href);
                 return false;
             });
         });
