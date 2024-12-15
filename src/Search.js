@@ -61,7 +61,9 @@ async function html(options) {
     let allPageBtnHtml = '';
     let lowest_page = options.page - PAGES_SHOWN / 2;
     if (lowest_page < 1) lowest_page = 1;
-    for (let i = 0; i <= PAGES_SHOWN; ++i) {
+
+    // Loop to create page links
+    for (let i = 0; i <= PAGES_SHOWN && i < Math.ceil(resorts.length / MAX_RESULTS); ++i) {
         allPageBtnHtml += pageBtnHtml(lowest_page + i);
     }
 
