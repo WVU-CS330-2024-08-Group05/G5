@@ -49,7 +49,6 @@ app.get('/search.html', async function (req, res) {
     // Try to send search results
     try {
         // Get search results html
-        console.log(Search.html);
         const html = await Search.html(options);
         res.send(html);
     } catch (err) {

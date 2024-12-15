@@ -45,11 +45,7 @@ function drawCharts() {
     }
 }
 
-async function performSearch() {
-    let spinner_html = `<div class="spinner-border" role="status">
-  <span class="visually-hidden">Loading...</span>
-</div>`;
-
+async function createSearchUrl() {
     // Get search bar value
     let search = $('#search-bar').val();
     // Create URL for /search.html
@@ -72,6 +68,17 @@ async function performSearch() {
             console.error('Error getting location:', error);
         }
     }
+
+    return url;
+}
+
+async function performSearch(url) {
+    const spinner_html = `<div class="spinner-border" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>`;
+
+    url = (typeof url == 'string') ? url : await createSearchUrl();
+
     // Hide main, show search-results
     $('#main').hide();
     // Display spinner while fetching
@@ -83,5 +90,12 @@ async function performSearch() {
             if (html) $('#search-results').html(html);
             else $('#search-results').html('<h2>No results...</h2>');
         })
-        .then(drawCharts);
+        .then(drawCharts)
+        // Set handlers for page-links
+        .then(() => {
+            $('.page-link').on('click', (e) => {
+                performSearch(this.href);
+                return false;
+            });
+        });
 }
