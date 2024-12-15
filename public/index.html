@@ -16,24 +16,38 @@
     <script src="ViewReviews.js"></script>
 </head>
 <body class="home-page">
-    <header>
-        <div class="nav-buttons">
-            <a href="account.html" class="account-button" style="display: none">Account</a>
-            <a href="skilogger.html" class="skilogger-button" style="display: none">Ski Logger</a>
-            <a href="login.html" class="login-button" style="display: inline-block">Login</a>
-            <a href="signup.html" class="signup-button" style="display: inline-block">Sign Up</a>
-        </div>
-        <div class="search-container">
-            <input type="search" placeholder="Search For Specific Resort or Location" id="search-bar" class="search-bar">
-            <button id="search-button" class="search-button">Search</button>
-            <label for="range">Within </label>
-            <select name="range" id="range">
-                <option value="25000">any range</option>
-                <option value="50">50 miles</option>
-                <option value="100">100 miles</option>
-                <option value="200">200 miles</option>
-            </select>
-        </div>
+    <header class="bg-primary-subtle">
+        <nav class="navbar navbar-expand-md container-fluid h5">
+            <div class="container-fluid">
+                <img src="snowflake.png" class="img-fluid" alt="Snowflake" width="100" height="100"/>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" style="display: none" href="account.html">Account</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" style="display: none" href="skilogger.html">Ski Logger</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="login.html">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="signup.html">Signup</a>
+                        </li>
+                    </ul>
+                    <form class="d-flex" role="search">
+                        <input class="form-control me-2" id="search-bar" type="search" placeholder="Search For Specific Resort" aria-label="Search">
+                        <button class="btn btn-outline-success" id="search-button" type="button">Search</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
 
     </header>
 
