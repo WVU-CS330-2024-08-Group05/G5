@@ -1,5 +1,3 @@
-const baseUrl = 'http://localhost:8080';
-
 // Search functionality
 $(function () {
     console.log('ready...');
@@ -55,7 +53,7 @@ async function performSearch() {
     // Get search bar value
     let search = $('#search-bar').val();
     // Create URL for /search.html
-    let url = new URL('./search.html', baseUrl);
+    let url = new URL('../search.html', window.location.href);
     if (search) url.searchParams.append('search', search);
 
     // Handle location and range parameters

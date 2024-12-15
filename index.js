@@ -14,8 +14,9 @@ const Weather = require('./weather.js');
 const ResortCard = require('./ResortCard.js');
 const sql = require('./sql');
 
-MAX_RESULTS = 10;
-MAX_FETCH_ATTEMPTS = 5;
+const MAX_RESULTS = 10;
+const MAX_FETCH_ATTEMPTS = 5;
+const PAGES_SHOWN = 8;
 
 // serve files from public dir
 app.use(express.static(path.join(__dirname, 'public')));
@@ -40,7 +41,15 @@ app.use(express.json());
 app.get('/search.html', async function (req, res) {
     // Get all resorts
     resorts = [...RESORTS];
-    options = { distance: false };
+    options = {
+        distance: false,
+        page: 1, 
+        url: req.protocol+ '://' + req.hostname + req.url,
+    };
+
+    // Check if page number is requested
+    if (req.query.page) options.page = req.query.page;
+
     // Filter resorts by text segment
     if (req.query.search) {
         resorts = filterBySearch(resorts, req.query.search)
@@ -58,6 +67,7 @@ app.get('/search.html', async function (req, res) {
             const html = await searchResultsHtml(resorts, options);
             res.send(html);
         } catch (err) {
+            console.error(err);
             res.send('<h2> Failed to from fetch National Weather Service API</h2>' +
                 '<h3>Please try again later...</h3>');
         }
@@ -65,7 +75,7 @@ app.get('/search.html', async function (req, res) {
 });
 
 async function searchResultsHtml(resorts, options) {
-    let results_html = "";
+    let results_html = '';
     // Sort resorts by distance from location
     if (options.distance) {
         resorts.sort((a, b) => a.distance - b.distance);
@@ -74,22 +84,46 @@ async function searchResultsHtml(resorts, options) {
     // Create results HTML
     for (let i = 0; i < MAX_RESULTS && i < resorts.length; ++i) {
         const resort = resorts[i];
-        for (let j = 0; j < MAX_FETCH_ATTEMPTS; ++j) {
+        for (let j = 1; j <= MAX_FETCH_ATTEMPTS; ++j) {
             try {
-                const cardHtml = await ResortCard.html(resort, options); // Await the card HTML
-                html = html + cardHtml; // Append to accumulated HTML
+                const cardHtml = await ResortCard.html(resort, options);
+                results_html += cardHtml;
             } catch (err) {
-                if (i == 4) {
+                if (j == 5) {
                     throw err;
                 }
                 else {
-                    console.error(`Nation weather service api timed out: try ${i + 1}/5.`);
+                    console.error(`Nation weather service api timed out: try ${j}/5.`);
                 }
             }
         }
     }
 
-    let page_footer = '';
+    function pageBtnHtml(num) {
+        if (options.page == num) {
+            return `<li class="page-item active" aria-current="page">
+      <span class="page-link">${num}</span>
+    </li>`;
+        } else {
+            let url = new URL(options.url);
+            url.searchParams.set('page', num);
+            return `<li class="page-item"><a class="page-link" href="${url.href}">${num}</a></li>`;
+        }
+    }
+
+    let allPageBtnHtml = '';
+    for (let i = 1; i <= PAGES_SHOWN; ++i) {
+        allPageBtnHtml += pageBtnHtml(i);
+    }
+
+    let page_footer = 
+`
+<nav aria-label="...">
+  <ul class="pagination pagination-lg">
+    ${allPageBtnHtml}
+  </ul>
+</nav>
+`
 
     return results_html + page_footer;
 }
