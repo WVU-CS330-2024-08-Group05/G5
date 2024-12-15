@@ -12,12 +12,6 @@ $(function () {
             performSearch();    // Call the search function
         }
     });
-
-    // Search close button
-    $('search-close-btn').on('click', function () {
-        $('#main').show();
-        $('#search-results').hide();
-    });
 });
 
 // Pie chart
@@ -96,6 +90,13 @@ async function performSearch(url) {
             $('.page-link').on('click', (e) => {
                 performSearch(e.target.href);
                 return false;
+            });
+
+            // Search close button
+            $('#search-close-btn').on('click', function () {
+                console.log('CLOSING SEARCH');
+                $('#main').show();
+                $('#search-results').hide();
             });
         });
 }

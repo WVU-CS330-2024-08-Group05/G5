@@ -8,6 +8,9 @@ const MAX_RESULTS = 10;
 const MAX_FETCH_ATTEMPTS = 5;
 
 async function html(options) {
+    result_header =
+        `<div class="container-fluid"><button type="button" id="search-close-btn" class="btn-close" aria-label="Close"></button></div>`;
+
     let resorts = [...RESORTS];
 
     // Filter resorts by text segment
@@ -67,7 +70,7 @@ async function html(options) {
         allPageBtnHtml += pageBtnHtml(lowest_page + i);
     }
 
-    let page_footer = 
+    let result_footer = 
 `
 <nav aria-label="...">
   <ul class="pagination pagination-lg">
@@ -75,8 +78,7 @@ async function html(options) {
   </ul>
 </nav>
 `
-
-    return results_html + page_footer;
+    return result_header + results_html + result_footer;
 }
 
 function filterBySearch(resorts, options) {
