@@ -88,6 +88,7 @@ async function searchResultsHtml(resorts, options) {
             try {
                 const cardHtml = await ResortCard.html(resort, options);
                 results_html += cardHtml;
+                break;
             } catch (err) {
                 if (j == 5) {
                     throw err;
@@ -112,8 +113,9 @@ async function searchResultsHtml(resorts, options) {
     }
 
     let allPageBtnHtml = '';
-    for (let i = 1; i <= PAGES_SHOWN; ++i) {
-        allPageBtnHtml += pageBtnHtml(i);
+    const lowest_page = options.page - PAGES_SHOWN / 2;
+    for (let i = 0; i <= PAGES_SHOWN; ++i) {
+        allPageBtnHtml += pageBtnHtml(lowest_page + i);
     }
 
     let page_footer = 
