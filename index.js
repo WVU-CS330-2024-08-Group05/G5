@@ -41,10 +41,11 @@ app.use(express.json());
 app.get('/search.html', async function (req, res) {
     // Get all resorts
     resorts = [...RESORTS];
+    const port = req.socket.localPort ? ':' + req.socket.localPort : '';
     options = {
         distance: false,
         page: 1, 
-        url: req.protocol+ '://' + req.hostname + req.url,
+        url: `${req.protocol}://${req.hostname}${port}${req.url}`,
     };
 
     // Check if page number is requested
@@ -113,7 +114,8 @@ async function searchResultsHtml(resorts, options) {
     }
 
     let allPageBtnHtml = '';
-    const lowest_page = options.page - PAGES_SHOWN / 2;
+    let lowest_page = options.page - PAGES_SHOWN / 2;
+    if (lowest_page < 1) lowest_page = 1;
     for (let i = 0; i <= PAGES_SHOWN; ++i) {
         allPageBtnHtml += pageBtnHtml(lowest_page + i);
     }
