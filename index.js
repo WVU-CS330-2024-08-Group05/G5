@@ -1,22 +1,14 @@
 /**
- * Server on http://localhost:8080
+ * Snowhere you'r going server entry point.
  */
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const app = express();
 const mssql = require('mssql');
-const bcrypt = require('bcrypt');
-const RESORTS = require('./resortdata.json');
-const NodeGeolocation = require('nodejs-geolocation').default;
-const geo = new NodeGeolocation('App');
-const Weather = require('./weather.js');
-const ResortCard = require('./ResortCard.js');
+const Search = require('./src/Search.js');
 const sql = require('./sql');
-
-const MAX_RESULTS = 10;
-const MAX_FETCH_ATTEMPTS = 5;
-const PAGES_SHOWN = 8;
+const RESORTS = require('./resortdata.json');
 
 // serve files from public dir
 app.use(express.static(path.join(__dirname, 'public')));
@@ -39,10 +31,13 @@ app.use(express.json());
  * Search results include resorts with names that start with req.query.search and resorts that are in a state the the begins with req.query.search.
  */
 app.get('/search.html', async function (req, res) {
-    // Get all resorts
-    resorts = [...RESORTS];
+    // Set search options
     const port = req.socket.localPort ? ':' + req.socket.localPort : '';
     options = {
+        lat: req.query.lat,
+        lon: req.query.lon,
+        range: req.query.range,
+        search: req.query.search,
         distance: false,
         page: 1, 
         url: `${req.protocol}://${req.hostname}${port}${req.url}`,
@@ -51,108 +46,19 @@ app.get('/search.html', async function (req, res) {
     // Check if page number is requested
     if (req.query.page) options.page = req.query.page;
 
-    // Filter resorts by text segment
-    if (req.query.search) {
-        resorts = filterBySearch(resorts, req.query.search)
-    }
-    // Filter resorts by distance from location
-    if (req.query.lat && req.query.lon && req.query.range) {
-        resorts = filterByDistance(resorts, req.query, req.query.range);
-        options.distance = true;
-    }
-
     // Try to send search results
-    for (i = 0; i < MAX_FETCH_ATTEMPTS; ++i) {
-        try {
-            // Get search results html
-            const html = await searchResultsHtml(resorts, options);
-            res.send(html);
-        } catch (err) {
-            console.error(err);
-            res.send('<h2> Failed to from fetch National Weather Service API</h2>' +
-                '<h3>Please try again later...</h3>');
-        }
+    try {
+        // Get search results html
+        console.log(Search.html);
+        const html = await Search.html(options);
+        res.send(html);
+    } catch (err) {
+        console.error(err);
+        res.send('<h2> Failed to from fetch National Weather Service API</h2>' +
+            '<h3>Please try again later...</h3>');
     }
+
 });
-
-async function searchResultsHtml(resorts, options) {
-    let results_html = '';
-    // Sort resorts by distance from location
-    if (options.distance) {
-        resorts.sort((a, b) => a.distance - b.distance);
-    }
-
-    // Create results HTML
-    for (let i = 0; i < MAX_RESULTS && i < resorts.length; ++i) {
-        const resort = resorts[i];
-        for (let j = 1; j <= MAX_FETCH_ATTEMPTS; ++j) {
-            try {
-                const cardHtml = await ResortCard.html(resort, options);
-                results_html += cardHtml;
-                break;
-            } catch (err) {
-                if (j == 5) {
-                    throw err;
-                }
-                else {
-                    console.error(`Nation weather service api timed out: try ${j}/5.`);
-                }
-            }
-        }
-    }
-
-    function pageBtnHtml(num) {
-        if (options.page == num) {
-            return `<li class="page-item active" aria-current="page">
-      <span class="page-link">${num}</span>
-    </li>`;
-        } else {
-            let url = new URL(options.url);
-            url.searchParams.set('page', num);
-            return `<li class="page-item"><a class="page-link" href="${url.href}">${num}</a></li>`;
-        }
-    }
-
-    let allPageBtnHtml = '';
-    let lowest_page = options.page - PAGES_SHOWN / 2;
-    if (lowest_page < 1) lowest_page = 1;
-    for (let i = 0; i <= PAGES_SHOWN; ++i) {
-        allPageBtnHtml += pageBtnHtml(lowest_page + i);
-    }
-
-    let page_footer = 
-`
-<nav aria-label="...">
-  <ul class="pagination pagination-lg">
-    ${allPageBtnHtml}
-  </ul>
-</nav>
-`
-
-    return results_html + page_footer;
-}
-
-function filterBySearch(resorts, search) {
-    let new_resorts = new Array();
-    for (let resort of resorts) {
-        if (resort.state.toLowerCase().includes(search.toLowerCase()) ||
-            resort.resort_name.toLowerCase().includes(search.toLowerCase()))
-            new_resorts.push(resort);
-    }
-    return new_resorts;
-}
-
-function filterByDistance(trips, location, range) {
-    let new_resorts = new Array();
-    for (let resort of resorts) {
-        let distance = geo.calculateDistance(resort, location, { unit: 'mi' });
-        resort['distance'] = distance;
-        if (distance < range) {
-            new_resorts.push(resort);
-        }
-    }
-    return new_resorts;
-}
 
 
 /** Get resort names */
@@ -289,7 +195,6 @@ app.post("/store-trips", async function (req, res) {
 });
 
 /** Pin Resorts */
-
 app.post("/set-pinned-resorts", async function (req, res) {
     let username = req.body.username;
     let pinned = req.body.pinned_resorts;

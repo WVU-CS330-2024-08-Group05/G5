@@ -1,7 +1,7 @@
 /**
  * Handles generating resort card html.
  */
-const Weather = require('./weather.js');
+const Weather = require('../weather.js');
 
 async function html(resort, options) {
     // Set distance html
