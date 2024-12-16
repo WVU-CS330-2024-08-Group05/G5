@@ -1,4 +1,6 @@
 /*
+National Weather Service API
+
 https://api.weather.gov/points/{latitude},{longitude}
 
 forecastHourly - forecast for hourly periods over the next seven days
@@ -7,7 +9,7 @@ forecastHourly - forecast for hourly periods over the next seven days
 forecast - forecast for 12h periods over the next seven days
 "forecast": "https://api.weather.gov/gridpoints/TOP/32,81/forecast"
 
-period format:
+example period format:
 {
     "number": 1,
     "name": "This Afternoon",
@@ -65,6 +67,55 @@ async function getResortWeatherHourly(resort) {
 
     return hourly.properties.periods;
 }
+
+/**
+ * National Digital Forecast Database (NDFD) API
+ * 
+ * https://graphical.weather.gov/xml/SOAP_server/ndfdXMLclient.php
+ * (fine-resolution (1-hour, 2.5km))
+ */
+
+/**
+ * Single point unsummarized data
+ * @param {lat, lon} point
+ */
+async function getNdfdData(point) {
+    const date = new Date();
+
+    const params = {
+        lat: point.lat,
+        lon: point.lon,
+        product: 'time-series',
+        begin: '',
+        end: '',
+        Unit: 'e',
+        XMLformat: 'DWML',
+    }
+
+    let url = new URL('https://digital.weather.gov/xml/SOAP_server/ndfdXMLclient.php');
+    for (let param in params) {
+        url.searchParams.append(param, params[param]);
+    }
+
+    console.log(url);
+
+    let data = await fetch(url);
+    console.log(data);
+
+    data = await data.text();
+    console.log(data);
+
+    return data;
+}
+
+
+
+
+
+
+
+
+
 
 module.exports = {
     getResortWeather,
