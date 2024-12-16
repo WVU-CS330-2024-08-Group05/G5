@@ -12,21 +12,19 @@ function isGuest() {
 
 function toggleGuestButtons() {
     const isGuest = sessionStorage.getItem("isGuest") === "true";
-    
-    const loginButton = document.querySelector('.login-button');
-    const signupButton = document.querySelector('.signup-button');
-    const accountButton = document.querySelector('.account-button');
-    const skiLoggerButton = document.querySelector('.skilogger-button');
-    
+
+    const loginButton = document.querySelector('#login-nav');
+    const signupButton = document.querySelector('#signup-nav');
+    const accountButton = document.querySelector('#account-nav');
+    const skiLoggerButton = document.querySelector('#skilogger-nav');
+
     loginButton.style.display = isGuest ? 'inline-block' : 'none';
     signupButton.style.display = isGuest ? 'inline-block' : 'none';
     accountButton.style.display = isGuest ? 'none' : 'inline-block';
     skiLoggerButton.style.display = isGuest ? 'none' : 'inline-block';
 }
 
-if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
-    document.addEventListener('DOMContentLoaded', isGuest);
-    window.addEventListener('pageshow', function () {
-        isGuest();
-    });
-}
+document.addEventListener('DOMContentLoaded', isGuest);
+window.addEventListener('pageshow', function () {
+    isGuest();
+});

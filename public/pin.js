@@ -1,4 +1,3 @@
-const urlBase = 'http://135.237.82.237:5000';
 let pinned_resorts = []; // initialize as empty, to be fetched later
 
 
@@ -49,7 +48,7 @@ async function pinResort(resort_name, username) {
 
 // store pinned resorts in the database
 async function storePinnedResorts(username) {
-    const url = urlBase + '/set-pinned-resorts';
+    const url = '/set-pinned-resorts';
     console.log(`Posting to ${url}...`);
 
     try {
@@ -75,7 +74,7 @@ async function storePinnedResorts(username) {
 
 // get pinned resorts from the database
 async function getPinnedResorts(username) {
-    const url = urlBase + '/get-pinned-resorts';
+    const url = '/get-pinned-resorts';
     console.log(`Getting from ${url}...`);
 
     try {

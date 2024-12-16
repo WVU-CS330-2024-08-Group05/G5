@@ -60,32 +60,24 @@ input[type="search"]::-webkit-search-cancel-button {
     flex-direction: column;
 }
 
-.user-locations {
+.trip-card {
     background-color: white;
-    margin-bottom:  2%;
+    margin-bottom: 2%;
     margin-left: 3%;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    overflow-y:auto
+    overflow-y: auto;
 }
 
 .location-title {
     display: flex;
+    justify-content: space-between;
+    margin-bottom: 3px;
+    width: 95%;
 }
 
 .location-title h2 {
-    height: fit-content;
     width: 90%;
-}
-
-.resort-rating {
-    width: fit-content;
-    height: 10%;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border-radius: 8px;
-    font-size: 1.2em;
 }
 
 .location-content {
@@ -93,30 +85,23 @@ input[type="search"]::-webkit-search-cancel-button {
     flex-wrap: wrap;
 }
 
-#location-img {
+.image-container {
     margin: 5px;
     width: 24%;
-  }
+}
+
+.location-img {
+    width: 100%;
+    height: auto;
+}
 
 .user-review {
     margin: 5px;
     padding: 5px;
-    width: 24%;
+    width: 50%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
+}
 
-.achievements {
-    margin: 5px;
-    padding: 5px;
-    width: 23%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-.activities {
-    margin: 5px;
-    padding: 5px;
-    width: 24%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
 
 #account-name {
     margin: 10px 30%;
@@ -170,4 +155,56 @@ input[type="search"]::-webkit-search-cancel-button {
     width: 150px;
     text-decoration: none;
     text-align: center;
+}
+
+
+.resort-rating {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 8px;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: fit-content;
+    cursor: default;
+}
+
+.star {
+    margin-left: 5px;
+    font-size: 1.5em;
+}
+
+/* Separate box for date and hours */
+.info-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.date-logged, .hours-logged {
+    padding: 10px;
+    background-color: #f1f1f1;
+    border-radius: 8px;
+    font-size: 1.1em;
+    width: 45%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.date-logged {
+    font-weight: bold;
+    color: #007bff;
+}
+
+.hours-logged {
+    font-weight: bold;
+    color: #007bff;
+}
+
+/* Additional spacing for clarity */
+.user-review p {
+    margin: 5px 0;
+    font-size: 1.1em;
+    line-height: 1.6;
 }

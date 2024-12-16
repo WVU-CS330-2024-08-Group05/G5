@@ -5,18 +5,16 @@
  * 
  *      Each trip will be it's own object, that way we can store a list of object in the database's json
  */
-const urlBase = 'http://135.237.82.237:5000';
 
 let trips = [];
 
 class Trip {
-
     constructor(resort, hours, date, rating, description) {
         this.resort = resort;
         this.hours = hours;
         this.date = date; // (mm/dd/yyyy)
         this.rating = rating; // integer 0-5
-        this.description = this.description;
+        this.description = description;
     }
 
     // Convert trips array to JSON
@@ -52,7 +50,7 @@ class Trip {
     
     // Store trips in the database for a specific user
     static async storeTripsInAccount(username, trip) {
-        const url = `${urlBase}/store-trips`;
+        const url = `/store-trips`;
 
         if (username) {
             try {
@@ -98,7 +96,7 @@ class Trip {
 
     // Fetch stored trips for a user from the server
     static async getAccountTrips(username) {
-        const url = urlBase + '/account-trips';
+        const url = '/account-trips';
         console.log(`Posting to ${url}...`);
 
         if (username) {
@@ -140,7 +138,7 @@ class Trip {
     
 
     async getRatings(){
-        const url = urlBase + '/pull-ratings';
+        const url = '/pull-ratings';
         console.log(`Getting from ${url}...`);
         try {
             const response = await fetch(url, {
@@ -166,5 +164,30 @@ class Trip {
         }
     }
 
+    static async html(trip) {
+        let { resort, date, hours, rating, description } = trip;
+
+        return `
+            <div class="trip-card">
+                <div class="location-title">
+                    <h2>${resort}</h2>
+                    <div class="resort-rating">${rating} <span class="star">★</span></div>
+                </div>
+                <div class="location-content">
+                    <div class="image-container">
+                        <img class="location-img" src="placeholder.png" alt="Picture of Resorts" height="200" width="200">
+                    </div>
+                    <div class="user-review">
+                        <h3>Review</h3>
+                        <p>I visited for ${hours} hours on ${date}. ${description}</p>
+                    </div>
+                </div>
+                <div class="info-container">
+                    <div class="date-logged">Date: ${date}</div>
+                    <div class="hours-logged">Hours Logged: ${hours}</div>
+                </div>
+            </div>
+        `;
+    }
 }
 

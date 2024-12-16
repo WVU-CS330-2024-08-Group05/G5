@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const toggleButton = document.getElementById('dark-mode-toggle');
+    
     // Check localStorage and apply saved mode
     if (localStorage.getItem('darkMode') === 'enabled') {
         document.body.classList.add('dark-mode');
@@ -7,7 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     else {
         document.body.classList.remove('dark-mode');
     }
-
+    /*
+    const toggleButton = document.getElementById('dark-mode-toggle');
     // Toggle dark mode on slider change
     toggleButton.on('click', () => {
 
@@ -20,5 +21,5 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.classList.remove('dark-mode');
             localStorage.setItem('darkMode', 'disabled');
         }
-    });
+    });*/
 });

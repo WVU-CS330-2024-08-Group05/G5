@@ -1,21 +1,14 @@
 /**
- * Server on http://135.237.82.237:5000
+ * Snowhere you'r going server entry point.
  */
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const app = express();
 const mssql = require('mssql');
-const bcrypt = require('bcrypt');
-const RESORTS = require('./resortdata.json');
-const NodeGeolocation = require('nodejs-geolocation').default;
-const geo = new NodeGeolocation('App');
-const Weather = require('./weather.js');
-const ResortCard = require('./ResortCard.js');
+const Search = require('./src/Search.js');
 const sql = require('./sql');
-const cors = require('cors');
-
-MAX_RESULTS = 10;
+const RESORTS = require('./resortdata.json');
 
 // serve files from public dir
 app.use(express.static(path.join(__dirname, 'public')));
@@ -49,67 +42,33 @@ app.use(cors(corsOptions));
  * Search results include resorts with names that start with req.query.search and resorts that are in a state the the begins with req.query.search.
  */
 app.get('/search.html', async function (req, res) {
-    // Get all resorts
-    resorts = [...RESORTS];
-    options = { distance: false };
-    // Filter resorts by text segment
-    if (req.query.search) {
-        resorts = filterBySearch(resorts, req.query.search)
-    }
-    // Filter resorts by distance from location
-    if (req.query.lat && req.query.lon && req.query.range) {
-        resorts = filterByDistance(resorts, req.query, req.query.range);
-        options.distance = true;
-    }
+    // Set search options
+    const port = req.socket.localPort ? ':' + req.socket.localPort : '';
+    options = {
+        lat: req.query.lat,
+        lon: req.query.lon,
+        range: req.query.range,
+        search: req.query.search,
+        distance: false,
+        page: 1, 
+        url: `${req.protocol}://${req.hostname}${port}${req.url}`,
+    };
+
+    // Check if page number is requested
+    if (req.query.page) options.page = req.query.page;
 
     // Try to send search results
     try {
         // Get search results html
-        const html = await getSearchResultsHtml(resorts, options);
+        const html = await Search.html(options);
         res.send(html);
     } catch (err) {
-        res.send(`<h2>I'm not in the mood right now, please try again...<h2>`);
         console.error(err);
+        res.send('<h2> Failed to from fetch National Weather Service API</h2>' +
+            '<h3>Please try again later...</h3>');
     }
+
 });
-
-async function getSearchResultsHtml(resorts, options) {
-    let html = "";
-    // Sort resorts by distance from location
-    if (options.distance) {
-        resorts.sort((a, b) => a.distance - b.distance);
-    }
-
-    // Create results HTML
-    for (let i = 0; i < MAX_RESULTS && i < resorts.length; ++i) {
-        const resort = resorts[i];
-        const cardHtml = await ResortCard.html(resort, options); // Await the card HTML
-        html = html + cardHtml; // Append to accumulated HTML
-    }
-    return html;
-}
-
-function filterBySearch(resorts, search) {
-    let new_resorts = new Array();
-    for (let resort of resorts) {
-        if (resort.state.toLowerCase().includes(search.toLowerCase()) ||
-            resort.resort_name.toLowerCase().includes(search.toLowerCase()))
-            new_resorts.push(resort);
-    }
-    return new_resorts;
-}
-
-function filterByDistance(trips, location, range) {
-    let new_resorts = new Array();
-    for (let resort of resorts) {
-        let distance = geo.calculateDistance(resort, location, { unit: 'mi' });
-        resort['distance'] = distance;
-        if (distance < range) {
-            new_resorts.push(resort);
-        }
-    }
-    return new_resorts;
-}
 
 
 /** Get resort names */
@@ -246,7 +205,6 @@ app.post("/store-trips", async function (req, res) {
 });
 
 /** Pin Resorts */
-
 app.post("/set-pinned-resorts", async function (req, res) {
     let username = req.body.username;
     let pinned = req.body.pinned_resorts;
