@@ -323,6 +323,14 @@ input[type="search"]::-webkit-search-cancel-button {
     align-items: center;
 }
 
+/* About Page */
+.about-page {
+    height: 100vh;
+    background-image: url('golden-ratio.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
 
 /*All for sk-logger*/
 
