@@ -9,17 +9,32 @@ const mssql = require('mssql');
 const Search = require('./src/Search.js');
 const sql = require('./sql');
 const RESORTS = require('./resortdata.json');
+const cors = require('cors');
+const fs = require('fs');
+const https = require('https');
 
 // serve files from public dir
 app.use(express.static(path.join(__dirname, 'public')));
 
 
 //dynamic porting
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`Listening on port ${PORT}...`);
-});
+// const PORT = process.env.PORT || 5000;
+// app.listen(PORT, () => {
+//     console.log(`Listening on port ${PORT}...`);
+// });
 
+
+// Read the certificate and key files
+const privateKey = fs.readFileSync('private.key', 'utf8');
+const certificate = fs.readFileSync('certificate.crt', 'utf8');
+
+// Set up SSL options
+const credentials = { key: privateKey, cert: certificate };
+
+// Create an HTTPS server and listen on port 5000
+https.createServer(credentials, app).listen(5000, () => {
+  console.log('Server running on https://<your-ip>:5000');
+});
 
 // Middleware to parse json
 app.use(express.json());
