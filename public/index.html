@@ -44,7 +44,7 @@
                             <a class="nav-link" href="about.html">About</a>
                         </li>
                     </ul>
-                    <form role="search" class="w-50">
+                    <form role="search" class="w-50 form-horizontal">
                         <div class="row">
                             <div class="col-9 p-0">
                                 <input class="form-control me-2" id="search-bar" type="search" placeholder="Resort search" aria-label="Search">
@@ -52,6 +52,25 @@
                             <div class="col-3 p-0">
                                 <button class="btn btn-outline-success" id="search-button" type="button">Search</button>
                             </div>
+                        </div>
+                        <div class="row flex-fill">
+                            <div class="col-5"></div>
+                            <div class="col-2 p-0 text-end">
+                                <lable for="range" class="col-form-label text-secondary">Within:</lable>
+                            </div>
+                            <div class="col-2 p-1">
+                                <select class="form-select-sm" aria-label="Range from current location" id="range">
+                                    <option selected value="25000">Any miles</option>
+                                    <option value="50">50 miles</option>
+                                    <option value="100">100 miles</option>
+                                    <option value="150">150 miles</option>
+                                    <option value="200">200 miles</option>
+                                    <option value="300">300 miles</option>
+                                    <option value="400">400 miles</option>
+                                    <option value="500">500 miles</option>
+                                </select>
+                            </div>
+                            <div class="col-3"></div>
                         </div>
                     </form>
                 </div>
