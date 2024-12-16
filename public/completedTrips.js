@@ -5,12 +5,10 @@
  * 
  *      Each trip will be it's own object, that way we can store a list of object in the database's json
  */
-const urlBase = 'http://localhost:8080';
 
 let trips = [];
 
 class Trip {
-
     constructor(resort, hours, date, rating, description) {
         this.resort = resort;
         this.hours = hours;
@@ -52,7 +50,7 @@ class Trip {
     
     // Store trips in the database for a specific user
     static async storeTripsInAccount(username, trip) {
-        const url = `${urlBase}/store-trips`;
+        const url = `/store-trips`;
 
         if (username) {
             try {
@@ -98,7 +96,7 @@ class Trip {
 
     // Fetch stored trips for a user from the server
     static async getAccountTrips(username) {
-        const url = urlBase + '/account-trips';
+        const url = '/account-trips';
         console.log(`Posting to ${url}...`);
 
         if (username) {
@@ -140,7 +138,7 @@ class Trip {
     
 
     async getRatings(){
-        const url = urlBase + '/pull-ratings';
+        const url = '/pull-ratings';
         console.log(`Getting from ${url}...`);
         try {
             const response = await fetch(url, {
@@ -191,8 +189,5 @@ class Trip {
             </div>
         `;
     }
-
-
-
 }
 
