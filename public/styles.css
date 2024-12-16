@@ -10,6 +10,10 @@ body {
     background-color: #f5f5f5;
 }
 
+.darkmode-button {
+    background-color: gray;
+}
+
 header {
     display: flex;
     justify-content: space-between;
