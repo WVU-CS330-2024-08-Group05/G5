@@ -47,14 +47,13 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 
 .right {
-    width: 30%;
+    width: 20%;
     display: flex;
     flex-direction: column;
-    margin-right: 2%;
 }
 
 .left {
-    width: 65%;
+    width: 80%;
     margin-right: 5%;
     display: flex;
     flex-direction: column;

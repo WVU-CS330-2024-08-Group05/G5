@@ -164,9 +164,35 @@ class Trip {
         }
     }
 
+    static async clearTrips() {
+        let username = sessionStorage.getItem("username");
+        trips = [];
+        const url = '/store-trips';
+        
+        console.log(`Getting from ${url}...`);
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, trips })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to eradicate trips from the database.');
+            }
+
+        }  catch(err) {
+                console.error('Error removing trips:', err);
+        }
+
+
+    }
+
     static async html(trip) {
         let { resort, date, hours, rating, description } = trip;
-
+        
         return `
             <div class="trip-card">
                 <div class="location-title">
