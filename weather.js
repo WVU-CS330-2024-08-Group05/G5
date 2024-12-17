@@ -75,6 +75,13 @@ async function getResortWeatherHourly(resort) {
  * 
  * https://graphical.weather.gov/xml/SOAP_server/ndfdXMLclient.php
  * (fine-resolution (1-hour, 2.5km))
+ * 
+ * Relevant items:
+ * 
+ * <winter-weather-outlook type="snowfall probability" units="percent" time-layout="k-p12h-n5-19">
+ * <name>Snow Probability, 90% Exceedance Percentile for 72-Hour Time Window</name>
+ * 
+ * 
  */
 
 /**
@@ -101,20 +108,12 @@ async function getNdfdData(point) {
     let data = await fetch(url);
     data = await data.text();
     data = await parser.parseStringPromise(data);
+    data = data.dwml.data[0].parameters[0];
 
-    console.dir(data);
-    console.log(data.dwml.head);
-    console.log(data.dwml.data);
+    console.log(Object.keys(data);
 }
 
 getNdfdData({ lat: 39.65, lon: -79.97 });
-
-
-
-
-
-
-
 
 
 module.exports = {
