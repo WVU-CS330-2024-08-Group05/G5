@@ -80,6 +80,58 @@ async function getPassword(username, password) {
     }
 }
 
+async function setPassword(username, password) {
+    try {
+        
+        const hashedPassword = await hashPassword(password); 
+        
+        const query = `
+            UPDATE Accounts 
+            SET password = @hashedPassword 
+            WHERE username = @username`; // update the existing password instead of inserting a new row
+        const inputs = [
+            { name: 'username', type: mssql.VarChar, value: username },
+            { name: 'hashedPassword', type: mssql.VarChar, value: hashedPassword },
+        ];
+        const resultSet = await executeQuery(query, inputs);
+
+        return resultSet.rowsAffected[0] > 0 ? "Password changed successfully" : "Password change failed";
+    } catch (err) {
+        console.error(err.message);
+        return "Error changing password";
+    }
+}
+
+
+async function setUsername(username, newUsername){
+    try {
+
+        const available = await getId(newUsername);
+
+        if(available === "Username not found") {
+            const query = `
+                UPDATE Accounts
+                SET username = @newUsername
+                WHERE username = @username`; 
+            const inputs = [
+                { name: 'username', type: mssql.VarChar, value: username },
+                { name: 'newUsername', type: mssql.VarChar, value: newUsername },
+            ];
+            const resultSet = await executeQuery(query, inputs);
+            
+            console.log(resultSet);
+
+            // Check if the insert was successful
+            return resultSet.rowsAffected[0] > 0 ? "Username changed successfully" : "Username change failed";
+        } else {
+            return "Username taken"
+        }
+    } catch (err) {
+        console.error(err.message);
+        return "Error changing password";
+    }
+}
+
 async function creatAccount(username, password, email) {
     try {
         const hashedPassword = await hashPassword(password); // Hash the password
@@ -178,8 +230,10 @@ async function isPasswordCorrect(password, hash) {
 
 module.exports = {
     creatAccount,
+    setUsername,
     getId,
     getPassword,
+    setPassword,
     getTrips,
     setTrips,
     executeQuery

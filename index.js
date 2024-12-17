@@ -125,6 +125,41 @@ app.post("/signing-up", async function (req, res) {
     res.send(msg);
 });
 
+/** Changing password and changing username */
+
+app.post('/change-password', async function (req, res) {
+    let msg = "";
+
+    const username = req.body.username;
+    const password = req.body.password;
+
+    try {
+        msg = await sql.setPassword(username, password);
+
+    } catch (err) {
+        console.error(err.message);
+        msg = "Error changing password. Please try again later.";
+    }
+
+    res.send(msg);
+});
+
+app.post('/change-username', async function (req, res) {
+
+    let msg = "";
+
+    const username = req.body.username;
+    const newUsername = req.body.newUsername;
+
+    try {
+        msg = await sql.setUsername(username, newUsername);
+    } catch (err) {
+        console.error(err.message);
+        msg = "Error changing username. Please try again later.";
+    }
+
+    res.send(msg); 
+});
 
 /** Pulling Ratings */
 
