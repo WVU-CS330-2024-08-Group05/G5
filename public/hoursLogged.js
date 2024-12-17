@@ -4,6 +4,9 @@ $(function () {
     let totalHours = 0;
     let trips = [];
 
+    // show username on page
+    document.getElementById('username-written').textContent = username;
+
     // Fetch trips for the user and update the UI on page load
     $(document).ready(async function () {
         const fetchedTrips = await Trip.getAccountTrips(username);
