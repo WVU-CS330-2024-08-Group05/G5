@@ -31,6 +31,8 @@ example period format:
 }
 */
 
+const xml2js = require('xml2js');
+const parser = new xml2js.Parser();
 
 async function getResortWeather(resort) {
     let url = `https://api.weather.gov/points/${resort.lat},${resort.lon}`;
@@ -86,10 +88,9 @@ async function getNdfdData(point) {
         lat: point.lat,
         lon: point.lon,
         product: 'time-series',
-        begin: '',
+        begin: date.toISOString().replace(/\..*$/, ''),
         end: '',
         Unit: 'e',
-        XMLformat: 'DWML',
     }
 
     let url = new URL('https://digital.weather.gov/xml/SOAP_server/ndfdXMLclient.php');
@@ -97,17 +98,16 @@ async function getNdfdData(point) {
         url.searchParams.append(param, params[param]);
     }
 
-    console.log(url);
-
     let data = await fetch(url);
-    console.log(data);
-
     data = await data.text();
-    console.log(data);
+    data = await parser.parseStringPromise(data);
 
-    return data;
+    console.dir(data);
+    console.log(data.dwml.head);
+    console.log(data.dwml.data);
 }
 
+getNdfdData({ lat: 39.65, lon: -79.97 });
 
 
 
