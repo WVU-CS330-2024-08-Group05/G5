@@ -218,5 +218,6 @@ async function updatePinnedHtml() {
             console.error(err);
         }
     }
-    else console.log(window.location.pathname);
+
+    drawCharts();
 }
