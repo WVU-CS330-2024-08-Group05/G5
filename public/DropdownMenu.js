@@ -1,9 +1,7 @@
 
 async function getNames() {
-    const baseUrl = 'http://localhost:8080';
-    const url = baseUrl + '/resort-names';
     console.log(`Getting from ${url}...`);
-    const response = await fetch('http://localhost:8080/resort-names');
+    const response = await fetch('/resort-names');
 
     // Check if the response is successful
     if (!response.ok) {
