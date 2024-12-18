@@ -1,7 +1,5 @@
-
 async function getNames() {
-    const baseUrl = 'http://localhost:8080';
-    const url = baseUrl + '/resort-names';
+    const url = urlBase + '/resort-names';
     console.log(`Getting from ${url}...`);
     const response = await fetch('http://localhost:8080/resort-names');
 
