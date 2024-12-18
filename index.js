@@ -6,9 +6,12 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const mssql = require('mssql');
-const Search = require('./src/Search.js');
 const sql = require('./sql');
 const RESORTS = require('./resortdata.json');
+
+// Dynamic html
+const Search = require('./src/Search.js');
+const ResortCard = require('./src/ResortCard');
 
 // serve files from public dir
 app.use(express.static(path.join(__dirname, 'public')));
@@ -59,6 +62,36 @@ app.get('/search.html', async function (req, res) {
 
 });
 
+/**
+ * Resort cards
+ */
+app.post("/resort-cards", async function (req, res) {
+    let resort_names;
+
+    try {
+        resort_names = req.body;
+    } catch (err) {
+        console.error(err);
+        res.send('Error parsing resorts');
+        return;
+    }
+
+    let html = '';
+    for (let name of resort_names) {
+        for (let resort of RESORTS) {
+            if (resort.resort_name === name) {
+                console.log('RESORTCARD');
+                let x = await ResortCard.html(resort, { distance: false });
+                console.log(x);
+                html += x;
+            }
+        }
+    }
+
+    console.log('>>>' + html + '<<<');
+    res.send(html);
+});
+
 
 /** Get resort names */
 app.get('/resort-names', async function (req, res) {
@@ -70,7 +103,6 @@ app.get('/resort-names', async function (req, res) {
     // Send the array of resort names as the response
     res.send(resort_names);
 });
-
 
 
 /**  Login Functionality
@@ -125,6 +157,41 @@ app.post("/signing-up", async function (req, res) {
     res.send(msg);
 });
 
+/** Changing password and changing username */
+
+app.post('/change-password', async function (req, res) {
+    let msg = "";
+
+    const username = req.body.username;
+    const password = req.body.password;
+
+    try {
+        msg = await sql.setPassword(username, password);
+
+    } catch (err) {
+        console.error(err.message);
+        msg = "Error changing password. Please try again later.";
+    }
+
+    res.send(msg);
+});
+
+app.post('/change-username', async function (req, res) {
+
+    let msg = "";
+
+    const username = req.body.username;
+    const newUsername = req.body.newUsername;
+
+    try {
+        msg = await sql.setUsername(username, newUsername);
+    } catch (err) {
+        console.error(err.message);
+        msg = "Error changing username. Please try again later.";
+    }
+
+    res.send(msg); 
+});
 
 /** Pulling Ratings */
 
@@ -158,7 +225,6 @@ app.get('/pull-ratings', async (req, res) => {
 
 
 /** Trips Functionality */
-
 app.post("/account-trips", async function (req, res) {
     let msg = null; // Default to no data
     const username = req.body.username;
@@ -193,6 +259,7 @@ app.post("/store-trips", async function (req, res) {
     res.send(msg);
 });
 
+
 /** Pin Resorts */
 app.post("/set-pinned-resorts", async function (req, res) {
     let username = req.body.username;
@@ -213,7 +280,6 @@ app.post("/set-pinned-resorts", async function (req, res) {
     }
 
 })
-
 
 // POST route handler
 app.post("/get-pinned-resorts", async function (req, res) {

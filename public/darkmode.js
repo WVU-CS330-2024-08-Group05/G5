@@ -7,19 +7,18 @@ document.addEventListener('DOMContentLoaded', () => {
     else {
         document.body.classList.remove('dark-mode');
     }
-    /*
-    const toggleButton = document.getElementById('dark-mode-toggle');
+    
     // Toggle dark mode on slider change
-    toggleButton.on('click', () => {
-
+    $('#darkmode-btn').on('click', () => {
         // Apply dark mode based on the slider state
-        if (toggleButton.checked) {
-            console.log("dark mode clicked");
+        if (localStorage.getItem('darkMode') === 'disabled') {
             document.body.classList.add('dark-mode');
             localStorage.setItem('darkMode', 'enabled');
+            console.log('darmode set');
         } else {
             document.body.classList.remove('dark-mode');
             localStorage.setItem('darkMode', 'disabled');
+            console.log('darkmode clear');
         }
-    });*/
+    });
 });

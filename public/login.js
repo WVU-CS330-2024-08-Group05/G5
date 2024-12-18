@@ -1,9 +1,16 @@
-const baseUrl = 'http://localhost:8080';
-// logging in
-console.log("logging in...");
+/**
+ * Handles the login functionality for a user by interacting with the server and updating the UI.
+ */
 $(function () {
     console.log("ready");
 
+    /**
+     * Performs the login operation by sending a POST request to the server
+     * with the provided username and password.
+     * 
+     * - Displays error messages if login fails.
+     * - Updates sessionStorage and redirects to the homepage on successful login.
+     */
     async function performLogin() {
         console.log("login attempt");
     
@@ -11,7 +18,7 @@ $(function () {
         let username = $('#username').val();
         let password = $('#password').val();
     
-        // input error messages
+        // Error message elements
         let usernameErrorDiv = $('#username-error');
         let passwordErrorDiv = $('#password-error');
 
@@ -20,22 +27,23 @@ $(function () {
         passwordErrorDiv.html("");
 
         // Define the URL for the POST request
-        let url = `${baseUrl}/login`;
+        let url = `/login`;
     
-        // Only send the request if username is provided
+        // Ensure both username and password are provided
         if (username && password) {
             console.log(`Posting to ${url}...`);
     
-            // Make a POST request with the username in the request body
+            // Make a POST request with the username and password
             fetch(url, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ username: username, password: password })
+                body: JSON.stringify({ username: username, password: password }),
             })
-            .then((res) => res.text())
+            .then((res) => res.text()) // Parse the response as plain text
             .then((msg) => {
+                // Handle server responses
                 if (msg === "Username not found") {
                     usernameErrorDiv.html("User does not exist, or username is incorrect.");
                 } 
@@ -43,34 +51,40 @@ $(function () {
                     passwordErrorDiv.html("Password is incorrect.");
                 }
                 if (msg === "Password is correct") {
-                    // Update the DOM first
+                    // Clear error messages
                     usernameErrorDiv.html(""); 
                     passwordErrorDiv.html("");
                     
-                    // Update sessionStorage to indicate a logged-in user (not a guest)
+                    // Set sessionStorage values for the logged-in user
                     sessionStorage.setItem("isGuest", "false");
-
                     sessionStorage.setItem("username", username);
     
-                    // Now redirect after the DOM is updated
+                    // Redirect to the homepage
                     setTimeout(() => {
                         window.location.href = 'index.html';
-                    }, 100); // Delay redirection slightly to ensure the DOM is updated
+                    }, 100); // Slight delay to ensure the DOM is updated
                 }
-
             })
             .catch((error) => {
                 console.error('Error:', error);
             });
         }
     }
-    // Logs in when login button clicked
+
+    /**
+     * Attaches the login functionality to the "Login" button click event.
+     */
     $('#login').on('click', performLogin);
-    // Logs in when enter button is clicked
+
+    /**
+     * Enables login when the Enter key is pressed in the username or password fields.
+     * 
+     * @param {Event} e - The keypress event.
+     */
     $('#username, #password').on('keypress', function (e) {
-        if (e.which === 13) {
+        if (e.which === 13) { // Keycode for Enter key
             e.preventDefault();
             performLogin();
         }
-    })
+    });
 });

@@ -13,11 +13,10 @@
     <script src="search.js"></script>
     <script src="guest.js"></script>
     <script src="pin.js"></script>
-    <script src="completedTrips.js"></script>
+    <script src="Trip.js"></script>
     <script src="account.js"></script>
-    <!-- Reference the darkmode.js file here -->
     <script src="darkmode.js"></script>
-    <script src="ViewReviews.js"></script>
+
 </head>
 <body>
     <header class="bg-primary-subtle">
@@ -102,12 +101,20 @@
                 <div>
                     <h1 id="settings-text"> Settings </h1>
                 </div>
-                <div id="settings">
-                    <button id="darkModeToggle" class="dark-mode-toggle">Dark Mode</button>
-                    <div class="setting">Filler Option 2</div>
-                    <div class="setting">Filler Option 3</div>
-                    <div class="setting">Filler Option 4</div>
-                </div>
+                <ul id="settings">
+                    <ul class="setting">
+                        <button class="btn btn-outline-success" id="darkModeToggle" class="dark-mode-toggle">Dark Mode</button>
+                    </ul>
+                    <ul class="setting">
+                        <button class="btn btn-outline-success" id="password-change">Change Password</button>
+                    </ul>
+                    <ul class="setting">
+                        <button class="btn btn-outline-success" id="username-change">Change Username</button>
+                    </ul>
+                    <ul class="setting">
+                        <button class="btn btn-outline-success" id="clear-trips">Clear Trips</button>
+                    </ul>
+                </ul>
 
             </div>
         </div>
