@@ -1,5 +1,7 @@
 # G5 Snowhere You're Going
 
+The root directory of our repo acts as our backend, the server, database connection and communication, and API calls are stored here.
+
 |--index.js              # Server config, handles setting up the server and communication
 
 |--sql.js                # Database SQL queries and helper function
@@ -14,6 +16,9 @@
   
     |--Search.js         # Handle search queries for resorts using the sites search bar
   
+
+The public directory is the frontend of our website. This includes the login, signup, and all functions used by the User.
+
 |--public/  
 
     |--DropdownMenu.js   # Dropdown menu on the Skilogger page
