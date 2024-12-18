@@ -5,6 +5,7 @@
 
 const bcrypt = require('bcrypt');
 const mssql = require('mssql');
+const crypto = require('crypto');
 
 /**
  * Database configuration object for connecting to the SQL database.
@@ -32,12 +33,14 @@ async function initializePool() {
     let retries = 5;
     while (retries > 0) {
         try {
+            // attempt to create a connection with the database
             poolConnection = await mssql.connect(config);
             console.log('Database connected');
             break;
         } catch (err) {
             console.error('Database connection error:', err.message);
             retries--;
+            
             if (retries === 0) {
                 throw new Error("Failed to connect to the database after multiple attempts.");
             }
@@ -63,6 +66,19 @@ async function getId(username) {
         const resultSet = await executeQuery(query, inputs);
 
         return resultSet.recordset.length > 0 ? "User found" : "Username not found";
+    } catch (err) {
+        console.error('Username query error:', err.message);
+        return err.message;
+    }
+}
+
+async function getEmail(username) {
+    try {
+        const query = `SELECT email FROM Accounts WHERE username COLLATE Latin1_General_BIN = @username`;
+        const inputs = [{ name: 'username', type: mssql.VarChar, value: username }];
+        const resultSet = await executeQuery(query, inputs);
+
+        return resultSet.recordset.length > 0 ? resultSet.recordset[0].email : "Username not found";
     } catch (err) {
         console.error('Username query error:', err.message);
         return err.message;
@@ -114,7 +130,6 @@ async function setPassword(username, password) {
             { name: 'hashedPassword', type: mssql.VarChar, value: hashedPassword },
         ];
         const resultSet = await executeQuery(query, inputs);
-
         return resultSet.rowsAffected[0] > 0 ? "Password changed successfully" : "Password change failed";
     } catch (err) {
         console.error(err.message);
@@ -166,8 +181,8 @@ async function creatAccount(username, password, email) {
     try {
         const hashedPassword = await hashPassword(password);
         const query = `
-            INSERT INTO Accounts (username, password, email, settings, pinned_resorts, trips)
-            VALUES (@username, @hashedPassword, @email, NULL, NULL, NULL)`;
+            INSERT INTO Accounts (username, password, email, pinned_resorts, trips, reset_token, token_expiry)
+            VALUES (@username, @hashedPassword, @email, NULL, NULL, NULL, NULL)`;
         const inputs = [
             { name: 'username', type: mssql.VarChar, value: username },
             { name: 'hashedPassword', type: mssql.VarChar, value: hashedPassword },
@@ -269,13 +284,53 @@ async function isPasswordCorrect(password, hash) {
     return await bcrypt.compare(password, hash);
 }
 
+
+async function generateToken(username) {
+    const token = crypto.randomBytes(32).toString('hex'); // Generate a secure token
+    const expiry = new Date(Date.now() + 15 * 60 * 1000); // Token expires in 15 minutes
+
+    const query = `
+        UPDATE Accounts
+        SET reset_token = @token, token_expiry = @expiry
+        WHERE username = @username`;
+    const inputs = [
+        { name: 'username', type: mssql.VarChar, value: username },
+        { name: 'token', type: mssql.VarChar, value: token },
+        { name: 'expiry', type: mssql.DateTime, value: expiry },
+    ];
+
+    await executeQuery(query, inputs);
+    return token;
+}
+
+async function validateToken(username, token) {
+    const query = `
+        SELECT reset_token, token_expiry
+        FROM Accounts
+        WHERE username = @username`;
+    const inputs = [{ name: 'username', type: mssql.VarChar, value: username }];
+
+    const resultSet = await executeQuery(query, inputs);
+
+    if (resultSet.recordset.length === 0) {
+        return false;
+    }
+
+    const { reset_token, token_expiry } = resultSet.recordset[0];
+    // Check if the token matches and has not expired
+    return reset_token === token && new Date() < new Date(token_expiry);
+}
+
 module.exports = {
     creatAccount,
     setUsername,
     getId,
+    getEmail,
     getPassword,
     setPassword,
     getTrips,
     setTrips,
     executeQuery,
+    generateToken,
+    validateToken
 };
