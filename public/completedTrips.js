@@ -2,6 +2,7 @@
  * Represents a completed trip with details about the resort, hours spent, date, rating, and description.
  */
 class Trip {
+    static trips =[];
     /**
      * Creates a new Trip instance.
      * @param {string} resort - The name of the resort.
@@ -110,17 +111,17 @@ class Trip {
 
                 const result = await response.json();
                 if (Array.isArray(result)) {
-                    trips = Trip.jsonToArray(result);
-                    return trips;
+                    Trip.trips= Trip.jsonToArray(result);
+                    return Trip.trips;
                 } else {
                     console.error("Unexpected response format:", result);
-                    trips = [];
-                    return trips;
+                    Trip.trips= [];
+                    return Trip.trips;
                 }
             } catch (error) {
                 console.error('Error fetching trips:', error);
-                trips = [];
-                return trips;
+                Trip.trips= [];
+                return Trip.trips;
             }
         } else {
             console.log("Username is required to fetch trips.");
@@ -152,13 +153,13 @@ class Trip {
      */
     static async clearTrips() {
         const username = sessionStorage.getItem("username");
-        trips = [];
+        Trip.trips= [];
         const url = '/store-trips';
         try {
             const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, trips }),
+                body: JSON.stringify({ username, trips: Trip.trips }),
             });
 
             if (!response.ok) {
