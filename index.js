@@ -6,9 +6,12 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const mssql = require('mssql');
-const Search = require('./src/Search.js');
 const sql = require('./sql');
 const RESORTS = require('./resortdata.json');
+
+// Dynamic html
+const PinnedResorts = require('./src/PinnedResorts.js');
+const Search = require('./src/Search.js');
 
 // serve files from public dir
 app.use(express.static(path.join(__dirname, 'public')));
@@ -57,6 +60,25 @@ app.get('/search.html', async function (req, res) {
             '<h3>Please try again later...</h3>');
     }
 
+});
+
+/**
+ * Home page functionality
+ * 
+ * Loads pinned resorts for user.
+ */
+app.post("/pinned-resorts", async function (req, res) {
+    const options = {
+        username: req.body.username
+    };
+    
+    try {
+        const html = await PinnedResorts.html(options);
+        res.send(html);
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(404);
+    }
 });
 
 
@@ -193,7 +215,6 @@ app.get('/pull-ratings', async (req, res) => {
 
 
 /** Trips Functionality */
-
 app.post("/account-trips", async function (req, res) {
     let msg = null; // Default to no data
     const username = req.body.username;
@@ -228,6 +249,7 @@ app.post("/store-trips", async function (req, res) {
     res.send(msg);
 });
 
+
 /** Pin Resorts */
 app.post("/set-pinned-resorts", async function (req, res) {
     let username = req.body.username;
@@ -248,7 +270,6 @@ app.post("/set-pinned-resorts", async function (req, res) {
     }
 
 })
-
 
 // POST route handler
 app.post("/get-pinned-resorts", async function (req, res) {
