@@ -42,6 +42,7 @@ async function html(resort, options) {
         <div class="acreage-details">
         <table>
             <tr>
+                <th>
                 <th>${week_days[0]}
                 <th>${week_days[1]}
                 <th>${week_days[2]}
@@ -51,6 +52,7 @@ async function html(resort, options) {
                 <th>${week_days[6]}
             </tr>
             <tr>
+                <th> Temperature
                 <td>${weather[0].temperature}\u00b0F
                 <td>${weather[2].temperature}\u00b0F
                 <td>${weather[4].temperature}\u00b0F
@@ -59,10 +61,18 @@ async function html(resort, options) {
                 <td>${weather[10].temperature}\u00b0F
                 <td>${weather[12].temperature}\u00b0F
             </tr>
+            <th> Precipitation
+            <td>${weather[0].probabilityOfPrecipitation.value}
+            <td>${weather[2].probabilityOfPrecipitation.value}
+            <td>${weather[4].probabilityOfPrecipitation.value}
+            <td>${weather[6].probabilityOfPrecipitation.value}
+            <td>${weather[8].probabilityOfPrecipitation.value}
+            <td>${weather[10].probabilityOfPrecipitation.value}
+            <td>${weather[12].probabilityOfPrecipitation.value}
         </table>
         </div>
         <div class="other-resort-details">
-        <p>Total Acres: ${resort.acres}<p>
+        <h5>Total Acres: ${resort.acres}<h5>
         ${distance}
         </div>
         <div class="resort-rating">
