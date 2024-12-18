@@ -204,16 +204,18 @@ document.addEventListener('click', async (event) => {
 async function updatePinnedHtml() {
     if (window.location.pathname === '/index.html') {
         try {
-            const html = await fetch('/resort-cards', {
+            console.log('Updating pinned');
+            let html = await fetch('/resort-cards', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(pinned_resorts),
             });
+            html = await html.text();
             $('#main').html(html);
         } catch (err) {
-            console.err(err);
+            console.error(err);
         }
     }
     else console.log(window.location.pathname);

@@ -11,6 +11,7 @@ const RESORTS = require('./resortdata.json');
 
 // Dynamic html
 const Search = require('./src/Search.js');
+const ResortCard = require('./src/ResortCard');
 
 // serve files from public dir
 app.use(express.static(path.join(__dirname, 'public')));
@@ -76,14 +77,18 @@ app.post("/resort-cards", async function (req, res) {
     }
 
     let html = '';
-    for (let name in resort_names) {
-        for (resort in RESORTS) {
-            if (resort.name === name) {
-                html += ResortCard.html(resort, { distance: false });
+    for (let name of resort_names) {
+        for (let resort of RESORTS) {
+            if (resort.resort_name === name) {
+                console.log('RESORTCARD');
+                let x = await ResortCard.html(resort, { distance: false });
+                console.log(x);
+                html += x;
             }
         }
     }
-    
+
+    console.log('>>>' + html + '<<<');
     res.send(html);
 });
 
