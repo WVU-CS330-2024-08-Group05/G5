@@ -1,5 +1,7 @@
 # G5 Snowhere You're Going
 
+Snowhere you're going is a webapp developed as part of a WVU project. You can contribute via our github at https://github.com/WVU-CS330-2024-08-Group05/G5.
+
 The root directory of our repo acts as our backend, the server, database connection and communication, and API calls are stored here.
 
 |--index.js              # Server config, handles setting up the server and communication
