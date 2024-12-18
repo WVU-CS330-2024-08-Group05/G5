@@ -1,19 +1,28 @@
 /**
- * Snowhere you'r going server entry point.
+ * @file Snowhere You're Going - Server Entry Point
+ * 
+ * This file serves as the main server entry point for the application. It includes
+ * endpoints for user authentication, resort searching, trip management, and email-based
+ * password recovery. Middleware and external modules are integrated to provide functionality.
  */
+// Load environment variables from .env
 require('dotenv').config();
+
+// Import dependencies
 const express = require('express');
 const path = require('path');
-const app = express();
 const mssql = require('mssql');
-const sql = require('./sql');
-const RESORTS = require('./resortdata.json');
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
 
-// Dynamic html
+// Import local modules
+const sql = require('./sql');
+const RESORTS = require('./resortdata.json');
 const Search = require('./src/Search.js');
-const ResortCard = require('./src/ResortCard');
+const ResortCard = require('./src/ResortCard.js');
+
+// Initialize Express app
+const app = express();
 
 // serve files from public dir
 app.use(express.static(path.join(__dirname, 'public')));
@@ -31,9 +40,16 @@ app.use(express.json());
 app.use(bodyParser.json());
 
 /**
- * Search functionality
+ * @description Endpoint for searching resorts based on query parameters.
  * 
- * Search results include resorts with names that start with req.query.search and resorts that are in a state the the begins with req.query.search.
+ * Filters resorts by name, state, or proximity and generates a paginated HTML response.
+ * 
+ * @route GET /search.html
+ * @query {string} search - Text to search for resorts by name or state.
+ * @query {number} lat - Latitude for distance-based filtering.
+ * @query {number} lon - Longitude for distance-based filtering.
+ * @query {number} range - Maximum distance from the location in miles.
+ * @query {number} page - Current page number for pagination.
  */
 app.get('/search.html', async function (req, res) {
     // Set search options
@@ -65,7 +81,10 @@ app.get('/search.html', async function (req, res) {
 });
 
 /**
- * Resort cards
+ * @description Endpoint for generating resort cards.
+ * 
+ * @route POST /resort-cards
+ * @body {string[]} resort_names - Array of resort names to generate cards for.
  */
 app.post("/resort-cards", async function (req, res) {
     let resort_names;
@@ -95,7 +114,12 @@ app.post("/resort-cards", async function (req, res) {
 });
 
 
-/** Get resort names */
+/**
+ * @description Endpoint to retrieve resort names.
+ * 
+ * @route GET /resort-names
+ * @returns {string[]} Array of resort names.
+ */
 app.get('/resort-names', async function (req, res) {
     let resorts = [...RESORTS];
 
@@ -107,10 +131,16 @@ app.get('/resort-names', async function (req, res) {
 });
 
 
-/**  Login Functionality
+/**
+ * @description Endpoint for user login.
  * 
- * check if username is in database, then check if password matches
-*/
+ * Validates the username and password against the database.
+ * 
+ * @route POST /login
+ * @body {string} username - The username provided by the user.
+ * @body {string} password - The password provided by the user.
+ * @returns {string} Message indicating login success or failure.
+ */
 app.post('/login', async function (req, res) {
     let msg = "";
     
@@ -132,9 +162,16 @@ app.post('/login', async function (req, res) {
 
 
 /**
- * Sign Up functionality
+ * @description Endpoint for user registration.
+ * 
+ * Checks if the username is available and creates a new account if it is.
+ * 
+ * @route POST /signing-up
+ * @body {string} username - Desired username.
+ * @body {string} password - Desired password.
+ * @body {string} email - User's email address.
+ * @returns {string} Message indicating sign-up success or failure.
  */
-
 app.post("/signing-up", async function (req, res) {
     let msg = "";
     const username = req.body.username;
@@ -195,9 +232,12 @@ app.post('/change-username', async function (req, res) {
     res.send(msg); 
 });
 
-/** Recovering password */
-
-// POST handler for sending recovery email
+/**
+ * @description Endpoint for sending password recovery emails.
+ * 
+ * @route POST /send-recovery-email
+ * @body {string} username - The username of the account to recover.
+ */
 app.post('/send-recovery-email', async (req, res) => {
     const { username } = req.body;
 

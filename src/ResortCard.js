@@ -1,7 +1,26 @@
 /**
- * Handles generating resort card html.
+ * Provides methods for generating resort card html server-side.
  */
 const Weather = require('../weather.js');
+
+/**
+ * Generates HTML for a resort card, including weather data, acreage breakdown,
+ * and additional details like distance and rating.
+ * 
+ * @param {Object} resort - Object containing resort information.
+ * @param {string} resort.resort_name - Name of the resort.
+ * @param {string} resort.state - State where the resort is located.
+ * @param {number} resort.lat - Latitude of the resort.
+ * @param {number} resort.lon - Longitude of the resort.
+ * @param {number} resort.distance - Distance to the resort (in miles).
+ * @param {number} resort.green_acres - Number of green trail acres.
+ * @param {number} resort.blue_acres - Number of blue trail acres.
+ * @param {number} resort.black_acres - Number of black trail acres.
+ * @param {number} resort.acres - Total acreage of the resort.
+ * @param {Object} options - Additional options for rendering the card.
+ * @param {boolean} options.distance - Whether to include distance in the card.
+ * @returns {Promise<string>} A promise resolving to the HTML string for the resort card.
+ */
 
 async function html(resort, options) {
     // Set distance html
@@ -58,6 +77,11 @@ async function html(resort, options) {
     return html
 }
 
+/**
+ * Generates an array of weekdays starting from "Today."
+ * 
+ * @returns {string[]} Array of weekday names, starting with "Today."
+ */
 function getWeekDays() {
     let weekDays = [
         'Sunday',

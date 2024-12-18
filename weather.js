@@ -1,3 +1,9 @@
+/**
+ * National Weather Service API Utilities
+ * 
+ * Provides methods to retrieve weather data using the National Weather Service API as well as data from the National Digital Forecast Database (NDFD).
+ */
+
 /*
 National Weather Service API
 
@@ -34,6 +40,14 @@ example period format:
 const xml2js = require('xml2js');
 const parser = new xml2js.Parser();
 
+/**
+ * Fetches 12-hour period weather data for the next seven days for a given resort.
+ * @param {Object} resort - The resort to fetch weather data for.
+ * @param {number} resort.lat - Latitude of the resort.
+ * @param {number} resort.lon - Longitude of the resort.
+ * @returns {Promise<Object[]>} Resolves to an array of weather periods in 12-hour format.
+ * @throws {Error} Throws an error if the API request fails.
+ */
 async function getResortWeather(resort) {
     let url = `https://api.weather.gov/points/${resort.lat},${resort.lon}`;
     data = await fetch(url);
@@ -53,6 +67,14 @@ async function getResortWeather(resort) {
     return twelve_hour.properties.periods;
 }
 
+/**
+ * Fetches hourly weather data for the next seven days for a given resort.
+ * @param {Object} resort - The resort to fetch weather data for.
+ * @param {number} resort.lat - Latitude of the resort.
+ * @param {number} resort.lon - Longitude of the resort.
+ * @returns {Promise<Object[]>} Resolves to an array of weather periods in hourly format.
+ * @throws {Error} Throws an error if the API request fails.
+ */
 async function getResortWeatherHourly(resort) {
     data = await fetch(`https://api.weather.gov/points/${resort.lat},${resort.lon}`)
     if (!data.ok) {
@@ -68,7 +90,7 @@ async function getResortWeatherHourly(resort) {
     return hourly.properties.periods;
 }
 
-/**
+/*
  * National Digital Forecast Database (NDFD) API
  * 
  * https://graphical.weather.gov/xml/SOAP_server/ndfdXMLclient.php
@@ -81,9 +103,12 @@ async function getResortWeatherHourly(resort) {
  */
 
 /**
- * Single point unsummarized data
- * @param {lat, lon} point Point to 
- */
+* Fetches unsummarized weather data from the National Digital Forecast Database (NDFD).
+* @param {Object} point - The geographic point to fetch weather data for.
+* @param {number} point.lat - Latitude of the point.
+* @param {number} point.lon - Longitude of the point.
+* @returns {Promise<Object>} Resolves to raw NDFD data for the specified point.
+*/
 async function getNdfdData(point) {
     const date = new Date();
 
