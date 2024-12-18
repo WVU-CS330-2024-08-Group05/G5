@@ -8,6 +8,10 @@
 // Initialize the list of pinned resorts as empty
 let pinned_resorts = [];
 
+const spinner_html = `<div class="spinner-border" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>`;
+
 /**
  * Fetches pinned resorts when the page loads and applies the "pinned" style to buttons.
  */
@@ -17,6 +21,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!username) {
             console.log('User is not logged in.');
             return;
+        }
+
+        if (window.location.pathname === '/index.html') {
+            $('#main').html(spinner_html);
         }
 
         // Fetch pinned resorts for the logged-in user
@@ -202,6 +210,8 @@ document.addEventListener('click', async (event) => {
 });
 
 async function updatePinnedHtml() {
+    
+
     if (window.location.pathname === '/index.html') {
         try {
             console.log('Updating pinned');
@@ -215,6 +225,7 @@ async function updatePinnedHtml() {
             html = await html.text();
             $('#main').html(html);
         } catch (err) {
+            $('#main').html(`<h2 class="text-warning-emphasis">Error: Could not retrieve account info</h2>`);
             console.error(err);
         }
     }

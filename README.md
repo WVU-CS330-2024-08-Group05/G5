@@ -10,7 +10,7 @@ The root directory of our repo acts as our backend, the server, database connect
 
 |--resortdata.json       # JSON file storing all of the data we use for the resorts
 
-|--src/                  
+|--src/                  # conains code that dynamically generates html as a string
 
     |--ResortCard.js     # Generate HTML wrappers for the home page based off resorts in our .JSON
   
