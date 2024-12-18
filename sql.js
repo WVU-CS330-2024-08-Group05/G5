@@ -1,12 +1,13 @@
 /**
- * Database functionality
+ * Database functionality for user management and operations, including authentication,
+ * account creation, trip storage, and updates to user details.
  */
 
 const bcrypt = require('bcrypt');
 const mssql = require('mssql');
 
 /**
- * Connect to Database
+ * Database configuration object for connecting to the SQL database.
  */
 const config = {
     user: process.env.DB_USER,
@@ -19,11 +20,16 @@ const config = {
     },
 };
 
-// establishing a persistent pool connection
+// Persistent database connection pool
 let poolConnection;
 
+/**
+ * Initializes a persistent connection pool with retry logic.
+ * Retries up to 5 times if the connection fails, waiting 5 seconds between attempts.
+ * @throws {Error} If the database connection fails after multiple attempts.
+ */
 async function initializePool() {
-    let retries = 5; // Set a retry limit
+    let retries = 5;
     while (retries > 0) {
         try {
             poolConnection = await mssql.connect(config);
@@ -41,12 +47,17 @@ async function initializePool() {
     }
 }
 
-// Initial connection attempt
+// Initialize the connection pool on module load
 initializePool();
 
+/**
+ * Checks if a username exists in the database.
+ * @param {string} username - The username to check.
+ * @returns {Promise<string>} "User found" if the username exists, "Username not found" otherwise.
+ * @throws {Error} If the query fails.
+ */
 async function getId(username) {
     try {
-
         const query = `SELECT id FROM Accounts WHERE username COLLATE Latin1_General_BIN = @username`;
         const inputs = [{ name: 'username', type: mssql.VarChar, value: username }];
         const resultSet = await executeQuery(query, inputs);
@@ -58,21 +69,25 @@ async function getId(username) {
     }
 }
 
+/**
+ * Verifies if a provided password matches the stored hash for a username.
+ * @param {string} username - The username to verify.
+ * @param {string} password - The password to verify.
+ * @returns {Promise<string>} "Password is correct" or "Password is incorrect".
+ * @throws {Error} If the query fails.
+ */
 async function getPassword(username, password) {
     try {
         const query = `SELECT password AS hash FROM Accounts WHERE username COLLATE Latin1_General_BIN = @username`;
         const inputs = [{ name: 'username', type: mssql.VarChar, value: username }];
         const resultSet = await executeQuery(query, inputs);
 
-        // Check if a matching record was found
         if (resultSet.recordset.length > 0) {
             const hash = resultSet.recordset[0].hash;
-
-            // Compare provided password with hashed password
             const isMatch = await isPasswordCorrect(password, hash);
             return isMatch ? "Password is correct" : "Password is incorrect";
         } else {
-            return "Password is incorrect"; // User not found or wrong password
+            return "Password is incorrect";
         }
     } catch (err) {
         console.error(err.message);
@@ -80,15 +95,20 @@ async function getPassword(username, password) {
     }
 }
 
+/**
+ * Updates the password for a user.
+ * @param {string} username - The username whose password will be updated.
+ * @param {string} password - The new password.
+ * @returns {Promise<string>} Success or failure message.
+ * @throws {Error} If the query fails.
+ */
 async function setPassword(username, password) {
     try {
-        
-        const hashedPassword = await hashPassword(password); 
-        
+        const hashedPassword = await hashPassword(password);
         const query = `
             UPDATE Accounts 
             SET password = @hashedPassword 
-            WHERE username = @username`; // update the existing password instead of inserting a new row
+            WHERE username = @username`;
         const inputs = [
             { name: 'username', type: mssql.VarChar, value: username },
             { name: 'hashedPassword', type: mssql.VarChar, value: hashedPassword },
@@ -102,51 +122,59 @@ async function setPassword(username, password) {
     }
 }
 
-
-async function setUsername(username, newUsername){
+/**
+ * Updates the username for a user.
+ * @param {string} username - The current username.
+ * @param {string} newUsername - The new username to set.
+ * @returns {Promise<string>} Success, failure, or username taken message.
+ * @throws {Error} If the query fails.
+ */
+async function setUsername(username, newUsername) {
     try {
-
         const available = await getId(newUsername);
 
-        if(available === "Username not found") {
+        if (available === "Username not found") {
             const query = `
                 UPDATE Accounts
                 SET username = @newUsername
-                WHERE username = @username`; 
+                WHERE username = @username`;
             const inputs = [
                 { name: 'username', type: mssql.VarChar, value: username },
                 { name: 'newUsername', type: mssql.VarChar, value: newUsername },
             ];
             const resultSet = await executeQuery(query, inputs);
-            
-            console.log(resultSet);
 
-            // Check if the insert was successful
             return resultSet.rowsAffected[0] > 0 ? "Username changed successfully" : "Username change failed";
         } else {
-            return "Username taken"
+            return "Username taken";
         }
     } catch (err) {
         console.error(err.message);
-        return "Error changing password";
+        return "Error changing username";
     }
 }
 
+/**
+ * Creates a new account with a hashed password and default values for optional fields.
+ * @param {string} username - The username for the account.
+ * @param {string} password - The password for the account.
+ * @param {string} email - The email address for the account.
+ * @returns {Promise<string>} Success or failure message.
+ * @throws {Error} If the query fails.
+ */
 async function creatAccount(username, password, email) {
     try {
-        const hashedPassword = await hashPassword(password); // Hash the password
-
+        const hashedPassword = await hashPassword(password);
         const query = `
             INSERT INTO Accounts (username, password, email, settings, pinned_resorts, trips)
-            VALUES (@username, @hashedPassword, @email, NULL, NULL, NULL) `; // empty jsons
+            VALUES (@username, @hashedPassword, @email, NULL, NULL, NULL)`;
         const inputs = [
             { name: 'username', type: mssql.VarChar, value: username },
             { name: 'hashedPassword', type: mssql.VarChar, value: hashedPassword },
-            { name: 'email', type: mssql.VarChar, value: email }
+            { name: 'email', type: mssql.VarChar, value: email },
         ];
         const resultSet = await executeQuery(query, inputs);
 
-        // Check if the insert was successful
         return resultSet.rowsAffected[0] > 0 ? "Account created successfully" : "Account creation failed";
     } catch (err) {
         console.error(err.message);
@@ -154,76 +182,89 @@ async function creatAccount(username, password, email) {
     }
 }
 
+/**
+ * Retrieves the trips array for a user.
+ * @param {string} username - The username whose trips will be retrieved.
+ * @returns {Promise<Array>} The trips array or an empty array if none exist.
+ * @throws {Error} If the query fails or JSON parsing fails.
+ */
 async function getTrips(username) {
-    let msg = null;
+    try {
+        const query = `SELECT trips FROM Accounts WHERE username COLLATE Latin1_General_BIN = @username`;
+        const inputs = [{ name: 'username', type: mssql.VarChar, value: username }];
+        const resultSet = await executeQuery(query, inputs);
 
-    const query = `SELECT trips FROM Accounts WHERE username COLLATE Latin1_General_BIN = @username`;
-    const input = [{ name: 'username', type: mssql.VarChar, value: username }];
-    const resultSet = await executeQuery(query, input);
-
-    if (resultSet.recordset && resultSet.recordset.length > 0) {
-        const tripsString = resultSet.recordset[0].trips;
-
-        // Ensure `tripsString` is valid JSON
-        if (tripsString) {
-            try {
-                const trips = JSON.parse(tripsString); // Parse JSON
-                msg = trips; // Assign parsed JSON to msg
-            } catch (error) {
-                console.error("Failed to parse JSON from database:", error);
-                msg = []; // Return empty array on parsing failure
-            }
+        if (resultSet.recordset.length > 0) {
+            const tripsString = resultSet.recordset[0].trips;
+            return tripsString ? JSON.parse(tripsString) : [];
         } else {
-            msg = []; // Handle null or empty trips column
+            return [];
         }
-    } else {
-        msg = []; // No records found
+    } catch (err) {
+        console.error('Error retrieving trips:', err.message);
+        return [];
     }
-    return msg;
 }
 
+/**
+ * Updates the trips array for a user.
+ * @param {string} username - The username whose trips will be updated.
+ * @param {Array|string} trips - The trips array or JSON string to store.
+ * @returns {Promise<string>} Success or failure message.
+ * @throws {Error} If the query fails.
+ */
 async function setTrips(username, trips) {
-    const query = `UPDATE Accounts SET trips = @trips WHERE username = @username`;
-    const input = [
-        { name: 'username', type: mssql.VarChar, value: username },
-        { name: 'trips', type: mssql.NVarChar, value: typeof trips === 'string' ? trips : JSON.stringify(trips) }
-        // Ensure trips is stringified only if it's not already a string
-    ];
-
     try {
-        await executeQuery(query, input);
+        const query = `UPDATE Accounts SET trips = @trips WHERE username = @username`;
+        const inputs = [
+            { name: 'username', type: mssql.VarChar, value: username },
+            { name: 'trips', type: mssql.NVarChar, value: typeof trips === 'string' ? trips : JSON.stringify(trips) },
+        ];
+        const resultSet = await executeQuery(query, inputs);
+
         return 'Trips successfully stored';
     } catch (err) {
-        console.error('Error in connectAndUpdateTrips:', err);
+        console.error('Error in setTrips:', err.message);
         return 'Failed to update trips';
     }
 }
 
-/** Query helper functions */
-
+/**
+ * Executes a parameterized SQL query.
+ * @param {string} query - The SQL query string.
+ * @param {Array<Object>} inputs - Array of input objects { name, type, value }.
+ * @returns {Promise<Object>} The query result set.
+ * @throws {Error} If the query fails.
+ */
 async function executeQuery(query, inputs = []) {
     if (!poolConnection) {
         throw new Error("Database connection is not initialized.");
     }
     try {
         const request = poolConnection.request();
-        inputs.forEach(({ name, type, value }) => {
-            request.input(name, type, value);
-        });
-
+        inputs.forEach(({ name, type, value }) => request.input(name, type, value));
         return await request.query(query);
     } catch (err) {
         console.error('Database query error:', err.message);
-        throw err; // Throw to handle error higher up
+        throw err;
     }
 }
 
-
+/**
+ * Hashes a password using bcrypt.
+ * @param {string} password - The plaintext password.
+ * @returns {Promise<string>} The hashed password.
+ */
 async function hashPassword(password) {
-    const saltRounds = 10;
-    return await bcrypt.hash(password, saltRounds);
+    return await bcrypt.hash(password, 10);
 }
 
+/**
+ * Compares a plaintext password with a hashed password.
+ * @param {string} password - The plaintext password.
+ * @param {string} hash - The hashed password.
+ * @returns {Promise<boolean>} True if the password matches the hash, false otherwise.
+ */
 async function isPasswordCorrect(password, hash) {
     return await bcrypt.compare(password, hash);
 }
@@ -236,5 +277,5 @@ module.exports = {
     setPassword,
     getTrips,
     setTrips,
-    executeQuery
-}
+    executeQuery,
+};
