@@ -91,13 +91,24 @@ body.dark-mode #account-name {
     background-color: #333333;
 }
 
+/* Override Bootstrap buttons with darkmode css */
+body.dark-mode .user-settings .btn-outline-success {
+    color: #ffffff;
+    border-color: #ffffff;
+}
+
+body.dark-mode .user-settings .btn-outline-success:hover {
+    color: #ffffff; 
+    border-color: #ffffff; 
+}
+
 /* ski logger dark mode */
 
 body.dark-mode #SkiTripList li {
     background-color: gray;
 }
 
-/* SkiingLeaderboard */
+/* SkiingLeaderboard dark mode */
 body.dark-mode #SkiingLeaderboard li {
     background-color: gray;
 }
