@@ -88,3 +88,76 @@ $(function () {
         }
     });
 });
+
+// showMessage function to display success or error messages
+function showMessage(message, type = 'success') {
+    const messageBox = $('#messageBox');
+    messageBox.text(message); // Set the message
+    messageBox.removeClass(); // Remove any previous classes
+    messageBox.addClass(type); // Add a class based on message type (e.g., 'success' or 'error')
+
+    messageBox.show(); // Display the message box
+
+    // Hide the message after a short delay
+    setTimeout(() => {
+        messageBox.fadeOut();
+    }, 3000); // Hide after 3 seconds
+}
+
+$(document).ready(() => {
+    $('#sendEmailButton').click(() => {
+        const username = $('#usernameInput').val();
+
+        if (!username) {
+            showMessage('Please enter your username', 'error'); 
+            return;
+        }
+
+        $.ajax({
+            url: '/send-recovery-email',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ username }),
+            success: (response) => {
+                showMessage(response.message, 'success');
+            
+                // Hide the recovery email input and show the reset password section
+                $('#sendEmailButton').hide();
+                $('#usernameInput').prop('disabled', true); // Disable username input
+                $('.resetPasswordContainer').show(); // Show the reset password section
+            },
+            error: (xhr) => {
+                const error = xhr.responseJSON?.error || 'An error occurred.';
+                showMessage(error, 'error');
+            },
+        });
+    });
+
+    $('#resetPasswordButton').click(() => {
+        const username = $('#usernameInput').val();
+        const token = $('#tokenInput').val();
+        const newPassword = $('#newPasswordInput').val();
+    
+        if (!username || !token || !newPassword) {
+            showMessage('Please fill in all fields.', 'error'); 
+            return;
+        }
+
+        $.ajax({
+            url: '/reset-password',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ username, token, newPassword }),
+            success: (response) => {
+                showMessage(response.message, 'success');
+                // Redirect or show success message
+                window.location.href = 'login.html'; // Redirect to login page
+            },
+            error: (xhr) => {
+                const error = xhr.responseJSON?.error || 'An error occurred.';
+                showMessage(error, 'error');
+            },
+        });
+    });
+});
+

@@ -8,6 +8,8 @@ const app = express();
 const mssql = require('mssql');
 const sql = require('./sql');
 const RESORTS = require('./resortdata.json');
+const bodyParser = require('body-parser');
+const nodemailer = require('nodemailer');
 
 // Dynamic html
 const Search = require('./src/Search.js');
@@ -24,9 +26,9 @@ app.listen(PORT, () => {
 });
 
 
-// Middleware to parse json
+// Middleware
 app.use(express.json());
-
+app.use(bodyParser.json());
 
 /**
  * Search functionality
@@ -192,6 +194,78 @@ app.post('/change-username', async function (req, res) {
 
     res.send(msg); 
 });
+
+/** Recovering password */
+
+// POST handler for sending recovery email
+app.post('/send-recovery-email', async (req, res) => {
+    const { username } = req.body;
+
+    // Check if the user exists
+    const user = await sql.getEmail(username);
+    if (user === "Username not found") {
+        res.json({ error: 'User not found.' });
+    }
+
+    const token = await sql.generateToken(username);
+
+    // Set up the email transporter using nodemailer
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
+        },
+    });
+
+    // Compose the recovery email
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: user,
+        subject: 'Password Recovery',
+        text: `Hello ${username},\n\n
+        Please use the following token on the previous page to reset your password:\n\n
+        The token will expire in 15 minutes.\n\n
+        ${token}\n\n
+        If you did not request this, please ignore this email.`,
+    };
+
+    // Send the recovery email
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error('Error sending email:', error);
+            return res.json({ error: 'Error sending recovery email.' });
+        }
+
+        console.log('Recovery email sent:', info.response);
+        res.json({ message: 'A recovery email has been sent to your email address.' });
+    });
+});
+
+
+// Endpoint to handle recovery email requests
+app.post('/reset-password', async (req, res) => {
+    const { username, token, newPassword } = req.body;
+
+    if (!username || !token || !newPassword) {
+        return res.json({ error: 'Missing required fields.' });
+    }
+
+    try {
+        const isValid = await sql.validateToken(username, token);
+        if (!isValid) {
+            return res.json({ error: 'Invalid or expired token.' });
+        }
+
+        await sql.setPassword(username, newPassword);
+
+        res.json({ message: 'Password reset successfully.' });
+    } catch (error) {
+        console.error(error);
+        res.json({ error: 'Internal server error.' });
+    }
+});
+
 
 /** Pulling Ratings */
 
