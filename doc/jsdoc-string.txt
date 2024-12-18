@@ -1,1 +1,0 @@
-jsdoc -d doc .\src\ResortCard.js .\src\Search.js .\sql.js .\public\pin.js .\public\Trip.js .\public\signup.css
