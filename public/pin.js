@@ -35,6 +35,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (error) {
         console.error('Error initializing pinned resorts:', error);
     }
+
+    updatePinnedHtml();
 });
 
 /**
@@ -57,6 +59,8 @@ async function pinResort(resort_name, username) {
     } else {
         console.log(`${resort_name} is already pinned.`);
     }
+
+    updatePinnedHtml();
 }
 
 /**
@@ -152,6 +156,8 @@ async function unpinResort(resort_name, username) {
     } else {
         console.log(`${resort_name} is not pinned.`);
     }
+
+    updatePinnedHtml();
 }
 
 /**
@@ -194,3 +200,21 @@ document.addEventListener('click', async (event) => {
         }
     }
 });
+
+async function updatePinnedHtml() {
+    if (window.location.pathname === '/index.html') {
+        try {
+            const html = await fetch('/resort-cards', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(pinned_resorts),
+            });
+            $('#main').html(html);
+        } catch (err) {
+            console.err(err);
+        }
+    }
+    else console.log(window.location.pathname);
+}

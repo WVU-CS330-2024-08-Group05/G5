@@ -10,7 +10,6 @@ const sql = require('./sql');
 const RESORTS = require('./resortdata.json');
 
 // Dynamic html
-const PinnedResorts = require('./src/PinnedResorts.js');
 const Search = require('./src/Search.js');
 
 // serve files from public dir
@@ -62,6 +61,32 @@ app.get('/search.html', async function (req, res) {
 
 });
 
+/**
+ * Resort cards
+ */
+app.post("/resort-cards", async function (req, res) {
+    let resort_names;
+
+    try {
+        resort_names = req.body;
+    } catch (err) {
+        console.error(err);
+        res.send('Error parsing resorts');
+        return;
+    }
+
+    let html = '';
+    for (let name in resort_names) {
+        for (resort in RESORTS) {
+            if (resort.name === name) {
+                html += ResortCard.html(resort, { distance: false });
+            }
+        }
+    }
+    
+    res.send(html);
+});
+
 
 /** Get resort names */
 app.get('/resort-names', async function (req, res) {
@@ -73,7 +98,6 @@ app.get('/resort-names', async function (req, res) {
     // Send the array of resort names as the response
     res.send(resort_names);
 });
-
 
 
 /**  Login Functionality
