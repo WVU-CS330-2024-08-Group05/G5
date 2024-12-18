@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/ResortCard.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: src/ResortCard.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Provides methods for generating resort card html server-side.
+ */
+const Weather = require('../weather.js');
+
+/**
+ * Generates HTML for a resort card, including weather data, acreage breakdown,
+ * and additional details like distance and rating.
+ * 
+ * @param {Object} resort - Object containing resort information.
+ * @param {string} resort.resort_name - Name of the resort.
+ * @param {string} resort.state - State where the resort is located.
+ * @param {number} resort.lat - Latitude of the resort.
+ * @param {number} resort.lon - Longitude of the resort.
+ * @param {number} resort.distance - Distance to the resort (in miles).
+ * @param {number} resort.green_acres - Number of green trail acres.
+ * @param {number} resort.blue_acres - Number of blue trail acres.
+ * @param {number} resort.black_acres - Number of black trail acres.
+ * @param {number} resort.acres - Total acreage of the resort.
+ * @param {Object} options - Additional options for rendering the card.
+ * @param {boolean} options.distance - Whether to include distance in the card.
+ * @returns {Promise&lt;string>} A promise resolving to the HTML string for the resort card.
+ */
+
+async function html(resort, options) {
+    // Set distance html
+    let distance = "";
+    if (options.distance) {
+        distance = `&lt;p>Distance: ${resort.distance} miles&lt;/p>`;
+    }
+    // Get array of weekdays, starting with Today
+    let week_days = getWeekDays();
+    // Get weather data (12-hour)
+    let weather = await Weather.getResortWeather(resort);
+
+    html =
+        `&lt;div class="resort-card">
+    &lt;h3>${resort.resort_name}&lt;/h3>
+    &lt;div class="resort-details">
+        &lt;img src=flags/Flag_of_${resort.state.replaceAll(' ', '_')}.svg alt="State Logo">
+        &lt;div class="piechart">[['Difficulty', 'Acres'], ['Green', ${resort.green_acres}], ['Blue', ${resort.blue_acres}], ['Black', ${resort.black_acres}]]&lt;/div >
+        &lt;div class="acreage-details">
+        &lt;table>
+            &lt;tr>
+                &lt;th>${week_days[0]}
+                &lt;th>${week_days[1]}
+                &lt;th>${week_days[2]}
+                &lt;th>${week_days[3]}
+                &lt;th>${week_days[4]}
+                &lt;th>${week_days[5]}
+                &lt;th>${week_days[6]}
+            &lt;/tr>
+            &lt;tr>
+                &lt;td>${weather[0].temperature}\u00b0F
+                &lt;td>${weather[2].temperature}\u00b0F
+                &lt;td>${weather[4].temperature}\u00b0F
+                &lt;td>${weather[6].temperature}\u00b0F
+                &lt;td>${weather[8].temperature}\u00b0F
+                &lt;td>${weather[10].temperature}\u00b0F
+                &lt;td>${weather[12].temperature}\u00b0F
+            &lt;/tr>
+        &lt;/table>
+        &lt;/div>
+        &lt;div class="other-resort-details">
+        &lt;p>Total Acres: ${resort.acres}&lt;p>
+        ${distance}
+        &lt;/div>
+        &lt;div class="resort-rating">
+            &lt;p>Rating&lt;/p>
+            &lt;/div>
+                &lt;button class="pin-button" data-resort-name="${resort.resort_name}">
+                    &lt;img src="pin-image.png" alt="Pin this resort" />
+                &lt;/button>
+            &lt;/div>
+&lt;/div >
+`
+    return html
+}
+
+/**
+ * Generates an array of weekdays starting from "Today."
+ * 
+ * @returns {string[]} Array of weekday names, starting with "Today."
+ */
+function getWeekDays() {
+    let weekDays = [
+        'Sunday',
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday'
+    ];
+    let date = new Date();
+    let day = date.getDay();
+    let week_array = [];
+    for (i = 0; i &lt; 7; ++i) {
+        week_array.push(weekDays[(day + i) % 7]);
+    }
+    week_array[0] = "Today";
+    return week_array;
+}
+
+module.exports = {
+    html
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Trip.html">Trip</a></li></ul><h3>Global</h3><ul><li><a href="global.html#RESORTS">RESORTS</a></li><li><a href="global.html#Weather">Weather</a></li><li><a href="global.html#bcrypt">bcrypt</a></li><li><a href="global.html#config">config</a></li><li><a href="global.html#creatAccount">creatAccount</a></li><li><a href="global.html#executeQuery">executeQuery</a></li><li><a href="global.html#filterByDistance">filterByDistance</a></li><li><a href="global.html#filterBySearch">filterBySearch</a></li><li><a href="global.html#getId">getId</a></li><li><a href="global.html#getPassword">getPassword</a></li><li><a href="global.html#getPinnedResorts">getPinnedResorts</a></li><li><a href="global.html#getTrips">getTrips</a></li><li><a href="global.html#getWeekDays">getWeekDays</a></li><li><a href="global.html#hashPassword">hashPassword</a></li><li><a href="global.html#html">html</a></li><li><a href="global.html#initializePool">initializePool</a></li><li><a href="global.html#isPasswordCorrect">isPasswordCorrect</a></li><li><a href="global.html#isResortPinned">isResortPinned</a></li><li><a href="global.html#pinResort">pinResort</a></li><li><a href="global.html#setPassword">setPassword</a></li><li><a href="global.html#setTrips">setTrips</a></li><li><a href="global.html#setUsername">setUsername</a></li><li><a href="global.html#storePinnedResorts">storePinnedResorts</a></li><li><a href="global.html#unpinResort">unpinResort</a></li><li><a href="global.html#updatePinButtonStyle">updatePinButtonStyle</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Dec 18 2024 17:17:50 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

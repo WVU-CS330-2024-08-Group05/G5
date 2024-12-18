@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: public/Trip.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: public/Trip.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Represents a completed trip with details about the resort, hours spent, date, rating, and description.
+ */
+class Trip {
+    static trips =[];
+    /**
+     * Creates a new Trip instance.
+     * @param {string} resort - The name of the resort.
+     * @param {number} hours - The number of hours spent at the resort.
+     * @param {string} date - The date of the trip (format: mm/dd/yyyy).
+     * @param {number} rating - The rating of the trip (0-5).
+     * @param {string} description - A brief description or review of the trip.
+     */
+    constructor(resort, hours, date, rating, description) {
+        this.resort = resort;
+        this.hours = hours;
+        this.date = date;
+        this.rating = rating;
+        this.description = description;
+    }
+
+    /**
+     * Converts an array of trips to a JSON string.
+     * @param {Trip[]} tripsArray - An array of Trip objects.
+     * @returns {string} The JSON string representation of the trips array.
+     */
+    static tripsToJson(tripsArray) {
+        return JSON.stringify(tripsArray);
+    }
+
+    /**
+     * Converts a JSON string back to an array of Trip objects.
+     * @param {Object[]} tripsJSON - The JSON data representing trips.
+     * @returns {Trip[]} An array of Trip objects.
+     */
+    static jsonToArray(tripsJSON) {
+        if (Array.isArray(tripsJSON)) {
+            return tripsJSON.flatMap(tripData => {
+                if (Array.isArray(tripData)) {
+                    return tripData.map(innerTrip =>
+                        new Trip(innerTrip.resort, innerTrip.hours, innerTrip.date, innerTrip.rating, innerTrip.description)
+                    );
+                } else if (tripData.resort &amp;&amp; tripData.hours &amp;&amp; tripData.date &amp;&amp; tripData.rating &amp;&amp; tripData.description) {
+                    return new Trip(tripData.resort, tripData.hours, tripData.date, tripData.rating, tripData.description);
+                } else {
+                    console.warn("Unexpected trip data format:", tripData);
+                    return [];
+                }
+            });
+        } else {
+            console.error("Unexpected format; expected an array but received:", tripsJSON);
+            return [];
+        }
+    }
+
+    /**
+     * Stores a new trip for a user in the database.
+     * @param {string} username - The username of the account.
+     * @param {Trip} trip - The trip to store.
+     * @returns {Promise&lt;void>}
+     */
+    static async storeTripsInAccount(username, trip) {
+        const url = `/store-trips`;
+
+        if (username) {
+            try {
+                let currentTrips = await Trip.getAccountTrips(username);
+                if (Array.isArray(currentTrips)) {
+                    currentTrips.push(trip);
+                } else {
+                    currentTrips = [trip];
+                }
+                const tripsJSON = Trip.tripsToJson(currentTrips);
+                const storeResponse = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, trips: tripsJSON }),
+                });
+
+                if (!storeResponse.ok) {
+                    throw new Error('Failed to store updated trips in the database.');
+                }
+                const result = await storeResponse.text();
+                console.log(result.includes('successfully stored') ? 'Trips successfully updated' : 'Error updating trips:', result);
+            } catch (error) {
+                console.error('Error storing trips:', error);
+            }
+        } else {
+            console.log("Username is required to store trips.");
+        }
+    }
+
+    /**
+     * Fetches stored trips for a user from the database.
+     * @param {string} username - The username of the account.
+     * @returns {Promise&lt;Trip[]>} An array of Trip objects.
+     */
+    static async getAccountTrips(username) {
+        const url = '/account-trips';
+        if (username) {
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch trips from the database.');
+                }
+
+                const result = await response.json();
+                if (Array.isArray(result)) {
+                    Trip.trips= Trip.jsonToArray(result);
+                    return Trip.trips;
+                } else {
+                    console.error("Unexpected response format:", result);
+                    Trip.trips= [];
+                    return Trip.trips;
+                }
+            } catch (error) {
+                console.error('Error fetching trips:', error);
+                Trip.trips= [];
+                return Trip.trips;
+            }
+        } else {
+            console.log("Username is required to fetch trips.");
+            return [];
+        }
+    }
+
+    /**
+     * Fetches the ratings of trips from the server.
+     * @returns {Promise&lt;Object[]>} The ratings data.
+     */
+    async getRatings() {
+        const url = '/pull-ratings';
+        try {
+            const response = await fetch(url, { method: 'GET', headers: { 'Content-Type': 'application/json' } });
+            if (!response.ok) {
+                throw new Error('Failed to fetch ratings from the database.');
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching ratings:', error);
+            return [];
+        }
+    }
+
+    /**
+     * Clears all trips for the logged-in user.
+     * @returns {Promise&lt;void>}
+     */
+    static async clearTrips() {
+        const username = sessionStorage.getItem("username");
+        Trip.trips= [];
+        const url = '/store-trips';
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, trips: Trip.trips }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to clear trips from the database.');
+            }
+        } catch (error) {
+            console.error('Error removing trips:', error);
+        }
+    }
+
+    /**
+     * Generates the HTML for a trip card.
+     * @param {Trip} trip - The trip to render.
+     * @returns {Promise&lt;string>} The HTML string for the trip card.
+     */
+    static async html(trip) {
+        const { resort, date, hours, rating, description } = trip;
+        return `
+            &lt;div class="trip-card">
+                &lt;div class="location-title">
+                    &lt;h2>${resort}&lt;/h2>
+                    &lt;div class="resort-rating">${rating} &lt;span class="star">★&lt;/span>&lt;/div>
+                &lt;/div>
+                &lt;div class="location-content">
+                    &lt;div class="image-container">
+                        &lt;img class="location-img" src="placeholder.png" alt="Picture of Resorts" height="200" width="200">
+                    &lt;/div>
+                    &lt;div class="user-review">
+                        &lt;h3>Review&lt;/h3>
+                        &lt;p>I visited for ${hours} hours on ${date}. ${description}&lt;/p>
+                    &lt;/div>
+                &lt;/div>
+                &lt;div class="info-container">
+                    &lt;div class="date-logged">Date: ${date}&lt;/div>
+                    &lt;div class="hours-logged">Hours Logged: ${hours}&lt;/div>
+                &lt;/div>
+            &lt;/div>
+        `;
+    }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Trip.html">Trip</a></li></ul><h3>Global</h3><ul><li><a href="global.html#RESORTS">RESORTS</a></li><li><a href="global.html#Weather">Weather</a></li><li><a href="global.html#bcrypt">bcrypt</a></li><li><a href="global.html#config">config</a></li><li><a href="global.html#creatAccount">creatAccount</a></li><li><a href="global.html#executeQuery">executeQuery</a></li><li><a href="global.html#filterByDistance">filterByDistance</a></li><li><a href="global.html#filterBySearch">filterBySearch</a></li><li><a href="global.html#getId">getId</a></li><li><a href="global.html#getPassword">getPassword</a></li><li><a href="global.html#getPinnedResorts">getPinnedResorts</a></li><li><a href="global.html#getTrips">getTrips</a></li><li><a href="global.html#getWeekDays">getWeekDays</a></li><li><a href="global.html#hashPassword">hashPassword</a></li><li><a href="global.html#html">html</a></li><li><a href="global.html#initializePool">initializePool</a></li><li><a href="global.html#isPasswordCorrect">isPasswordCorrect</a></li><li><a href="global.html#isResortPinned">isResortPinned</a></li><li><a href="global.html#pinResort">pinResort</a></li><li><a href="global.html#setPassword">setPassword</a></li><li><a href="global.html#setTrips">setTrips</a></li><li><a href="global.html#setUsername">setUsername</a></li><li><a href="global.html#storePinnedResorts">storePinnedResorts</a></li><li><a href="global.html#unpinResort">unpinResort</a></li><li><a href="global.html#updatePinButtonStyle">updatePinButtonStyle</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Dec 18 2024 17:17:50 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

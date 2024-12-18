@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: src/Search.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: src/Search.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Generates paginated HTML for a list of ski resorts based on search and filter options.
+ * Includes functionality to filter resorts by name, state, or distance from a specified location.
+ */
+
+const RESORTS = require('../resortdata.json');
+const NodeGeolocation = require('nodejs-geolocation').default;
+const geo = new NodeGeolocation('App');
+const ResortCard = require('./ResortCard.js');
+
+const PAGES_SHOWN = 8;
+const MAX_RESULTS = 10;
+const MAX_FETCH_ATTEMPTS = 5;
+
+/**
+ * Generates HTML for a paginated list of resorts based on search and filter options.
+ * 
+ * @param {Object} options - Options for filtering and generating results.
+ * @param {string} [options.search] - Search string to filter resorts by name or state.
+ * @param {number} [options.lat] - Latitude for filtering resorts by distance.
+ * @param {number} [options.lon] - Longitude for filtering resorts by distance.
+ * @param {number} [options.range] - Maximum distance (in miles) to filter resorts.
+ * @param {boolean} [options.distance] - Whether to include distance in resort details.
+ * @param {string} options.url - Base URL for pagination links.
+ * @param {number} options.page - Current page number for pagination.
+ * @returns {Promise&lt;string>} A promise that resolves to the generated HTML.
+ * @throws {Error} If fetching resort weather data fails after multiple attempts.
+ */
+async function html(options) {
+    result_header =
+        `&lt;div class="container-fluid">&lt;button type="button" id="search-close-btn" class="btn-close" aria-label="Close">&lt;/button>&lt;/div>`;
+
+    let resorts = [...RESORTS];
+
+    // Filter resorts by text segment
+    if (options.search) {
+        resorts = filterBySearch(resorts, options);
+    }
+    // Filter resorts by distance from location
+    if (options.lat &amp;&amp; options.lon &amp;&amp; options.range) {
+        resorts = filterByDistance(resorts, options);
+        options.distance = true;
+    }
+    let results_html = '';
+    // Sort resorts by distance from location
+    if (options.distance) {
+        resorts.sort((a, b) => a.distance - b.distance);
+    }
+
+    // Create results HTML
+    const base = (options.page - 1) * MAX_RESULTS;
+    for (let i = 0; i &lt; MAX_RESULTS &amp;&amp; i + base &lt; resorts.length; ++i) {
+        const resort = resorts[i + base];
+        for (let j = 1; j &lt;= MAX_FETCH_ATTEMPTS; ++j) {
+            try {
+                const cardHtml = await ResortCard.html(resort, options);
+                results_html += cardHtml;
+                break;
+            } catch (err) {
+                if (j == 5) {
+                    throw err;
+                }
+                else {
+                    console.error(`Nation weather service api timed out: try ${j}/5.`);
+                }
+            }
+        }
+    }
+
+    // Create page footer html
+
+    // Helper function to generate pagination button HTML
+    function pageBtnHtml(num) {
+        if (options.page == num) {
+            return `&lt;li class="page-item active" aria-current="page">
+      &lt;span class="page-link">${num}&lt;/span>
+    &lt;/li>`;
+        } else {
+            let url = new URL(options.url);
+            url.searchParams.set('page', num);
+            return `&lt;li class="page-item">&lt;a class="page-link" href="${url.href}">${num}&lt;/a>&lt;/li>`;
+        }
+    }
+
+    let allPageBtnHtml = '';
+    let lowest_page = options.page - PAGES_SHOWN / 2;
+    if (lowest_page &lt; 1) lowest_page = 1;
+
+    // Loop to create page links
+    for (let i = 0; i &lt;= PAGES_SHOWN &amp;&amp; i &lt; Math.ceil(resorts.length / MAX_RESULTS); ++i) {
+        allPageBtnHtml += pageBtnHtml(lowest_page + i);
+    }
+
+    let result_footer = 
+`
+&lt;nav aria-label="...">
+  &lt;ul class="pagination pagination-lg">
+    ${allPageBtnHtml}
+  &lt;/ul>
+&lt;/nav>
+`
+    return result_header + results_html + result_footer;
+}
+
+/**
+ * Filters resorts based on a search string that matches their name or state.
+ * 
+ * @param {Object[]} resorts - Array of resort objects to filter.
+ * @param {Object} options - Options object containing the search string.
+ * @param {string} options.search - Search string to filter resorts.
+ * @returns {Object[]} Array of resorts that match the search string.
+ */
+function filterBySearch(resorts, options) {
+    const search = options.search;
+    return resorts.filter(function (resort) {
+        return (resort.state.toLowerCase().includes(search.toLowerCase()) ||
+            resort.resort_name.toLowerCase().includes(search.toLowerCase()));
+    });
+}
+
+/**
+ * Filters resorts based on their distance from a specified location.
+ * 
+ * @param {Object[]} resorts - Array of resort objects to filter.
+ * @param {Object} options - Options object containing location and range.
+ * @param {number} options.lat - Latitude of the user's location.
+ * @param {number} options.lon - Longitude of the user's location.
+ * @param {number} options.range - Maximum distance (in miles) to include resorts.
+ * @returns {Object[]} Array of resorts within the specified distance range.
+ */
+function filterByDistance(resorts, options) {
+    return resorts.filter(function (resort) {
+        let distance = geo.calculateDistance(resort, options, { unit: 'mi' });
+        resort['distance'] = distance;
+        return (distance &lt; options.range);
+    });
+}
+
+
+module.exports = {
+    html
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Trip.html">Trip</a></li></ul><h3>Global</h3><ul><li><a href="global.html#RESORTS">RESORTS</a></li><li><a href="global.html#Weather">Weather</a></li><li><a href="global.html#bcrypt">bcrypt</a></li><li><a href="global.html#config">config</a></li><li><a href="global.html#creatAccount">creatAccount</a></li><li><a href="global.html#executeQuery">executeQuery</a></li><li><a href="global.html#filterByDistance">filterByDistance</a></li><li><a href="global.html#filterBySearch">filterBySearch</a></li><li><a href="global.html#getId">getId</a></li><li><a href="global.html#getPassword">getPassword</a></li><li><a href="global.html#getPinnedResorts">getPinnedResorts</a></li><li><a href="global.html#getTrips">getTrips</a></li><li><a href="global.html#getWeekDays">getWeekDays</a></li><li><a href="global.html#hashPassword">hashPassword</a></li><li><a href="global.html#html">html</a></li><li><a href="global.html#initializePool">initializePool</a></li><li><a href="global.html#isPasswordCorrect">isPasswordCorrect</a></li><li><a href="global.html#isResortPinned">isResortPinned</a></li><li><a href="global.html#pinResort">pinResort</a></li><li><a href="global.html#setPassword">setPassword</a></li><li><a href="global.html#setTrips">setTrips</a></li><li><a href="global.html#setUsername">setUsername</a></li><li><a href="global.html#storePinnedResorts">storePinnedResorts</a></li><li><a href="global.html#unpinResort">unpinResort</a></li><li><a href="global.html#updatePinButtonStyle">updatePinButtonStyle</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Dec 18 2024 17:17:50 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
