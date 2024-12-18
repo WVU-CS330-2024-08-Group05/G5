@@ -62,25 +62,6 @@ app.get('/search.html', async function (req, res) {
 
 });
 
-/**
- * Home page functionality
- * 
- * Loads pinned resorts for user.
- */
-app.post("/pinned-resorts", async function (req, res) {
-    const options = {
-        username: req.body.username
-    };
-    
-    try {
-        const html = await PinnedResorts.html(options);
-        res.send(html);
-    } catch (err) {
-        console.error(err);
-        res.sendStatus(404);
-    }
-});
-
 
 /** Get resort names */
 app.get('/resort-names', async function (req, res) {

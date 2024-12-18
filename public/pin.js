@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         let username = sessionStorage.getItem("username");
         if (!username) {
-            console.error('User is not logged in.');
+            console.log('User is not logged in.');
             return;
         }
 
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     updatePinButtonStyle(button, true);
                 }
             });
-        }, 1000); // Allow time for dynamic content to load
+        }, 500); // Allow time for dynamic content to load
     } catch (error) {
         console.error('Error initializing pinned resorts:', error);
     }
