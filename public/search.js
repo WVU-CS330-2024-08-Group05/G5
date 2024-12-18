@@ -22,20 +22,25 @@ google.charts.setOnLoadCallback(drawCharts);
 // Draw the chart and set the chart values
 function drawCharts() {
     for (let element of document.getElementsByClassName('piechart')) {
-        var data = google.visualization.arrayToDataTable(eval(element.textContent));
+        try {
+            var data = google.visualization.arrayToDataTable(eval(element.textContent));
 
-        // Optional; add a title and set the width and height of the chart
-        var options = {
-            'width': 100, 'height': 100,
-            'colors': ['#6ad977', '#6070d6', '#161617'],
-            legend: 'none',
-            'chartArea': { 'width': '100%', 'height': '100%' },
-            'backgroundColor': 'transparent'
-        };
+            // Optional; add a title and set the width and height of the chart
+            var options = {
+                'width': 100, 'height': 100,
+                'colors': ['#6ad977', '#6070d6', '#161617'],
+                legend: 'none',
+                'chartArea': { 'width': '100%', 'height': '100%' },
+                'backgroundColor': 'transparent'
+            };
 
-        // Display the chart inside the <div> element with id="piechart"
-        var chart = new google.visualization.PieChart(element);
-        chart.draw(data, options);
+            // Display the chart inside the <div> element with id="piechart"
+            var chart = new google.visualization.PieChart(element);
+            chart.draw(data, options);
+        } catch (err) {
+            console.log(element.textContent);
+            console.error(err);
+        }
     }
 }
 
