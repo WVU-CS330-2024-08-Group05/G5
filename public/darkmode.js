@@ -10,15 +10,15 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Toggle dark mode on slider change
     $('#darkmode-btn').on('click', () => {
-        console.log("dark mode clicked");
-
         // Apply dark mode based on the slider state
-        if ($('#darkmode-btn').is()) {
+        if (localStorage.getItem('darkMode') === 'disabled') {
             document.body.classList.add('dark-mode');
             localStorage.setItem('darkMode', 'enabled');
+            console.log('darmode set');
         } else {
             document.body.classList.remove('dark-mode');
             localStorage.setItem('darkMode', 'disabled');
+            console.log('darkmode clear');
         }
     });
 });
