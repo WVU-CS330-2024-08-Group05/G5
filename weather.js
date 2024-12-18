@@ -38,7 +38,6 @@ async function getResortWeather(resort) {
     let url = `https://api.weather.gov/points/${resort.lat},${resort.lon}`;
     data = await fetch(url);
     if (!data.ok) {
-        console.log(resort);
         console.log(data);
         throw new Error(`Failed to fetch ${url}...`);
     }
@@ -46,7 +45,6 @@ async function getResortWeather(resort) {
     url = `${data.properties.forecast}`;
     let twelve_hour = await fetch(url);
     if (!twelve_hour.ok) {
-        console.log(resort);
         console.log(data);
         throw new Error(`Failed to fetch ${url}...`);
     }
@@ -80,13 +78,11 @@ async function getResortWeatherHourly(resort) {
  * 
  * <winter-weather-outlook type="snowfall probability" units="percent" time-layout="k-p12h-n5-19">
  * <name>Snow Probability, 90% Exceedance Percentile for 72-Hour Time Window</name>
- * 
- * 
  */
 
 /**
  * Single point unsummarized data
- * @param {lat, lon} point
+ * @param {lat, lon} point Point to 
  */
 async function getNdfdData(point) {
     const date = new Date();
@@ -95,28 +91,30 @@ async function getNdfdData(point) {
         lat: point.lat,
         lon: point.lon,
         product: 'time-series',
-        begin: date.toISOString().replace(/\..*$/, ''),
+        begin: date.toISOString().replace(/\:\d\d\..*$/, ''),
         end: '',
         Unit: 'e',
     }
 
     let url = new URL('https://digital.weather.gov/xml/SOAP_server/ndfdXMLclient.php');
+
     for (let param in params) {
         url.searchParams.append(param, params[param]);
     }
+
+    console.log(url);
+    return;
 
     let data = await fetch(url);
     data = await data.text();
     data = await parser.parseStringPromise(data);
     data = data.dwml.data[0].parameters[0];
 
-    console.log(Object.keys(data);
+    return data;
 }
-
-getNdfdData({ lat: 39.65, lon: -79.97 });
-
 
 module.exports = {
     getResortWeather,
-    getResortWeatherHourly
+    getResortWeatherHourly,
+    getNdfdData,
 };
