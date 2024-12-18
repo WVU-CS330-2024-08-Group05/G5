@@ -1,15 +1,26 @@
-const baseUrl = 'http://localhost:8080';
+/**
+ * Handles user signup functionality:
+ * - Validates user inputs (email, password strength).
+ * - Checks if the username is available.
+ * - Updates session storage and redirects on successful signup.
+ */
 
+const baseUrl = 'http://localhost:8080'; // Base URL for the API
 
 $(function () {
-   async function performSignup() {
+    /**
+     * Performs signup by validating user inputs, checking username availability, and handling user account creation.
+     */
+    async function performSignup() {
+        // Gather user inputs
         let username = $('#username').val();
         let password = $('#password').val();
         let email = $('#email').val();
 
+        // Error display elements
         let emailErrorDiv = $('#email-error');
         let passwordErrorDiv = $('#password-error');
-        let usernameErrorDiv = $('#username-error'); 
+        let usernameErrorDiv = $('#username-error');
 
         // Clear previous error messages
         emailErrorDiv.html("");
@@ -17,8 +28,8 @@ $(function () {
         usernameErrorDiv.html("");
 
         // Validate email and password
-        let emailResult = isEmail(email);  
-        let passwordErrorMessage = isStrongPassword(password);  
+        let emailResult = isEmail(email);
+        let passwordErrorMessage = isStrongPassword(password);
 
         let hasError = false;
 
@@ -34,35 +45,40 @@ $(function () {
             hasError = true;
         }
 
-        // Check if username is taken
+        // Proceed only if there are no validation errors
         if (!hasError) {
             const usernameAvailable = await usernameExists(username, password, email);
             if (usernameAvailable) {
-                
-                // Update sessionStorage to indicate a logged-in user (not a guest)
+                // Update session storage to reflect logged-in state
                 sessionStorage.setItem("isGuest", "false");
-                
                 sessionStorage.setItem("username", username);
-                
-                // Update the DOM and redirect
+
+                // Redirect to the homepage after a short delay
                 setTimeout(() => {
                     window.location.href = 'index.html';
-                }, 100);
+                }, 100); // Ensure DOM is updated before redirection
             }
         }
     }
-    // Listens for when the sign up button is pressed
+
+    // Event listener for the signup button
     $('#signup').on('click', performSignup);
-    // Listens for when enter is pressed when typing in any of the fields
+
+    // Event listener for the "Enter" key within input fields
     $('#password, #username, #email').on('keypress', function (e) {
         if (e.which === 13) { // Enter key code is 13
             e.preventDefault();
             performSignup();
         }
-    })
+    });
 });
 
-
+/**
+ * Validates the strength of a password.
+ * 
+ * @param {string} password - The password to validate.
+ * @returns {string} - An error message if the password is weak, or an empty string if valid.
+ */
 function isStrongPassword(password) {
     let error = "";
     if (password.length < 8) {
@@ -74,6 +90,12 @@ function isStrongPassword(password) {
     return error;
 }
 
+/**
+ * Validates the format of an email address.
+ * 
+ * @param {string} email - The email address to validate.
+ * @returns {string} - An error message if the email is invalid, or an empty string if valid.
+ */
 function isEmail(email) {
     let error = "";
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -83,32 +105,40 @@ function isEmail(email) {
     return error;
 }
 
+/**
+ * Checks if a username is available by sending a POST request to the server.
+ * 
+ * @param {string} username - The username to check.
+ * @param {string} password - The password for the account.
+ * @param {string} email - The email for the account.
+ * @returns {Promise<boolean>} - Resolves true if the username is available, false if taken.
+ */
 function usernameExists(username, password, email) {
     return new Promise((resolve, reject) => {
         let usernameErrorDiv = $('#username-error');
         usernameErrorDiv.html(""); // Clear previous error messages
 
         let url = `${baseUrl}/signing-up`;
-        
+
         fetch(url, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username: username, password: password, email: email })
+            body: JSON.stringify({ username: username, password: password, email: email }),
         })
-        .then((res) => res.text())
-        .then((msg) => { 
-            if (msg === "Username taken") {
-                usernameErrorDiv.html("Username is taken. Please pick another.");
-                resolve(false); // Username is taken
-            } else {
-                resolve(true); // Username is available
-            }
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-            reject(error); // Handle fetch errors
-        });
+            .then((res) => res.text())
+            .then((msg) => {
+                if (msg === "Username taken") {
+                    usernameErrorDiv.html("Username is taken. Please pick another.");
+                    resolve(false); // Username is taken
+                } else {
+                    resolve(true); // Username is available
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                reject(error); // Handle fetch errors
+            });
     });
 }

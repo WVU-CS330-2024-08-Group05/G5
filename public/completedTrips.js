@@ -1,39 +1,45 @@
-/** Completed Trips Object / Method Calls
- *      Data to be stored: Resort name, hours, date, rating. Written review in the future
- * 
- *      Function: Store as JSON, that upload to data base. 
- * 
- *      Each trip will be it's own object, that way we can store a list of object in the database's json
+/**
+ * Represents a completed trip with details about the resort, hours spent, date, rating, and description.
  */
-
-let trips = [];
-
 class Trip {
+    /**
+     * Creates a new Trip instance.
+     * @param {string} resort - The name of the resort.
+     * @param {number} hours - The number of hours spent at the resort.
+     * @param {string} date - The date of the trip (format: mm/dd/yyyy).
+     * @param {number} rating - The rating of the trip (0-5).
+     * @param {string} description - A brief description or review of the trip.
+     */
     constructor(resort, hours, date, rating, description) {
         this.resort = resort;
         this.hours = hours;
-        this.date = date; // (mm/dd/yyyy)
-        this.rating = rating; // integer 0-5
+        this.date = date;
+        this.rating = rating;
         this.description = description;
     }
 
-    // Convert trips array to JSON
-    static tripsToJson(tripsArray) {;
+    /**
+     * Converts an array of trips to a JSON string.
+     * @param {Trip[]} tripsArray - An array of Trip objects.
+     * @returns {string} The JSON string representation of the trips array.
+     */
+    static tripsToJson(tripsArray) {
         return JSON.stringify(tripsArray);
     }
 
-    // Convert JSON back to trips array (and store them as Trip objects)
+    /**
+     * Converts a JSON string back to an array of Trip objects.
+     * @param {Object[]} tripsJSON - The JSON data representing trips.
+     * @returns {Trip[]} An array of Trip objects.
+     */
     static jsonToArray(tripsJSON) {
-        // Ensure trips are converted into Trip objects
         if (Array.isArray(tripsJSON)) {
             return tripsJSON.flatMap(tripData => {
                 if (Array.isArray(tripData)) {
-                    // Handle nested arrays
                     return tripData.map(innerTrip =>
                         new Trip(innerTrip.resort, innerTrip.hours, innerTrip.date, innerTrip.rating, innerTrip.description)
                     );
-                } else if (tripData.resort && tripData.hours && tripData.date && tripData.rating, tripData.description) {
-                    // Handle direct trip objects
+                } else if (tripData.resort && tripData.hours && tripData.date && tripData.rating && tripData.description) {
                     return new Trip(tripData.resort, tripData.hours, tripData.date, tripData.rating, tripData.description);
                 } else {
                     console.warn("Unexpected trip data format:", tripData);
@@ -46,46 +52,35 @@ class Trip {
         }
     }
 
-    
-    
-    // Store trips in the database for a specific user
+    /**
+     * Stores a new trip for a user in the database.
+     * @param {string} username - The username of the account.
+     * @param {Trip} trip - The trip to store.
+     * @returns {Promise<void>}
+     */
     static async storeTripsInAccount(username, trip) {
         const url = `/store-trips`;
 
         if (username) {
             try {
-                // get the current trips using the existing function
                 let currentTrips = await Trip.getAccountTrips(username);
-                
-                // add the new trip to the list of trips
                 if (Array.isArray(currentTrips)) {
                     currentTrips.push(trip);
-
                 } else {
-                    console.warn("Unexpected data format; resetting trips to an empty array.");
                     currentTrips = [trip];
                 }
-                // convert updated trips array to JSON
                 const tripsJSON = Trip.tripsToJson(currentTrips);
-                // store updated trips in the database
                 const storeResponse = await fetch(url, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, trips: tripsJSON }),
                 });
 
                 if (!storeResponse.ok) {
                     throw new Error('Failed to store updated trips in the database.');
                 }
-
                 const result = await storeResponse.text();
-                if (result.includes('successfully stored')) {
-                    console.log('Trips successfully updated:', result);
-                } else {
-                    console.error('Error updating trips:', result);
-                }
+                console.log(result.includes('successfully stored') ? 'Trips successfully updated' : 'Error updating trips:', result);
             } catch (error) {
                 console.error('Error storing trips:', error);
             }
@@ -94,18 +89,18 @@ class Trip {
         }
     }
 
-    // Fetch stored trips for a user from the server
+    /**
+     * Fetches stored trips for a user from the database.
+     * @param {string} username - The username of the account.
+     * @returns {Promise<Trip[]>} An array of Trip objects.
+     */
     static async getAccountTrips(username) {
         const url = '/account-trips';
-        console.log(`Posting to ${url}...`);
-
         if (username) {
             try {
                 const response = await fetch(url, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username }),
                 });
 
@@ -113,21 +108,18 @@ class Trip {
                     throw new Error('Failed to fetch trips from the database.');
                 }
 
-                // Directly retrieve the JSON response
                 const result = await response.json();
-
                 if (Array.isArray(result)) {
-                    // Convert JSON to Trip objects and update the global trips array
-                    trips = Trip.jsonToArray(result); 
+                    trips = Trip.jsonToArray(result);
                     return trips;
                 } else {
                     console.error("Unexpected response format:", result);
-                    trips = []; // Reset trips if format is invalid
+                    trips = [];
                     return trips;
                 }
             } catch (error) {
                 console.error('Error fetching trips:', error);
-                trips = []; // Reset trips in case of an error
+                trips = [];
                 return trips;
             }
         } else {
@@ -135,64 +127,55 @@ class Trip {
             return [];
         }
     }
-    
 
-    async getRatings(){
+    /**
+     * Fetches the ratings of trips from the server.
+     * @returns {Promise<Object[]>} The ratings data.
+     */
+    async getRatings() {
         const url = '/pull-ratings';
-        console.log(`Getting from ${url}...`);
         try {
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
+            const response = await fetch(url, { method: 'GET', headers: { 'Content-Type': 'application/json' } });
             if (!response.ok) {
-                throw new Error('Failed to fetch trips from the database.');
+                throw new Error('Failed to fetch ratings from the database.');
             }
-
-            // Directly retrieve the JSON response
-            const result = await response.json();
-            
-            return result;
-
-        }  catch(err) {
-                console.error('Error fetching ratings:', error);
-                ratings = []; // Reset trips in case of an error
-                return trips;
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching ratings:', error);
+            return [];
         }
     }
 
+    /**
+     * Clears all trips for the logged-in user.
+     * @returns {Promise<void>}
+     */
     static async clearTrips() {
-        let username = sessionStorage.getItem("username");
+        const username = sessionStorage.getItem("username");
         trips = [];
         const url = '/store-trips';
-        
-        console.log(`Getting from ${url}...`);
         try {
             const response = await fetch(url, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, trips })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, trips }),
             });
 
             if (!response.ok) {
-                throw new Error('Failed to eradicate trips from the database.');
+                throw new Error('Failed to clear trips from the database.');
             }
-
-        }  catch(err) {
-                console.error('Error removing trips:', err);
+        } catch (error) {
+            console.error('Error removing trips:', error);
         }
-
-
     }
 
+    /**
+     * Generates the HTML for a trip card.
+     * @param {Trip} trip - The trip to render.
+     * @returns {Promise<string>} The HTML string for the trip card.
+     */
     static async html(trip) {
-        let { resort, date, hours, rating, description } = trip;
-        
+        const { resort, date, hours, rating, description } = trip;
         return `
             <div class="trip-card">
                 <div class="location-title">
@@ -216,4 +199,3 @@ class Trip {
         `;
     }
 }
-
