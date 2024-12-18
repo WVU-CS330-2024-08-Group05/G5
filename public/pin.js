@@ -1,7 +1,5 @@
 let pinned_resorts = []; // initialize as empty, to be fetched later
 
-
-
 // fetch pinned resorts when the page loads
 document.addEventListener('DOMContentLoaded', async () => {
     try {

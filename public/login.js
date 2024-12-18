@@ -1,4 +1,4 @@
-const baseUrl = 'http://localhost:8080';
+
 // logging in
 console.log("logging in...");
 $(function () {
@@ -20,7 +20,7 @@ $(function () {
         passwordErrorDiv.html("");
 
         // Define the URL for the POST request
-        let url = `${baseUrl}/login`;
+        let url = `/login`;
     
         // Only send the request if username is provided
         if (username && password) {
