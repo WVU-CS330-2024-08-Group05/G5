@@ -57,12 +57,8 @@ async function html(options) {
                 results_html += cardHtml;
                 break;
             } catch (err) {
-                if (j == 5) {
-                    throw err;
-                }
-                else {
-                    console.error(`Nation weather service api timed out: try ${j}/5.`);
-                }
+                if (j == 5) console.log(resort);
+                console.error(`Nation weather service api timed out: try ${j}/5.`);
             }
         }
     }
@@ -91,8 +87,8 @@ async function html(options) {
         allPageBtnHtml += pageBtnHtml(lowest_page + i);
     }
 
-    let result_footer = 
-`
+    let result_footer =
+        `
 <nav aria-label="...">
   <ul class="pagination pagination-lg">
     ${allPageBtnHtml}

@@ -33,6 +33,11 @@ async function html(resort, options) {
     // Get weather data (12-hour)
     let weather = await Weather.getResortWeather(resort);
 
+    function precipProb(index) {
+        const prob = weather[index].probabilityOfPrecipitation.value;
+        return (prob) ? prob+'%' : '';
+    }
+
     html =
         `<div class="resort-card">
     <h3>${resort.resort_name}</h3>
@@ -62,13 +67,13 @@ async function html(resort, options) {
                 <td>${weather[12].temperature}\u00b0F
             </tr>
             <th> Precipitation
-            <td>${weather[0].probabilityOfPrecipitation.value}
-            <td>${weather[2].probabilityOfPrecipitation.value}
-            <td>${weather[4].probabilityOfPrecipitation.value}
-            <td>${weather[6].probabilityOfPrecipitation.value}
-            <td>${weather[8].probabilityOfPrecipitation.value}
-            <td>${weather[10].probabilityOfPrecipitation.value}
-            <td>${weather[12].probabilityOfPrecipitation.value}
+            <td>${precipProb(0)}
+            <td>${precipProb(2)}
+            <td>${precipProb(4)}
+            <td>${precipProb(6)}
+            <td>${precipProb(8)}
+            <td>${precipProb(10)}
+            <td>${precipProb(12)}
         </table>
         </div>
         <div class="other-resort-details">
