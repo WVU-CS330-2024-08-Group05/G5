@@ -109,7 +109,6 @@ app.post("/resort-cards", async function (req, res) {
         }
     }
 
-    console.log('>>>' + html + '<<<');
     res.send(html);
 });
 
