@@ -13,11 +13,11 @@ $(function () {
      */
     async function performLogin() {
         console.log("login attempt");
-    
+
         // Gather user inputs
         let username = $('#username').val();
         let password = $('#password').val();
-    
+
         // Error message elements
         let usernameErrorDiv = $('#username-error');
         let passwordErrorDiv = $('#password-error');
@@ -28,11 +28,11 @@ $(function () {
 
         // Define the URL for the POST request
         let url = `/login`;
-    
+
         // Ensure both username and password are provided
         if (username && password) {
             console.log(`Posting to ${url}...`);
-    
+
             // Make a POST request with the username and password
             fetch(url, {
                 method: 'POST',
@@ -54,11 +54,11 @@ $(function () {
                     // Clear error messages
                     usernameErrorDiv.html(""); 
                     passwordErrorDiv.html("");
-                    
+
                     // Set sessionStorage values for the logged-in user
                     sessionStorage.setItem("isGuest", "false");
                     sessionStorage.setItem("username", username);
-    
+
                     // Redirect to the homepage
                     setTimeout(() => {
                         window.location.href = 'index.html';
@@ -89,7 +89,12 @@ $(function () {
     });
 });
 
-// showMessage function to display success or error messages
+/**
+ * Displays a success or error message in the UI.
+ * 
+ * @param {string} message - The message to display.
+ * @param {string} [type='success'] - The type of the message ('success' or 'error').
+ */
 function showMessage(message, type = 'success') {
     const messageBox = $('#messageBox');
     messageBox.text(message); // Set the message
@@ -105,6 +110,10 @@ function showMessage(message, type = 'success') {
 }
 
 $(document).ready(() => {
+    /**
+     * Sends a recovery email to the user based on their username.
+     * Displays success or error messages based on the response.
+     */
     $('#sendEmailButton').click(() => {
         const username = $('#usernameInput').val();
 
@@ -120,7 +129,7 @@ $(document).ready(() => {
             data: JSON.stringify({ username }),
             success: (response) => {
                 showMessage(response.message, 'success');
-            
+                
                 // Hide the recovery email input and show the reset password section
                 $('#sendEmailButton').hide();
                 $('#usernameInput').prop('disabled', true); // Disable username input
@@ -133,11 +142,15 @@ $(document).ready(() => {
         });
     });
 
+    /**
+     * Resets the user's password using a token, username, and new password.
+     * Displays success or error messages based on the response.
+     */
     $('#resetPasswordButton').click(() => {
         const username = $('#usernameInput').val();
         const token = $('#tokenInput').val();
         const newPassword = $('#newPasswordInput').val();
-    
+
         if (!username || !token || !newPassword) {
             showMessage('Please fill in all fields.', 'error'); 
             return;
@@ -160,4 +173,3 @@ $(document).ready(() => {
         });
     });
 });
-
