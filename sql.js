@@ -72,6 +72,16 @@ async function getId(username) {
     }
 }
 
+/**
+ * @description Retrieves the email address associated with a given username from the database.
+ * 
+ * @param {string} username - The username of the account for which to retrieve the email.
+ * @returns {Promise<string>} A promise that resolves to the email address if found, 
+ *                            "Username not found" if the username does not exist, 
+ *                            or an error message if a query error occurs.
+ * 
+ * @throws Will log an error to the console if the database query fails.
+ */
 async function getEmail(username) {
     try {
         const query = `SELECT email FROM Accounts WHERE username COLLATE Latin1_General_BIN = @username`;
@@ -84,6 +94,7 @@ async function getEmail(username) {
         return err.message;
     }
 }
+
 
 /**
  * Verifies if a provided password matches the stored hash for a username.
@@ -285,6 +296,14 @@ async function isPasswordCorrect(password, hash) {
 }
 
 
+/**
+ * @description Generates a secure token for password recovery and stores it in the database with an expiry time.
+ * 
+ * @param {string} username - The username of the account for which to generate the token.
+ * @returns {Promise<string>} A promise that resolves to the generated token.
+ * 
+ * @throws Will throw an error if the database query fails.
+ */
 async function generateToken(username) {
     const token = crypto.randomBytes(32).toString('hex'); // Generate a secure token
     const expiry = new Date(Date.now() + 15 * 60 * 1000); // Token expires in 15 minutes
@@ -303,6 +322,15 @@ async function generateToken(username) {
     return token;
 }
 
+/**
+ * @description Validates a password recovery token for a given username by checking if it matches and is not expired.
+ * 
+ * @param {string} username - The username of the account to validate the token for.
+ * @param {string} token - The token to validate.
+ * @returns {Promise<boolean>} A promise that resolves to `true` if the token is valid, otherwise `false`.
+ * 
+ * @throws Will throw an error if the database query fails.
+ */
 async function validateToken(username, token) {
     const query = `
         SELECT reset_token, token_expiry
@@ -320,6 +348,7 @@ async function validateToken(username, token) {
     // Check if the token matches and has not expired
     return reset_token === token && new Date() < new Date(token_expiry);
 }
+
 
 module.exports = {
     creatAccount,

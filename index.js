@@ -194,15 +194,20 @@ app.post("/signing-up", async function (req, res) {
 
 /** Changing password and changing username */
 
+/**
+ * @description Endpoint to change the user's password.
+ * 
+ * @route POST /change-password
+ * @body {string} username - The username of the account.
+ * @body {string} password - The new password to set.
+ */
 app.post('/change-password', async function (req, res) {
     let msg = "";
-
     const username = req.body.username;
     const password = req.body.password;
 
     try {
         msg = await sql.setPassword(username, password);
-
     } catch (err) {
         console.error(err.message);
         msg = "Error changing password. Please try again later.";
@@ -211,10 +216,15 @@ app.post('/change-password', async function (req, res) {
     res.send(msg);
 });
 
+/**
+ * @description Endpoint to change the user's username.
+ * 
+ * @route POST /change-username
+ * @body {string} username - The current username.
+ * @body {string} newUsername - The new username to set.
+ */
 app.post('/change-username', async function (req, res) {
-
     let msg = "";
-
     const username = req.body.username;
     const newUsername = req.body.newUsername;
 
@@ -225,7 +235,7 @@ app.post('/change-username', async function (req, res) {
         msg = "Error changing username. Please try again later.";
     }
 
-    res.send(msg); 
+    res.send(msg);
 });
 
 /**
@@ -240,12 +250,11 @@ app.post('/send-recovery-email', async (req, res) => {
     // Check if the user exists
     const user = await sql.getEmail(username);
     if (user === "Username not found") {
-        res.json({ error: 'User not found.' });
+        return res.json({ error: 'User not found.' });
     }
 
     const token = await sql.generateToken(username);
 
-    // Set up the email transporter using nodemailer
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -254,7 +263,6 @@ app.post('/send-recovery-email', async (req, res) => {
         },
     });
 
-    // Compose the recovery email
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: user,
@@ -266,7 +274,6 @@ app.post('/send-recovery-email', async (req, res) => {
         If you did not request this, please ignore this email.`,
     };
 
-    // Send the recovery email
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             console.error('Error sending email:', error);
@@ -278,8 +285,14 @@ app.post('/send-recovery-email', async (req, res) => {
     });
 });
 
-
-// Endpoint to handle recovery email requests
+/**
+ * @description Endpoint to reset a user's password using a recovery token.
+ * 
+ * @route POST /reset-password
+ * @body {string} username - The username of the account.
+ * @body {string} token - The recovery token.
+ * @body {string} newPassword - The new password to set.
+ */
 app.post('/reset-password', async (req, res) => {
     const { username, token, newPassword } = req.body;
 
@@ -302,13 +315,13 @@ app.post('/reset-password', async (req, res) => {
     }
 });
 
-
-/** Pulling Ratings */
-
-// Function to get the list of ratings
+/**
+ * @description Endpoint to retrieve a list of ratings.
+ * 
+ * @route GET /pull-ratings
+ */
 app.get('/pull-ratings', async (req, res) => {
     try {
-        // Query to retrieve ratings
         const query = `
             SELECT 
                 JSON_VALUE(trip.value, '$.resort') AS resort_name,
@@ -320,37 +333,43 @@ app.get('/pull-ratings', async (req, res) => {
             WHERE 
                 JSON_VALUE(trip.value, '$.rating') IS NOT NULL;
         `;
-
-        // Execute the query
         const result = await poolConnection.request().query(query);
-
-        // Send the results as JSON
         res.json(result.recordset);
-
     } catch (error) {
         console.error('Error executing query:', error);
         res.send('Error retrieving ratings');
     }
 });
 
-
-/** Trips Functionality */
+/**
+ * @description Endpoint to retrieve user trips.
+ * 
+ * @route POST /account-trips
+ * @body {string} username - The username of the account.
+ */
 app.post("/account-trips", async function (req, res) {
-    let msg = null; // Default to no data
+    let msg = null;
     const username = req.body.username;
+
     try {
         msg = await sql.getTrips(username);
     } catch (err) {
         console.error(err.message);
-        msg = { error: "Error retrieving trips. Please try again later." }; // Send error as JSON
+        msg = { error: "Error retrieving trips. Please try again later." };
     }
 
-    res.json(msg); // Ensure response is always JSON
+    res.json(msg);
 });
 
-
+/**
+ * @description Endpoint to store user trips.
+ * 
+ * @route POST /store-trips
+ * @body {string} username - The username of the account.
+ * @body {Array} trips - The list of trips to store.
+ */
 app.post("/store-trips", async function (req, res) {
-    let msg = "Storing account failed";  // Default error message
+    let msg = "Storing account failed";
     const username = req.body.username;
     const trips = req.body.trips;
 
@@ -369,11 +388,16 @@ app.post("/store-trips", async function (req, res) {
     res.send(msg);
 });
 
-
-/** Pin Resorts */
+/**
+ * @description Endpoint to set pinned resorts for a user.
+ * 
+ * @route POST /set-pinned-resorts
+ * @body {string} username - The username of the account.
+ * @body {Array|string} pinned_resorts - The list of pinned resorts or a JSON string of resorts.
+ */
 app.post("/set-pinned-resorts", async function (req, res) {
-    let username = req.body.username;
-    let pinned = req.body.pinned_resorts;
+    const username = req.body.username;
+    const pinned = req.body.pinned_resorts;
 
     const query = `UPDATE Accounts SET pinned_resorts = @pinned WHERE username = @username`;
     const input = [
@@ -388,39 +412,46 @@ app.post("/set-pinned-resorts", async function (req, res) {
         console.error('Error in saving pinned resorts:', err);
         res.send("Failed");
     }
-
-})
-
-// POST route handler
-app.post("/get-pinned-resorts", async function (req, res) {
-    const username = req.body.username;
-    const pinnedResorts = await getPinnedResorts(username); // Call the function to get pinned resorts
-    res.send(pinnedResorts); // Send the result back to the client
 });
 
-// Function to handle the query and return the pinned resorts
-async function getPinnedResorts(username) {
-    let msg = []; // Default to empty array if no resorts are found
+/**
+ * @description Endpoint to retrieve pinned resorts for a user.
+ * 
+ * @route POST /get-pinned-resorts
+ * @body {string} username - The username of the account.
+ */
+app.post("/get-pinned-resorts", async function (req, res) {
+    const username = req.body.username;
+    const pinnedResorts = await getPinnedResorts(username);
+    res.send(pinnedResorts);
+});
 
+/**
+ * @description Function to retrieve pinned resorts from the database.
+ * 
+ * @param {string} username - The username of the account.
+ * @returns {Promise<Array>} A promise that resolves to the list of pinned resorts.
+ */
+async function getPinnedResorts(username) {
+    let msg = [];
     const query = "SELECT pinned_resorts FROM Accounts WHERE username COLLATE Latin1_General_BIN = @username";
     const input = [{ name: 'username', type: mssql.VarChar, value: username }];
     const resultSet = await sql.executeQuery(query, input);
 
-
     if (resultSet.recordset && resultSet.recordset.length > 0) {
         const pinnedString = resultSet.recordset[0].pinned_resorts;
 
-        // Ensure pinnedString is valid JSON
         if (pinnedString) {
             try {
-                const pinned = JSON.parse(pinnedString); // Parse JSON
-                msg = pinned; // Assign parsed JSON to msg
+                const pinned = JSON.parse(pinnedString);
+                msg = pinned;
             } catch (error) {
                 console.error("Failed to parse JSON from database:", error);
-                msg = []; // Return empty array on parsing failure
+                msg = [];
             }
         }
     }
 
-    return msg; // Return the result
+    return msg;
 }
+
