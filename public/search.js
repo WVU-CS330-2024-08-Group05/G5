@@ -22,6 +22,7 @@ google.charts.setOnLoadCallback(drawCharts);
 // Draw the chart and set the chart values
 function drawCharts() {
     for (let element of document.getElementsByClassName('piechart')) {
+        if (!element.textContent.match(/\[\['Difficulty', 'Acres'\].*/)) continue;
         try {
             var data = google.visualization.arrayToDataTable(eval(element.textContent));
 
@@ -38,7 +39,6 @@ function drawCharts() {
             var chart = new google.visualization.PieChart(element);
             chart.draw(data, options);
         } catch (err) {
-            console.log(element.textContent);
             console.error(err);
         }
     }

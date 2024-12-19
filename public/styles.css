@@ -1,3 +1,9 @@
+/* Variables */
+:root {
+    --blue-theme: #007bff;
+}
+
+
 /*Home*/
 * {
     font-family: Arial, sans-serif;
@@ -91,15 +97,33 @@ body.dark-mode #account-name {
     background-color: #333333;
 }
 
-/* Override Bootstrap buttons with darkmode css */
+/* Override Bootstrap buttons with css */
+body .btn-outline-success {
+    color: white;
+    background-color: var(--blue-theme);
+}
+
+body .user-settings .btn-outline-success {
+    color: black;
+    background-color: transparent;
+    border-color: black;
+}
+
+body .user-settings .btn-outline-success:hover {
+    color: white;
+    background-color: var(--blue-theme);
+}
+
 body.dark-mode .user-settings .btn-outline-success {
     color: #ffffff;
     border-color: #ffffff;
+    background-color: transparent;
 }
 
 body.dark-mode .user-settings .btn-outline-success:hover {
     color: #ffffff; 
     border-color: #ffffff; 
+    background-color: var(--blue-theme);
 }
 
 /* ski logger dark mode */
