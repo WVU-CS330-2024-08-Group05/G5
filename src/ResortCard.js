@@ -43,7 +43,7 @@ async function html(resort, options) {
         const temp = weather[index].temperature;
 
         if (pp && pp > 30) {
-            if (temp => 32) return `<img class="weather-icon" src="/weather-icons/001-rainy.png"/>`;
+            if (temp >= 32) return `<img class="weather-icon" src="/weather-icons/001-rainy.png"/>`;
             else if (temp < 32) return `<img class="weather-icon" src="/weather-icons/004-snowflake.png"/>`;
         }
         else return '';
