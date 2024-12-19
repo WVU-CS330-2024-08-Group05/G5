@@ -152,6 +152,27 @@
                         font-size: 16px;
                         padding: 8px 10px;
                     }
+
+                    /* darkmode */
+
+                    body.dark-mode .select2-dropdown {
+                        color: white;
+                        background-color: gray;
+                    }
+
+                    body.dark-mode .select2-selection {
+                        background-color: #353535;
+                        color: white;
+                    }
+
+                    body.dark-mode .select2-container--default .select2-selection--single {
+                        color: white;
+                    }
+
+                   /* Highlight the selected resort more clearly */
+                    body.dark-mode .select2-container--default .select2-selection--single .select2-selection__rendered {
+                        color: white; 
+                    }
                 </style>
                 <select class="Resort" id="Resort" name="Resort"></select>
 
