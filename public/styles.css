@@ -318,9 +318,15 @@ input[type="search"]::-webkit-search-cancel-button {
     }
 
     .resort-card img {
-        height: 100%;
         height: 100px;
         width: 100px;
+    }
+
+    .resort-card .weather-icon {
+        padding:0;
+        border: 0;
+        height: 30px;
+        width: 30px;
     }
 
     .resort-card th, .resort-card td {

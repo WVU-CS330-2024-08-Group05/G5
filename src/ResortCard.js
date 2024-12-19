@@ -38,6 +38,17 @@ async function html(resort, options) {
         return (prob) ? prob+'%' : '';
     }
 
+    function getIcon(index) {
+        const pp = weather[index].probabilityOfPrecipitation.value;
+        const temp = weather[index].temperature;
+
+        if (pp && pp > 30) {
+            if (temp => 32) return `<img class="weather-icon" src="/weather-icons/001-rainy.png"/>`;
+            else if (temp < 32) return `<img class="weather-icon" src="/weather-icons/004-snowflake.png"/>`;
+        }
+        else return '';
+    }
+
     html =
         `<div class="resort-card">
     <h3>${resort.resort_name}</h3>
@@ -46,6 +57,16 @@ async function html(resort, options) {
         <div class="piechart">[['Difficulty', 'Acres'], ['Green', ${resort.green_acres}], ['Blue', ${resort.blue_acres}], ['Black', ${resort.black_acres}]]</div >
         <div class="acreage-details">
         <table>
+        <tr>
+            <td>
+            <td>${getIcon(0)}
+            <td>${getIcon(2)}
+            <td>${getIcon(4)}
+            <td>${getIcon(6)}
+            <td>${getIcon(8)}
+            <td>${getIcon(10)}
+            <td>${getIcon(12)}
+        </tr>
             <tr>
                 <th>
                 <th>${week_days[0]}
