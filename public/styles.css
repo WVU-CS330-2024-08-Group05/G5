@@ -1,7 +1,12 @@
 /* Variables */
 :root {
     --blue-theme: #007bff;
+    --gray-theme: #333333;
+    --dark-gray-theme: #232323;
 }
+/* Reference these in your css like so
+    background-color: var(--blue-theme);
+*/
 
 
 /*Home*/
@@ -81,8 +86,31 @@ body.dark-mode .piechart{
 
 /* Account page darkmode */
 body.dark-mode .user-locations {
-    background-color: #333333;
+    background-color: #333333; /* gray */
     color: white;
+}
+
+body.dark-mode .trip-card {
+    background-color: var(--dark-gray-theme);
+}
+
+body.dark-mode #username-written {
+    background-color: transparent;
+}
+
+
+body.dark-mode .user-review {
+    background-color: gray;
+}
+
+body.dark-mode .date-logged {
+    color: white;
+    background-color: var(--dark-gray-theme);
+}
+
+body.dark-mode .hours-logged {
+    color: white;
+    background-color: var(--dark-gray-theme);
 }
 
 body.dark-mode #settings {
