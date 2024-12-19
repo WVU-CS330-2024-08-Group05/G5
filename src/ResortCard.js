@@ -54,7 +54,8 @@ async function html(resort, options) {
     <h3>${resort.resort_name}</h3>
     <div class="resort-details">
         <img src=flags/Flag_of_${resort.state.replaceAll(' ', '_')}.svg alt="State Logo">
-        <div class="piechart">[['Difficulty', 'Acres'], ['Green', ${resort.green_acres}], ['Blue', ${resort.blue_acres}], ['Black', ${resort.black_acres}]]</div >
+        <div class="piechart-div"> <p><strong>Acreage Difficulty</strong></p>
+        <div class="piechart">[['Difficulty', 'Acres'], ['Green', ${resort.green_acres}], ['Blue', ${resort.blue_acres}], ['Black', ${resort.black_acres}]]</div ></div>
         <div class="acreage-details">
         <table>
         <tr>
