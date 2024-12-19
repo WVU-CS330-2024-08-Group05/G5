@@ -104,6 +104,11 @@ async function html(resort, options) {
         <p>Total Acres: ${resort.acres}</p>
         </strong>
         </div>
+        <div>
+        <button class="pin-button" data-resort-name="${resort.resort_name}">
+                    <img src="pin-image.png" alt="Pin this resort" />
+                </button>
+        </div>
     </div>
 </div >
 `
