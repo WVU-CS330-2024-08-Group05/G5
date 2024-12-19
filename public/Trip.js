@@ -185,7 +185,6 @@ class Trip {
                 </div>
                 <div class="location-content">
                     <div class="image-container">
-                        <img class="location-img" src="placeholder.png" alt="Picture of Resorts" height="200" width="200">
                     </div>
                     <div class="user-review">
                         <h3>Review</h3>
