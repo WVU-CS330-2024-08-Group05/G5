@@ -61,15 +61,43 @@ async function html(resort, options) {
     // Get weather data (12-hour)
     let weather = await Weather.getResortWeather(resort);
 
+    function precipProb(index) {
+        const prob = weather[index].probabilityOfPrecipitation.value;
+        return (prob) ? prob+'%' : '';
+    }
+
+    function getIcon(index) {
+        const pp = weather[index].probabilityOfPrecipitation.value;
+        const temp = weather[index].temperature;
+
+        if (pp &amp;&amp; pp > 30) {
+            if (temp => 32) return `&lt;img class="weather-icon" src="/weather-icons/001-rainy.png"/>`;
+            else if (temp &lt; 32) return `&lt;img class="weather-icon" src="/weather-icons/004-snowflake.png"/>`;
+        }
+        else return '';
+    }
+
     html =
         `&lt;div class="resort-card">
     &lt;h3>${resort.resort_name}&lt;/h3>
     &lt;div class="resort-details">
         &lt;img src=flags/Flag_of_${resort.state.replaceAll(' ', '_')}.svg alt="State Logo">
-        &lt;div class="piechart">[['Difficulty', 'Acres'], ['Green', ${resort.green_acres}], ['Blue', ${resort.blue_acres}], ['Black', ${resort.black_acres}]]&lt;/div >
+        &lt;div class="piechart-div"> &lt;p>&lt;strong>Acreage Difficulty&lt;/strong>&lt;/p>
+        &lt;div class="piechart">[['Difficulty', 'Acres'], ['Green', ${resort.green_acres}], ['Blue', ${resort.blue_acres}], ['Black', ${resort.black_acres}]]&lt;/div >&lt;/div>
         &lt;div class="acreage-details">
         &lt;table>
+        &lt;tr>
+            &lt;td>
+            &lt;td>${getIcon(0)}
+            &lt;td>${getIcon(2)}
+            &lt;td>${getIcon(4)}
+            &lt;td>${getIcon(6)}
+            &lt;td>${getIcon(8)}
+            &lt;td>${getIcon(10)}
+            &lt;td>${getIcon(12)}
+        &lt;/tr>
             &lt;tr>
+                &lt;th>
                 &lt;th>${week_days[0]}
                 &lt;th>${week_days[1]}
                 &lt;th>${week_days[2]}
@@ -79,6 +107,7 @@ async function html(resort, options) {
                 &lt;th>${week_days[6]}
             &lt;/tr>
             &lt;tr>
+                &lt;th> Temperature
                 &lt;td>${weather[0].temperature}\u00b0F
                 &lt;td>${weather[2].temperature}\u00b0F
                 &lt;td>${weather[4].temperature}\u00b0F
@@ -87,19 +116,28 @@ async function html(resort, options) {
                 &lt;td>${weather[10].temperature}\u00b0F
                 &lt;td>${weather[12].temperature}\u00b0F
             &lt;/tr>
+            &lt;th> Precipitation
+            &lt;td>${precipProb(0)}
+            &lt;td>${precipProb(2)}
+            &lt;td>${precipProb(4)}
+            &lt;td>${precipProb(6)}
+            &lt;td>${precipProb(8)}
+            &lt;td>${precipProb(10)}
+            &lt;td>${precipProb(12)}
         &lt;/table>
         &lt;/div>
         &lt;div class="other-resort-details">
-        &lt;p>Total Acres: ${resort.acres}&lt;p>
+        &lt;strong>
         ${distance}
+        &lt;p>Total Acres: ${resort.acres}&lt;/p>
+        &lt;/strong>
         &lt;/div>
-        &lt;div class="resort-rating">
-            &lt;p>Rating&lt;/p>
-            &lt;/div>
-                &lt;button class="pin-button" data-resort-name="${resort.resort_name}">
+        &lt;div>
+        &lt;button class="pin-button" data-resort-name="${resort.resort_name}">
                     &lt;img src="pin-image.png" alt="Pin this resort" />
                 &lt;/button>
-            &lt;/div>
+        &lt;/div>
+    &lt;/div>
 &lt;/div >
 `
     return html
@@ -142,13 +180,13 @@ module.exports = {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Trip.html">Trip</a></li></ul><h3>Global</h3><ul><li><a href="global.html#RESORTS">RESORTS</a></li><li><a href="global.html#Weather">Weather</a></li><li><a href="global.html#bcrypt">bcrypt</a></li><li><a href="global.html#config">config</a></li><li><a href="global.html#creatAccount">creatAccount</a></li><li><a href="global.html#executeQuery">executeQuery</a></li><li><a href="global.html#filterByDistance">filterByDistance</a></li><li><a href="global.html#filterBySearch">filterBySearch</a></li><li><a href="global.html#getId">getId</a></li><li><a href="global.html#getPassword">getPassword</a></li><li><a href="global.html#getPinnedResorts">getPinnedResorts</a></li><li><a href="global.html#getTrips">getTrips</a></li><li><a href="global.html#getWeekDays">getWeekDays</a></li><li><a href="global.html#hashPassword">hashPassword</a></li><li><a href="global.html#html">html</a></li><li><a href="global.html#initializePool">initializePool</a></li><li><a href="global.html#isPasswordCorrect">isPasswordCorrect</a></li><li><a href="global.html#isResortPinned">isResortPinned</a></li><li><a href="global.html#pinResort">pinResort</a></li><li><a href="global.html#setPassword">setPassword</a></li><li><a href="global.html#setTrips">setTrips</a></li><li><a href="global.html#setUsername">setUsername</a></li><li><a href="global.html#storePinnedResorts">storePinnedResorts</a></li><li><a href="global.html#unpinResort">unpinResort</a></li><li><a href="global.html#updatePinButtonStyle">updatePinButtonStyle</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Trip.html">Trip</a></li></ul><h3>Global</h3><ul><li><a href="global.html#RESORTS">RESORTS</a></li><li><a href="global.html#Weather">Weather</a></li><li><a href="global.html#baseUrl">baseUrl</a></li><li><a href="global.html#bcrypt">bcrypt</a></li><li><a href="global.html#config">config</a></li><li><a href="global.html#creatAccount">creatAccount</a></li><li><a href="global.html#executeQuery">executeQuery</a></li><li><a href="global.html#filterByDistance">filterByDistance</a></li><li><a href="global.html#filterBySearch">filterBySearch</a></li><li><a href="global.html#generateToken">generateToken</a></li><li><a href="global.html#getEmail">getEmail</a></li><li><a href="global.html#getId">getId</a></li><li><a href="global.html#getPassword">getPassword</a></li><li><a href="global.html#getPinnedResorts">getPinnedResorts</a></li><li><a href="global.html#getTrips">getTrips</a></li><li><a href="global.html#getWeekDays">getWeekDays</a></li><li><a href="global.html#hashPassword">hashPassword</a></li><li><a href="global.html#html">html</a></li><li><a href="global.html#initializePool">initializePool</a></li><li><a href="global.html#isEmail">isEmail</a></li><li><a href="global.html#isPasswordCorrect">isPasswordCorrect</a></li><li><a href="global.html#isResortPinned">isResortPinned</a></li><li><a href="global.html#isStrongPassword">isStrongPassword</a></li><li><a href="global.html#pinResort">pinResort</a></li><li><a href="global.html#setPassword">setPassword</a></li><li><a href="global.html#setTrips">setTrips</a></li><li><a href="global.html#setUsername">setUsername</a></li><li><a href="global.html#showMessage">showMessage</a></li><li><a href="global.html#storePinnedResorts">storePinnedResorts</a></li><li><a href="global.html#toggleButtonsVisibility">toggleButtonsVisibility</a></li><li><a href="global.html#unpinResort">unpinResort</a></li><li><a href="global.html#updatePinButtonStyle">updatePinButtonStyle</a></li><li><a href="global.html#usernameExists">usernameExists</a></li><li><a href="global.html#validateToken">validateToken</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Dec 18 2024 17:29:36 GMT-0500 (Eastern Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Dec 18 2024 22:24:46 GMT-0500 (Eastern Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

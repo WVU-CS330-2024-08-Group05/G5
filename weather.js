@@ -4,7 +4,7 @@
  * Provides methods to retrieve weather data using the National Weather Service API as well as data from the National Digital Forecast Database (NDFD).
  */
 
-/*
+/**
 National Weather Service API
 
 https://api.weather.gov/points/{latitude},{longitude}
@@ -89,7 +89,7 @@ async function getResortWeatherHourly(resort) {
     return hourly.properties.periods;
 }
 
-/*
+/**
  * National Digital Forecast Database (NDFD) API
  * 
  * https://graphical.weather.gov/xml/SOAP_server/ndfdXMLclient.php

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: public/signup.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: public/signup.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Handles user signup functionality:
+ * - Validates user inputs (email, password strength).
+ * - Checks if the username is available.
+ * - Updates session storage and redirects on successful signup.
+ */
+
+const baseUrl = 'http://localhost:8080'; // Base URL for the API
+
+$(function () {
+    /**
+     * Performs signup by validating user inputs, checking username availability, and handling user account creation.
+     */
+    async function performSignup() {
+        // Gather user inputs
+        let username = $('#username').val();
+        let password = $('#password').val();
+        let email = $('#email').val();
+
+        // Error display elements
+        let emailErrorDiv = $('#email-error');
+        let passwordErrorDiv = $('#password-error');
+        let usernameErrorDiv = $('#username-error');
+
+        // Clear previous error messages
+        emailErrorDiv.html("");
+        passwordErrorDiv.html("");
+        usernameErrorDiv.html("");
+
+        // Validate email and password
+        let emailResult = isEmail(email);
+        let passwordErrorMessage = isStrongPassword(password);
+
+        let hasError = false;
+
+        // Display email error if invalid
+        if (emailResult) {
+            emailErrorDiv.html(emailResult);
+            hasError = true;
+        }
+
+        // Display password error if invalid
+        if (passwordErrorMessage) {
+            passwordErrorDiv.html(passwordErrorMessage);
+            hasError = true;
+        }
+
+        // Proceed only if there are no validation errors
+        if (!hasError) {
+            const usernameAvailable = await usernameExists(username, password, email);
+            if (usernameAvailable) {
+                // Update session storage to reflect logged-in state
+                sessionStorage.setItem("isGuest", "false");
+                sessionStorage.setItem("username", username);
+
+                // Redirect to the homepage after a short delay
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 100); // Ensure DOM is updated before redirection
+            }
+        }
+    }
+
+    // Event listener for the signup button
+    $('#signup').on('click', performSignup);
+
+    // Event listener for the "Enter" key within input fields
+    $('#password, #username, #email').on('keypress', function (e) {
+        if (e.which === 13) { // Enter key code is 13
+            e.preventDefault();
+            performSignup();
+        }
+    });
+});
+
+/**
+ * Validates the strength of a password.
+ * 
+ * @param {string} password - The password to validate.
+ * @returns {string} - An error message if the password is weak, or an empty string if valid.
+ */
+function isStrongPassword(password) {
+    let error = "";
+    if (password.length &lt; 8) {
+        error += "Password needs to be more than 8 characters.&lt;br>";
+    }
+    if (!/[A-Z]/.test(password)) {
+        error += "Password needs to have a capital letter.&lt;br>";
+    }
+    return error;
+}
+
+/**
+ * Validates the format of an email address.
+ * 
+ * @param {string} email - The email address to validate.
+ * @returns {string} - An error message if the email is invalid, or an empty string if valid.
+ */
+function isEmail(email) {
+    let error = "";
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+        error += "Must be a valid email.&lt;br>";
+    }
+    return error;
+}
+
+/**
+ * Checks if a username is available by sending a POST request to the server.
+ * 
+ * @param {string} username - The username to check.
+ * @param {string} password - The password for the account.
+ * @param {string} email - The email for the account.
+ * @returns {Promise&lt;boolean>} - Resolves true if the username is available, false if taken.
+ */
+function usernameExists(username, password, email) {
+    return new Promise((resolve, reject) => {
+        let usernameErrorDiv = $('#username-error');
+        usernameErrorDiv.html(""); // Clear previous error messages
+
+        let url = `${baseUrl}/signing-up`;
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username: username, password: password, email: email }),
+        })
+            .then((res) => res.text())
+            .then((msg) => {
+                if (msg === "Username taken") {
+                    usernameErrorDiv.html("Username is taken. Please pick another.");
+                    resolve(false); // Username is taken
+                } else {
+                    resolve(true); // Username is available
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                reject(error); // Handle fetch errors
+            });
+    });
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Trip.html">Trip</a></li></ul><h3>Global</h3><ul><li><a href="global.html#RESORTS">RESORTS</a></li><li><a href="global.html#Weather">Weather</a></li><li><a href="global.html#baseUrl">baseUrl</a></li><li><a href="global.html#bcrypt">bcrypt</a></li><li><a href="global.html#config">config</a></li><li><a href="global.html#creatAccount">creatAccount</a></li><li><a href="global.html#executeQuery">executeQuery</a></li><li><a href="global.html#filterByDistance">filterByDistance</a></li><li><a href="global.html#filterBySearch">filterBySearch</a></li><li><a href="global.html#generateToken">generateToken</a></li><li><a href="global.html#getEmail">getEmail</a></li><li><a href="global.html#getId">getId</a></li><li><a href="global.html#getPassword">getPassword</a></li><li><a href="global.html#getPinnedResorts">getPinnedResorts</a></li><li><a href="global.html#getTrips">getTrips</a></li><li><a href="global.html#getWeekDays">getWeekDays</a></li><li><a href="global.html#hashPassword">hashPassword</a></li><li><a href="global.html#html">html</a></li><li><a href="global.html#initializePool">initializePool</a></li><li><a href="global.html#isEmail">isEmail</a></li><li><a href="global.html#isPasswordCorrect">isPasswordCorrect</a></li><li><a href="global.html#isResortPinned">isResortPinned</a></li><li><a href="global.html#isStrongPassword">isStrongPassword</a></li><li><a href="global.html#pinResort">pinResort</a></li><li><a href="global.html#setPassword">setPassword</a></li><li><a href="global.html#setTrips">setTrips</a></li><li><a href="global.html#setUsername">setUsername</a></li><li><a href="global.html#showMessage">showMessage</a></li><li><a href="global.html#storePinnedResorts">storePinnedResorts</a></li><li><a href="global.html#toggleButtonsVisibility">toggleButtonsVisibility</a></li><li><a href="global.html#unpinResort">unpinResort</a></li><li><a href="global.html#updatePinButtonStyle">updatePinButtonStyle</a></li><li><a href="global.html#usernameExists">usernameExists</a></li><li><a href="global.html#validateToken">validateToken</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Dec 18 2024 22:24:46 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
