@@ -101,10 +101,7 @@ app.post("/resort-cards", async function (req, res) {
     for (let name of resort_names) {
         for (let resort of RESORTS) {
             if (resort.resort_name === name) {
-                console.log('RESORTCARD');
-                let x = await ResortCard.html(resort, { distance: false });
-                console.log(x);
-                html += x;
+                html += await ResortCard.html(resort, { distance: false });
             }
         }
     }
