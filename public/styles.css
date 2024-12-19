@@ -90,6 +90,21 @@ body.dark-mode .user-locations {
     color: white;
 }
 
+#account-name {
+    background-color: transparent !important;
+    border: none !important;
+    padding: 0 !important; 
+    box-shadow: none !important;
+}
+
+
+body.dark-mode #account-name {
+    background-color: transparent !important;
+    color: white; 
+}
+
+
+
 body.dark-mode .trip-card {
     background-color: var(--dark-gray-theme);
 }
