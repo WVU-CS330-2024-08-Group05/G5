@@ -198,9 +198,7 @@ body.dark-mode input[type="date"] {
 
 /* End of CSS for dark mode */
 
-/* Account page partial CSS (some in account.css) */
 
-/* End of account page css */
 
 .nav-buttons {
     display: flex;
@@ -597,3 +595,6 @@ body #hourSubmit {
 #return-home:hover {
     background-color: darkblue;
 }
+
+
+
